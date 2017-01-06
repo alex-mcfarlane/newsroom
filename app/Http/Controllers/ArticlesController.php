@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Http\Requests;
-use App\Article;
+use App\Newsroom\Articles\ArticleCreator;
 
 class ArticlesController extends Controller
 {
@@ -15,6 +15,11 @@ class ArticlesController extends Controller
     
     public function store(Request $request)
     {
-        $this->articleCreator->make($request->only('title', 'body', 'category_id'));
+        $fillableAttributes = $request->only('title', 'body');
+        $categoryId = $request->input('category_id');
+        
+        $article = $this->articleCreator->make($fillableAttributes, $categoryId);
+        
+        return response()->json($article);
     }
 }
