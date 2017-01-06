@@ -5,6 +5,7 @@ use App\Article;
 use App\Category;
 use App\Newsroom\Validators\ArticleValidator;
 use App\Newsroom\Exceptions\ArticleException;
+use App\Newsroom\Exceptions\CategoryNotFoundException;
 
 /**
  * ArticleCreator Class
@@ -34,11 +35,11 @@ class ArticleCreator {
         
         //add the category
         if(isset($attributes["category_id"])) {
-            //associate article with category
-            if(! $category = Category::find($attributes["category_id"])) {
-                throw new ArticleException(["Unable to find a category with the id specified"]);
+            try{
+                $article->setCategory($attributes["category_id"]);
+            } catch(CategoryNotFoundException $e) {
+                throw new ArticleException($e->getErrors());
             }
-            $article->category()->associate($category);
         }
         
         return $article;
