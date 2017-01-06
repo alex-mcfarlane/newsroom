@@ -30,4 +30,13 @@ class Article extends Model
         
         $this->save();
     }
+    
+    /**
+     * return articles created on a given day
+     * @param DateTime $date should be in format Y:m:d H:i:s
+     */
+    public static function filterByDay($date)
+    {
+        return self::where('created_at', '>=', $date);
+    }
 }

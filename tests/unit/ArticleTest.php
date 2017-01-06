@@ -45,4 +45,17 @@ class ArticleTest extends TestCase
         $this->assertEquals('Article body', $article->body);
         $this->assertEquals($category, $article->category);
     }
+    
+    /** @test */
+    public function can_filter_articles_by_date()
+    {   
+        $article = Article::create([
+            'title' => 'My Article',
+            'body' => 'Article body'
+        ]);
+        
+        $articles = Article::filterByDay($article->created_at)->get();
+
+        $this->assertTrue($articles->contains($article));
+    }
 }
