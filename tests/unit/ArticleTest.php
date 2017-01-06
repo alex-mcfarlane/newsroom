@@ -58,4 +58,20 @@ class ArticleTest extends TestCase
 
         $this->assertTrue($articles->contains($article));
     }
+    
+    /** @test */
+    public function can_filter_articles_between_dates()
+    {
+        $article = Article::create([
+            'title' => 'My Article',
+            'body' => 'Article body'
+        ]);
+        
+        $now = date('Y-m-d H:i:s', time());
+        $start = date('Y-m-d H:i:s', time() - (60 * 60 * 24 * 14)); //two weeks ago
+        
+        $articles = Article::filterBetweenDates($start, $now);
+        
+        $this->assertTrue($articles->contains($article));
+    }
 }
