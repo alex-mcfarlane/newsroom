@@ -9,6 +9,11 @@ class Article extends Model
 {
     protected $fillable = ["title", "body"];
     
+    public static function withSubResources($id)
+    {
+        return self::with('category')->findOrFail($id);
+    }
+    
     public function category()
     {
         return $this->belongsTo('App\Category');

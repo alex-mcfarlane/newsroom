@@ -4,8 +4,10 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Http\Requests;
+use App\Article;
 use App\Newsroom\Articles\ArticleCreator;
 use App\Newsroom\Exceptions\ArticleException;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class ArticlesController extends Controller
 {
@@ -24,5 +26,14 @@ class ArticlesController extends Controller
         }
         
         return response()->json($article);
+    }
+    
+    public function show($id)
+    {
+        try{
+            return response()->json(Article::withSubResources($id));
+        } catch(ModelNotFoundException $e) {
+            return response()->json($e->getMessage());
+        }
     }
 }
