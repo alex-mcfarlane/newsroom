@@ -3,6 +3,8 @@ namespace App\Newsroom\Articles;
 
 use App\Article;
 use App\Category;
+use App\Newsroom\Validators\ArticleValidator;
+use App\Newsroom\Exceptions\ArticleException;
 
 /**
  * ArticleCreator Class
@@ -10,14 +12,34 @@ use App\Category;
  * @author Alex McFarlane
  */
 class ArticleCreator {
-    public function make($fillableAttr, $categoryId)
+    
+    protected $validator;
+    
+    public function __construct(ArticleValidator $validator)
     {
-        //find the category
-        $category = Category::find($categoryId);
+        $this->validator = $validator;
+    }
+    
+    public function make($attributes)
+    {
         //create the article
-        $article = Article::create($fillableAttr);
-        //associate article with category
-        $article->category()->associate($category);
+        if(! $this->validator->isValid($attributes)) {
+            throw new ArticleException($this->validator->getErrors());
+        }
+        
+        $article = Article::create([
+            "title" => $attributes["title"],
+            "body" => $attributes["body"],
+        ]);
+        
+        //add the category
+        if(isset($attributes["category_id"])) {
+            //associate article with category
+            if(! $category = Category::find($attributes["category_id"])) {
+                throw new ArticleException(["Unable to find a category with the id specified"]);
+            }
+            $article->category()->associate($category);
+        }
         
         return $article;
     }
