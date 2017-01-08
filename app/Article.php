@@ -39,4 +39,10 @@ class Article extends Model
     {
         return self::where('created_at', '>=', $date);
     }
+
+    public static function filterBetweenDates($start, $end)
+    {
+        return self::where('created_at', '>=', $start)
+                    ->where('created_at', '<=', $end);
+    }
 }

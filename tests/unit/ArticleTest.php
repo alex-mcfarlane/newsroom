@@ -62,16 +62,26 @@ class ArticleTest extends TestCase
     /** @test */
     public function can_filter_articles_between_dates()
     {
+        $now = date('Y-m-d H:i:s', time());
+        $twoWeeksAgo = date('Y-m-d H:i:s', time() - (60 * 60 * 24 * 14)); //two weeks ago
+        $threeWeeksAgo = date('Y-m-d H:i:s', time() - (60 * 60 * 24 * 21)); //three weeks ago
+        
         $article = Article::create([
             'title' => 'My Article',
             'body' => 'Article body'
         ]);
+
+        $article2 = Article::create([
+            'title' => 'My second article',
+            'body' => 'This is my second article'
+        ]);
         
-        $now = date('Y-m-d H:i:s', time());
-        $start = date('Y-m-d H:i:s', time() - (60 * 60 * 24 * 14)); //two weeks ago
+        $article2->created_at = $twoWeeksAgo;
+        $article2->save();
         
-        $articles = Article::filterBetweenDates($start, $now);
-        
+        $articles = Article::filterBetweenDates($twoWeeksAgo, $now)->get();
+
         $this->assertTrue($articles->contains($article));
+        $this->assertTrue(!$articles->contains($article2));
     }
 }
