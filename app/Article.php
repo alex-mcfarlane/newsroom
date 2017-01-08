@@ -45,4 +45,22 @@ class Article extends Model
         return self::where('created_at', '>=', $start)
                     ->where('created_at', '<=', $end);
     }
+
+    public static function newestForEachCategory($categories)
+    {
+        $newestArticlesPerCategory = [];
+
+        foreach($categories as $category)
+        {
+            $article = Article::where('category_id', $category->id)->orderBy('created_at', 'desc')
+                        ->first();
+
+            if($article)
+            {
+                $newestArticlesPerCategory[$category->title] = $article;
+            }
+        }
+
+        return $newestArticlesPerCategory;
+    }
 }

@@ -114,6 +114,8 @@ class ArticleTest extends TestCase
             'body' => 'Article body'
         ]);
         $articleJS->setCategory($category2->id);
+        $articleJS->created_at = date('Y-m-d H:i:s', time() - (60 * 60 * 24 * 2));
+        $articleJS->save();
 
         $articleJS2 = Article::create([
             'title' => 'My second JS Article',
@@ -126,6 +128,8 @@ class ArticleTest extends TestCase
             'body' => 'Article body'
         ]);
         $articleAlgo->setCategory($category3->id);
+        $articleAlgo->created_at = date('Y-m-d H:i:s', time() - (60 * 60 * 24 * 2));
+        $articleAlgo->save();
 
         $articleAlgo2 = Article::create([
             'title' => 'My Second Algo Article',
@@ -133,10 +137,10 @@ class ArticleTest extends TestCase
         ]);
         $articleAlgo2->setCategory($category3->id);
 
-        $articles = Article::newestForEachCategory();
+        $articles = Article::newestForEachCategory(Category::all());
 
-        $this->assertTrue($articles->contains($articlePHP));
-        $this->assertTrue($articles->contains($articleJS2));
-        $this->assertTrue($articles->contains($articleAlgo2));
+        $this->assertTrue(in_array(Article::find($articlePHP->id), $articles));
+        $this->assertTrue(in_array(Article::find($articleJS2->id), $articles));
+        $this->assertTrue(in_array(Article::find($articleAlgo2->id), $articles));
     }
 }
