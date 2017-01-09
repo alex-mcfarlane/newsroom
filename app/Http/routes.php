@@ -34,6 +34,10 @@ Route::group(['prefix' => 'api'], function(){
     Route::resource('articles', 'ArticlesController', ['only' => [
         'store', 'show'
     ]]);
+
+    Route::resource('categories', 'CategoriesController', ['only' => [
+        'store', 'show'
+    ]]);
 });
 
 Route::post('/api/articles', 'ArticlesController@store');
