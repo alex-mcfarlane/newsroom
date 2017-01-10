@@ -9,13 +9,19 @@ namespace App\Newsroom\Articles;
  * @author Alex McFarlane
  */
 class ArticleQuerier {
-    protected $validFilterableFields = [];
+    protected $filters = [];
+    protected $validFilterableFields = ['start_date', 'end_date'];
+
+    public function __construct($filters)
+    {
+        $this->filters = $filters;
+    }
     
-    public function addFilters($filters)
+    public function search()
     {
         $articles = new Article();
         
-        foreach($filters as $field => $value)
+        foreach($this->filters as $field => $value)
         {
             if(!in_array($field, $this->validFilterableFields)) {
                 return false;

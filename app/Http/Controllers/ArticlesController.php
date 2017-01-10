@@ -20,8 +20,8 @@ class ArticlesController extends Controller
     public function index(Request $request)
     {
         if(count($request->all()) > 0) {
-            $articles = new ArticleQuerier();
-            $articles->addFilters($request->all());
+            $articleQuerier = new ArticleQuerier($request->all());
+            $articles = $articleQuerier->search($request->all());
         }
         else{
             $articles = new Article();
