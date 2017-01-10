@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Http\Requests;
 use App\Article;
 use App\Newsroom\Articles\ArticleCreator;
+use App\Newsroom\Articles\ArticleQuerier;
 use App\Newsroom\Exceptions\ArticleException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
@@ -18,8 +19,14 @@ class ArticlesController extends Controller
     
     public function index(Request $request)
     {
-        $articles = Article::query();
-
+        if(count($request->all()) > 0) {
+            $articles = new ArticleQuerier();
+            $articles->addFilters($request->all());
+        }
+        else{
+            $articles = new Article();
+        }
+        
         if($request->has('start_date') && $request->has('end_date')) {
             $articles->filterBetweenDates($request->has('start_date'), $request->has('end_date'));
         }

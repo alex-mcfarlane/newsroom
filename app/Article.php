@@ -40,12 +40,12 @@ class Article extends Model
         return self::where('created_at', '>=', $date);
     }
 
-    public static function scopeFilterBeforeDate($query, $date)
+    public static function scopeFilterByEndDate($query, $date)
     {
         return $query->where('created_at', '<', $date);
     }
 
-    public static function scopeFilterAfterDate($query, $date)
+    public static function scopeFilterByStartDate($query, $date)
     {
         return $query->where('created_at', '>', $date);
     }
