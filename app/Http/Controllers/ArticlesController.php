@@ -16,6 +16,20 @@ class ArticlesController extends Controller
         $this->articleCreator = $articleCreator;
     }
     
+    public function index(Request $request)
+    {
+        $articles = Article::query();
+
+        if($request->has('start_date')) {
+            $articles->filterAfterDate($request->input('start_date'));
+        }
+        if($request->has('end_date')) {
+            $articles->filterBeforeDate($request->input('end_date'));
+        }
+
+        return response()->json($articles->get());
+    }
+
     public function store(Request $request)
     {        
         try{

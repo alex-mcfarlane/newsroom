@@ -32,7 +32,7 @@ Route::group(['middleware' => ['web']], function () {
 
 Route::group(['prefix' => 'api'], function(){
     Route::resource('articles', 'ArticlesController', ['only' => [
-        'store', 'show'
+        'store', 'show', 'index'
     ]]);
 
     Route::resource('categories', 'CategoriesController', ['only' => [

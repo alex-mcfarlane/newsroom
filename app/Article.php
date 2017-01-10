@@ -40,9 +40,19 @@ class Article extends Model
         return self::where('created_at', '>=', $date);
     }
 
-    public static function filterBetweenDates($start, $end)
+    public static function scopeFilterBeforeDate($query, $date)
     {
-        return self::where('created_at', '>=', $start)
+        return $query->where('created_at', '<', $date);
+    }
+
+    public static function scopeFilterAfterDate($query, $date)
+    {
+        return $query->where('created_at', '>', $date);
+    }
+
+    public static function scopeFilterBetweenDates($query, $start, $end)
+    {
+        return $query->where('created_at', '>=', $start)
                     ->where('created_at', '<=', $end);
     }
 
