@@ -20,10 +20,13 @@ class ArticlesController extends Controller
     {
         $articles = Article::query();
 
-        if($request->has('start_date')) {
+        if($request->has('start_date') && $request->has('end_date')) {
+            $articles->filterBetweenDates($request->has('start_date'), $request->has('end_date'));
+        }
+        elseif($request->has('start_date')) {
             $articles->filterAfterDate($request->input('start_date'));
         }
-        if($request->has('end_date')) {
+        elseif($request->has('end_date')) {
             $articles->filterBeforeDate($request->input('end_date'));
         }
 
