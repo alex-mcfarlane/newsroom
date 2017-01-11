@@ -2,6 +2,8 @@
 
 namespace App\Newsroom\Articles;
 
+use App\Article;
+
 /**
  * ArticleQuerier Class
  * 
@@ -19,23 +21,26 @@ class ArticleQuerier {
     
     public function search()
     {
-        $articles = new Article();
+        $article = new Article;
+        $query = Article::query();
         
         foreach($this->filters as $field => $value)
         {
             if(!in_array($field, $this->validFilterableFields)) {
-                return false;
+                continue;
             }
             
             $method = 'filterBy'.camel_case($field);
-            if(method_exists($articles, $method)) {
-                $articles->$method($value);
+            
+            if(method_exists($article, 'scope'.$method)) {
+                $query->$method($value);
             }
             else{
-                $articles->where($field, $value);
+                $query->where($field, $value);
             }
         }
         
-        return $articles;
+        return $query;
     }
+
 }

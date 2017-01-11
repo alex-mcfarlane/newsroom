@@ -21,23 +21,13 @@ class ArticlesController extends Controller
     {
         if(count($request->all()) > 0) {
             $articleQuerier = new ArticleQuerier($request->all());
-            $articles = $articleQuerier->search($request->all());
+            $articles = $articleQuerier->search($request->all())->get();
         }
         else{
-            $articles = new Article();
-        }
-        
-        if($request->has('start_date') && $request->has('end_date')) {
-            $articles->filterBetweenDates($request->has('start_date'), $request->has('end_date'));
-        }
-        elseif($request->has('start_date')) {
-            $articles->filterAfterDate($request->input('start_date'));
-        }
-        elseif($request->has('end_date')) {
-            $articles->filterBeforeDate($request->input('end_date'));
+            $articles = Article::all();
         }
 
-        return response()->json($articles->get());
+        return response()->json($articles);
     }
 
     public function store(Request $request)
