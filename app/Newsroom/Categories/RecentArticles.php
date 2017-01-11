@@ -11,10 +11,6 @@ class RecentArticles extends CategoryArticleRetriever
 {
     public function retrieval()
     {
-        $output = $this->model->toArray();
-        $output["articles"] = [];
-        $output["articles"][] = $this->query->newestArticles($this->limit);
-        
-        return $output;
+        return $this->output($this->query->newestArticles($this->limit));
     }
 }

@@ -30,5 +30,14 @@ abstract class CategoryArticleRetriever
         return $this;
     }
     
+    protected function output($collection)
+    {
+        $output = $this->model->toArray();
+        $output["articles"] = [];
+        $output["articles"][] = $collection;
+        
+        return $output;
+    }
+    
     protected abstract function retrieval();
 }

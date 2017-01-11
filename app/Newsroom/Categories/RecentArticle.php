@@ -10,11 +10,7 @@ namespace App\Newsroom\Categories;
 class RecentArticle extends CategoryArticleRetriever
 {    
     public function retrieval()
-    {        
-        $output = $this->model->toArray();
-        $output["articles"] = [];
-        $output["articles"][] = $this->query->newestArticle();
-        
-        return $output;
+    {    
+        return $this->output($this->query->newestArticle());
     }
 }
