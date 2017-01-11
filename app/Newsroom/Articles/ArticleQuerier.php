@@ -2,6 +2,7 @@
 
 namespace App\Newsroom\Articles;
 
+use App\Newsroom\Querier;
 use App\Article;
 
 /**
@@ -10,37 +11,14 @@ use App\Article;
  *
  * @author Alex McFarlane
  */
-class ArticleQuerier {
-    protected $filters = [];
-    protected $validFilterableFields = ['start_date', 'end_date'];
+class ArticleQuerier extends Querier{
+
+    protected $validFilterableFields = ['title', 'body', 'start_date', 'end_date'];
 
     public function __construct($filters)
     {
         $this->filters = $filters;
+        $this->model = new Article();
+        $this->query = Article::query();
     }
-    
-    public function search()
-    {
-        $article = new Article;
-        $query = Article::query();
-        
-        foreach($this->filters as $field => $value)
-        {
-            if(!in_array($field, $this->validFilterableFields)) {
-                continue;
-            }
-            
-            $method = 'filterBy'.camel_case($field);
-            
-            if(method_exists($article, 'scope'.$method)) {
-                $query->$method($value);
-            }
-            else{
-                $query->where($field, $value);
-            }
-        }
-        
-        return $query;
-    }
-
 }
