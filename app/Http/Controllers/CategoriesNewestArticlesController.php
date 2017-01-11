@@ -6,21 +6,22 @@ use Illuminate\Http\Request;
 use App\Http\Requests;
 use App\Article;
 use App\Category;
+use App\Newsroom\Factories\ArticleRetrieverFactory;
 
 class CategoriesNewestArticlesController extends Controller
 {
     public function index(Request $request)
     {
         $categories = Category::all();
-        $newestArticlesPerCategory = [];
         
         foreach($categories as $category)
         {
-            $article = $category->getNewestArticle();
+            $retriever = ArticleRetrieverFactory::create($category, $request->input('limit'));
+            $result = $retriever->get();
             
-            if($article)
+            if($result)
             {
-                $newestArticlesPerCategory[$category->title] = $article;
+                $newestArticlesPerCategory[$category->title] = $result;
             }
         }
 

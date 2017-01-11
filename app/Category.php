@@ -20,6 +20,6 @@ class Category extends Model
     
     public function getNewestArticles($num)
     {
-        return $this->articles()->orderBy('created_at', 'desc')->limit($num);
+        return $this->articles()->orderBy('created_at', 'desc')->limit($num)->get();
     }
 }
