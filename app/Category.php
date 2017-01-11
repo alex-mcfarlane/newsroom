@@ -10,6 +10,16 @@ class Category extends Model
     
     public function articles()
     {
-        return $this->hasMany('App\Articles');
+        return $this->hasMany('App\Article');
+    }
+    
+    public function getNewestArticle()
+    {
+        return $this->getNewestArticles(1)->first();
+    }
+    
+    public function getNewestArticles($num)
+    {
+        return $this->articles()->orderBy('created_at', 'desc')->limit($num);
     }
 }
