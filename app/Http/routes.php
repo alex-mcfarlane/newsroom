@@ -31,6 +31,8 @@ Route::group(['middleware' => ['web']], function () {
 });
 
 Route::group(['prefix' => 'api'], function(){
+    Route::get('articles/newest', 'NewestArticlesController@index');
+    
     Route::resource('articles', 'ArticlesController', ['only' => [
         'store', 'show', 'index'
     ]]);
