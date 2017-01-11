@@ -9,8 +9,12 @@ namespace App\Newsroom\Categories;
  */
 class RecentArticles extends CategoryArticleRetriever
 {
-    public function get()
+    public function retrieval()
     {
-        return $this->category->getNewestArticles($this->limit);
+        $output = $this->model->toArray();
+        $output["articles"] = [];
+        $output["articles"][] = $this->query->newestArticles($this->limit);
+        
+        return $output;
     }
 }

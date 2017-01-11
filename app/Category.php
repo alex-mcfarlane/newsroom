@@ -13,13 +13,8 @@ class Category extends Model
         return $this->hasMany('App\Article');
     }
     
-    public function getNewestArticle()
+    public function newestArticlesQuery()
     {
-        return $this->getNewestArticles(1)->first();
-    }
-    
-    public function getNewestArticles($num)
-    {
-        return $this->articles()->orderBy('created_at', 'desc')->limit($num)->get();
+        return $this->articles()->orderBy('created_at', 'desc');
     }
 }

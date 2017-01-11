@@ -13,6 +13,7 @@ class CategoriesNewestArticlesController extends Controller
     public function index(Request $request)
     {
         $categories = Category::all();
+        $newestArticlesPerCategory = []; //hashmap that will hold categories and their articles
         
         foreach($categories as $category)
         {

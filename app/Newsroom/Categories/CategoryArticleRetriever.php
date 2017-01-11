@@ -11,11 +11,24 @@ use App\Category;
  */
 abstract class CategoryArticleRetriever
 {
+    protected $query;
+    
     public function __construct(Category $category, $limit = 1)
     {
-        $this->category = $category;
+        $this->model = $category;
         $this->limit = $limit;
     }
     
-    protected abstract function get();
+    public function get()
+    {
+        return $this->startQuery()->retrieval();
+    }
+    
+    public function startQuery()
+    {
+        $this->query = $this->model->newestArticlesQuery();
+        return $this;
+    }
+    
+    protected abstract function retrieval();
 }

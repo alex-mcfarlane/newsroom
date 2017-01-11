@@ -55,4 +55,14 @@ class Article extends Model
         return $query->where('created_at', '>=', $start)
                     ->where('created_at', '<=', $end);
     }
+    
+    public function scopeNewestArticle($query)
+    {
+        return $query->first();
+    }
+    
+    public function scopeNewestArticles($query, $num)
+    {
+        return $query->limit($num)->get();
+    }
 }
