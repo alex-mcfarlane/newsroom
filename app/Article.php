@@ -44,7 +44,18 @@ class Article extends Model
     
     public function markAsFeatured()
     {
+        //if another article(s) is featured, we need to unfeature them
+        foreach(Article::where('featured', true)->get() as $article) {
+            $article->unfeature();
+        }
+        
         $this->featured = true;
+        $this->save();
+    }
+    
+    public function unfeature()
+    {
+        $this->featured = false;
         $this->save();
     }
     
