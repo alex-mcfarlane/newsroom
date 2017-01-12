@@ -18,12 +18,9 @@ class Article extends Model
         $article = self::create([
             "title" => $attributes["title"],
             "body" => $attributes["body"],
-            "featured" => false
         ]);
         
-        if($attributes['featured'] === true) {
-            $article->markAsFeatured();
-        }
+        $article->setFeatured($attributes['featured']);
         
         if(isset($attributes["category_id"])) {
             $article->setCategory($attributes["category_id"]);
@@ -42,7 +39,16 @@ class Article extends Model
         return $this->belongsTo('App\Category');
     }
     
-    public function markAsFeatured()
+    public function setFeatured($featured)
+    {
+        if($featured === true) {
+            $this->markAsFeatured();
+        } else {
+            $this->unfeature();
+        }
+    }
+    
+    private function markAsFeatured()
     {
         //if another article(s) is featured, we need to unfeature them
         foreach(Article::where('featured', true)->get() as $article) {
