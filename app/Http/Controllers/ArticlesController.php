@@ -33,7 +33,7 @@ class ArticlesController extends Controller
     public function store(Request $request)
     {        
         try{
-            $article = $this->articleCreator->make($request->only('title', 'body', 'category_id'));
+            $article = $this->articleCreator->make($request->only('title', 'body', 'featured', 'category_id'));
         }
         catch(ArticleException $e) {
             return response()->json($e->getErrors());

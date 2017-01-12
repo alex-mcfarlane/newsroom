@@ -16,6 +16,7 @@ class CreateArticlesTable extends Migration
             $table->increments('id');
             $table->string('title');
             $table->string('body');
+            $table->boolean('featured');
             $table->integer('category_id')->nullable();
             $table->timestamps();
         });

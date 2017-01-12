@@ -9,6 +9,29 @@ class Article extends Model
 {
     protected $fillable = ["title", "body"];
     
+    protected $attributes = [
+        'featured' => false
+    ];
+    
+    public static function fromForm(array $attributes)
+    {        
+        $article = self::create([
+            "title" => $attributes["title"],
+            "body" => $attributes["body"],
+            "featured" => false
+        ]);
+        
+        if($attributes['featured'] === true) {
+            $article->markAsFeatured();
+        }
+        
+        if(isset($attributes["category_id"])) {
+            $article->setCategory($attributes["category_id"]);
+        }
+        
+        return $article;
+    }
+    
     public static function withSubResources($id)
     {
         return self::with('category')->findOrFail($id);
@@ -17,6 +40,12 @@ class Article extends Model
     public function category()
     {
         return $this->belongsTo('App\Category');
+    }
+    
+    public function markAsFeatured()
+    {
+        $this->featured = true;
+        $this->save();
     }
     
     public function setCategory($categoryId)
