@@ -32,14 +32,13 @@ Route::group(['middleware' => ['web']], function () {
 
 Route::group(['prefix' => 'api'], function(){
     Route::get('categories/newestArticles', 'CategoriesNewestArticlesController@index');
-    
-    Route::resource('articles', 'ArticlesController', ['only' => [
-        'store', 'show', 'index'
-    ]]);
 
     Route::resource('categories', 'CategoriesController', ['only' => [
         'store', 'show'
     ]]);
+    
+    Route::PUT('articles/{id}/feature', 'FeaturedArticlesController@feature');
+    Route::DELETE('articles/{id}/feature', 'FeaturedArticlesController@unfeature');
 });
 
 Route::post('/api/articles', 'ArticlesController@store');
