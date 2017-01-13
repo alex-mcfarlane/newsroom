@@ -38,6 +38,7 @@ Route::group(['prefix' => 'api'], function(){
     ]]);
     
     Route::PUT('articles/{id}/feature', 'FeaturedArticlesController@feature');
+    Route::DELETE('articles/{id}/feature', 'FeaturedArticlesController@unfeature');
 });
 
 Route::post('/api/articles', 'ArticlesController@store');

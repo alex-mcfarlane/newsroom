@@ -8,8 +8,8 @@ namespace App\Newsroom\Exceptions;
  */
 class ArticleException extends BaseException
 {
-    public function __construct($errors)
+    public function __construct($errors, $httpStatusCode = 400)
     {
-        parent::__construct("Article exception", $errors);
+        parent::__construct("Article exception", $errors, $httpStatusCode);
     }
 }

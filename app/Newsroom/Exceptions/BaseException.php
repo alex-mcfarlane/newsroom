@@ -10,10 +10,12 @@ use Exception;
 class BaseException extends Exception{
     
     protected $errors;
+    protected $httpStatusCode;
 
-	public function __construct($message, $errors, $code = 0, Exception $previous = null)
+	public function __construct($message, $errors, $httpStatusCode = 400, $code = 0, Exception $previous = null)
 	{
 		$this->errors =  $errors;
+        $this->httpStatusCode = $httpStatusCode;
 		parent::__construct($message, $code, $previous);
 	}
 
@@ -21,4 +23,9 @@ class BaseException extends Exception{
 	{
 		return $this->errors;
 	}
+    
+    public function getHttpStatusCode()
+    {
+        return $this->httpStatusCode;
+    }
 }

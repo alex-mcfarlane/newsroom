@@ -5,20 +5,34 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Http\Requests;
 use App\Article;
+use App\Newsroom\Articles\ArticleFeaturer;
 
 class FeaturedArticlesController extends Controller
 {
-    public function feature($id)
+    protected $articleFeaturer;
+    
+    public function __construct(ArticleFeaturer $articleFeaturer)
     {
-        if(! $article = Article::find($id)) {
-            return response()->json('Article not found', 404);
-        }
-        
+        $this->articleFeaturer = $articleFeaturer;
+    }
+    
+    public function feature($id)
+    {   
         try{
-            $article->markAsFeatured();
+            $this->articleFeaturer->feature($id, true);
             return response()->json(null, 204);
-        } catch (Exception $ex) {
-            return response()->json('Article could not be updated');
+        } catch (\App\Newsroom\Exceptions\ArticleException $ex) {
+            return response()->json($ex->getErrors(), $ex->getHttpStatusCode());
+        }
+    }
+    
+    public function unfeature($id)
+    {
+        try{
+            $this->articleFeaturer->feature($id, false);
+            return response()->json(null, 204);
+        } catch (\App\Newsroom\Exceptions\ArticleException $ex) {
+            return response()->json($ex->getErrors(), $ex->getHttpStatusCode());
         }
     }
 }

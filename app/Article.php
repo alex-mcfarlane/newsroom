@@ -48,6 +48,18 @@ class Article extends Model
         }
     }
     
+    public function setCategory($categoryId)
+    {
+        //associate article with category
+        if(! $category = Category::find($categoryId)) {
+            throw new CategoryNotFoundException;
+        }
+        
+        $this->category()->associate($category);
+        
+        $this->save();
+    }
+    
     private function markAsFeatured()
     {
         //if another article(s) is featured, we need to unfeature them
@@ -59,21 +71,9 @@ class Article extends Model
         $this->save();
     }
     
-    public function unfeature()
+    private function unfeature()
     {
         $this->featured = false;
-        $this->save();
-    }
-    
-    public function setCategory($categoryId)
-    {
-        //associate article with category
-        if(! $category = Category::find($categoryId)) {
-            throw new CategoryNotFoundException;
-        }
-        
-        $this->category()->associate($category);
-        
         $this->save();
     }
     

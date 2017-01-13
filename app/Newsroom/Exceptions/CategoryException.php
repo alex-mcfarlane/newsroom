@@ -10,8 +10,8 @@ namespace App\Newsroom\Exceptions;
 
 class CategoryException extends BaseException
 {
-	public function __construct($errors)
+	public function __construct($errors, $httpStatusCode = 400)
 	{
-		parent::__construct('Category exception', $errors);
+		parent::__construct('Category exception', $errors, $httpStatusCode);
 	}
 }

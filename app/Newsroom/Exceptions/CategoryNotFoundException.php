@@ -11,6 +11,6 @@ namespace App\Newsroom\Exceptions;
 class CategoryNotFoundException extends BaseException{
     public function __construct()
     {
-        parent::__construct("Category not found", ["Unable to retreive category"]);
+        parent::__construct("Category not found", ["Unable to retreive category"], 404);
     }
 }
