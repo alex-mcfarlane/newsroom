@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use App\Http\Requests;
 use App\Article;
@@ -14,6 +15,7 @@ class ArticlesController extends Controller
 {
     public function __construct(ArticleCreator $articleCreator)
     {
+        $this->middleware('jwt.auth', ['except' => ['index']]);
         $this->articleCreator = $articleCreator;
     }
     
