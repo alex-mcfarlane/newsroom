@@ -15,6 +15,6 @@ class Category extends Model
     
     public function newestArticlesQuery()
     {
-        return $this->articles()->orderBy('created_at', 'desc');
+        return $this->articles()->where('featured', false)->orderBy('created_at', 'desc');
     }
 }

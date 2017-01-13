@@ -34,6 +34,11 @@ class Article extends Model
         return self::with('category')->findOrFail($id);
     }
     
+    public static function featured()
+    {
+        return self::where('featured', true)->first();
+    }
+    
     public function category()
     {
         return $this->belongsTo('App\Category');

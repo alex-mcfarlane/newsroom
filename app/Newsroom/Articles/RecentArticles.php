@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Newsroom\Categories;
+namespace App\Newsroom\Articles;
 
 /**
  * Description of RecentArticles
