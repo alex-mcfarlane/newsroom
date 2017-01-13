@@ -5,6 +5,7 @@ use Illuminate\Http\Request;
 use App\Newsroom\Users\UserCreator;
 use App\Newsroom\Exceptions\UserException;
 use App\Http\Controllers\Controller;
+use JWTAuth;
 /**
  * API endpoints for users resource
  *
@@ -21,7 +22,9 @@ class UsersAPIController extends Controller{
     public function store(Request $request)
     {
         try{
-            $token = $this->userCreator->register($request->only('name', 'email', 'password', 'password_confirmation'));
+            $user = $this->userCreator->register($request->only('name', 'email', 'password', 'password_confirmation'));
+            $token = JWTAuth::fromUser($user);
+            
             return response()->json(compact('token'));
         } catch(UserException $ex) {
             return response()->json($ex->getErrors(), $ex->getHttpStatusCode());

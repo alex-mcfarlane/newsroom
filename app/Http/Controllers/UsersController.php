@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Http\Requests;
 use App\Newsroom\Users\UserCreator;
 use App\Newsroom\Exceptions\UserException;
+use Auth;
 
 class UsersController extends Controller
 {
@@ -18,14 +19,15 @@ class UsersController extends Controller
     
     public function create()
     {
-        return view('users.create');
+        return view('auth.register');
     }
     
     public function store(Request $request)
     {
         try{
-            $token = $this->userCreator->register($request->only('name', 'email', 'password', 'password_confirmation'));
-            return response()->json(compact('token'));
+            $user = $this->userCreator->register($request->only('name', 'email', 'password', 'password_confirmation'));
+            Auth::login($user);
+            return redirect()->action('HomeController@index');
         } catch(UserException $ex) {
             return redirect()->back()->withErrors($ex->getErrors())->withInput();
         }

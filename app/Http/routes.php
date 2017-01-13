@@ -23,10 +23,10 @@ Route::post('/api/articles', 'ArticlesController@store');
 /*
  * Web Routes
  */
-Route::get('/', 'HomeController@index');
+Route::group(['middleware' => ['web']], function() {
+    Route::get('/', 'HomeController@index');
 
-Route::get('/register', 'UsersController@create');
+    Route::get('/register', 'UsersController@create');
 
-Route::post('/users', 'UsersController@store');
-
-//Route::auth();
+    Route::post('/users', 'UsersController@store');
+});

@@ -4,7 +4,6 @@ namespace App\Newsroom\Users;
 use App\Newsroom\Validators\UserValidator;
 use App\Newsroom\Exceptions\UserException;
 use App\User;
-use JWTAuth;
 
 /**
  * Description of UserCreator
@@ -29,6 +28,6 @@ class UserCreator {
         
         $user = User::create($input);
         
-        return JWTAuth::fromUser($user); //return token
+        return $user;
     }
 }
