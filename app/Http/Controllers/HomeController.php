@@ -4,9 +4,10 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Http\Requests;
+use App\Article;
 use App\Newsroom\Articles\ArticleRetrieverService;
 
-class CategoriesNewestArticlesController extends Controller
+class HomeController extends Controller
 {
     protected $articleRetrieverService;
     
@@ -15,10 +16,12 @@ class CategoriesNewestArticlesController extends Controller
         $this->articleRetrieverService = $retrieverService;
     }
     
-    public function index(Request $request)
+    public function index()
     {
-        $articles = $this->articleRetrieverService->retrieveArticlesForCategories();
-
-    	return response()->json($articles);
+        $featuredArticle = Article::where('featured', true)->first();
+        
+        $newestArticles = $this->articleRetrieverService->retrieveArticlesForCategories();
+                
+        return view('home', compact($featuredArticle, $newestArticles));
     }
 }

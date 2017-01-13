@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Newsroom\Categories;
+namespace App\Newsroom\Articles;
 
 use App\Category;
 

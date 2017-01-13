@@ -30,6 +30,9 @@ Route::group(['middleware' => ['web']], function () {
     //
 });
 
+/*
+ * API routes
+ */
 Route::group(['prefix' => 'api'], function(){
     Route::get('categories/newestArticles', 'CategoriesNewestArticlesController@index');
 
@@ -42,3 +45,9 @@ Route::group(['prefix' => 'api'], function(){
 });
 
 Route::post('/api/articles', 'ArticlesController@store');
+
+/*
+ * Web Routes
+ */
+Route::get('/', 'HomeController@index');
+
