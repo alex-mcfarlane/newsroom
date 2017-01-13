@@ -17,8 +17,8 @@ class CategoriesNewestArticlesController extends Controller
     
     public function index(Request $request)
     {
-        $articles = $this->articleRetrieverService->retrieveArticlesForCategories();
-
+        $articles = $this->articleRetrieverService->retrieveArticlesForCategories($request->input('limit'));
+        
     	return response()->json($articles);
     }
 }

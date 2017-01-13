@@ -11,22 +11,22 @@ use App\Newsroom\Articles\ArticleRetieverFactory;
  */
 class ArticleRetrieverService {
     
-    public function retrieveArticlesForCategories()
+    public function retrieveArticlesForCategories($limit = null)
     {
         $categories = Category::all();
         $newestArticlesPerCategory = []; //hashmap that will hold categories and their articles
         
         foreach($categories as $category)
         {
-            $retriever = ArticleRetrieverFactory::create($category, $request->input('limit'));
+            $retriever = ArticleRetrieverFactory::create($category, $limit);
             $result = $retriever->get();
-            
+
             if($result)
             {
                 $newestArticlesPerCategory[$category->title] = $result;
             }
         }
 
-    	$newestArticlesPerCategory;
+    	return $newestArticlesPerCategory;
     }
 }

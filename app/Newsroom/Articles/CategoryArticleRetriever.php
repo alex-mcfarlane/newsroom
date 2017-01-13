@@ -34,7 +34,7 @@ abstract class CategoryArticleRetriever
     {
         $output = $this->model->toArray();
         $output["articles"] = [];
-        $output["articles"][] = $collection;
+        $output["articles"] = $collection;
         
         return $output;
     }

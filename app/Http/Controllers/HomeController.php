@@ -21,7 +21,7 @@ class HomeController extends Controller
         $featuredArticle = Article::where('featured', true)->first();
         
         $newestArticles = $this->articleRetrieverService->retrieveArticlesForCategories();
-                
-        return view('home', compact($featuredArticle, $newestArticles));
+
+        return view('home', compact('featuredArticle', 'newestArticles'));
     }
 }
