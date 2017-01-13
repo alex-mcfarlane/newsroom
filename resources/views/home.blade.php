@@ -15,14 +15,22 @@
             </section>
             
             <section id="recent" class="col-md-4 col-sm-12">
-                <h3>Newest in...</h3>
+                <h3>Newest Articles</h3>
                 
                 @foreach($newestArticles as $categoryTitle => $category)
-                    <h4>{{$categoryTitle}}</h4>
-                    
                     <article>
-                        <h3>{{$category['articles']->title}}</h3>
+                        <h4>{{$category['articles']->title}}</h4>
                         <p>{{$category['articles']->body}}</p>
+                        
+                        <div class="meta-info">
+                            <time>{{date('F d, Y', strtotime($category['articles']->created_at))}}</time>
+                            in
+                            <a href=''>
+                                {{$categoryTitle}}
+                            </a>
+                        </div>
+                        
+                        <h5></h5>
                     </article>
                 @endforeach
                 

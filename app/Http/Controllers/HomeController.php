@@ -18,7 +18,7 @@ class HomeController extends Controller
     
     public function index()
     {
-        $featuredArticle = Article::where('featured', true)->first();
+        $featuredArticle = Article::featured();
         
         $newestArticles = $this->articleRetrieverService->retrieveArticlesForCategories();
 
