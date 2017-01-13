@@ -10,8 +10,12 @@ Route::group(['prefix' => 'api'], function(){
         'store', 'show'
     ]]);
     
-    Route::PUT('articles/{id}/feature', 'FeaturedArticlesController@feature');
-    Route::DELETE('articles/{id}/feature', 'FeaturedArticlesController@unfeature');
+    Route::put('articles/{id}/feature', 'FeaturedArticlesController@feature');
+    Route::delete('articles/{id}/feature', 'FeaturedArticlesController@unfeature');
+    
+    Route::resource('users', 'API\UsersAPIController', ['only' =>
+        'store'
+    ]);
 });
 
 Route::post('/api/articles', 'ArticlesController@store');
@@ -21,5 +25,8 @@ Route::post('/api/articles', 'ArticlesController@store');
  */
 Route::get('/', 'HomeController@index');
 
+Route::get('/register', 'UsersController@create');
+
+Route::post('/users', 'UsersController@store');
 
 //Route::auth();
