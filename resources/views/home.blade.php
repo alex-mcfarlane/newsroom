@@ -8,10 +8,20 @@
             
             <section id="featured" class="col-md-8 col-sm-12">
                 @if($featuredArticle)
-                <article>
-                    <h2>{{$featuredArticle->title}}</h2>
-                    <h4>{{$featuredArticle->category->title}}</h4>
-                    <p>{{$featuredArticle->body}}</p>
+                <article class="featured-article">
+                    <img src="http://placehold.it/1200x800" class="img-responsive" alt="Featured Article alt"/>
+
+                    <div class="article-info">
+                        <h4 class="article-tag">{{$featuredArticle->category->title}}</h4>
+
+                        <div class="article-heading">
+                            <h2>{{$featuredArticle->title}}</h2>
+                            <time>{{date('F d, Y', strtotime($featuredArticle->created_at))}}</time>
+                        </div>
+
+                        <p>{{$featuredArticle->body}}</p>
+                    </div>
+
                 </article>
                 @endif
             </section>
@@ -20,20 +30,22 @@
                 <h3>Newest Articles</h3>
                 
                 @foreach($newestArticles as $categoryTitle => $category)
-                    <article>
-                        <h4>{{$category['articles']->title}}</h4>
-                        <p>{{$category['articles']->body}}</p>
-                        
-                        <div class="meta-info">
-                            <time>{{date('F d, Y', strtotime($category['articles']->created_at))}}</time>
-                            in
-                            <a href=''>
-                                {{$categoryTitle}}
-                            </a>
-                        </div>
-                        
-                        <h5></h5>
-                    </article>
+                    @if($category['articles']->count() > 0)
+                        <article>
+
+                            <div class="article-list-item-info">
+                                <h4 class="article-tag">{{$categoryTitle}}</h4>
+
+                                <div class="article-heading">
+                                    <h3>{{$category['articles']->title}}</h3>
+                                    <time>{{date('F d, Y', strtotime($category['articles']->created_at))}}</time>
+                                </div>
+
+                                <p>{{$category['articles']->body}}</p>
+                            </div>
+
+                        </article>
+                    @endif
                 @endforeach
                 
             </section>
