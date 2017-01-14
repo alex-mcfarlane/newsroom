@@ -30,20 +30,22 @@
                 <h3>Newest Articles</h3>
                 
                 @foreach($newestArticles as $categoryTitle => $category)
-                    <article>
+                    @if($category['articles']->count() > 0)
+                        <article>
 
-                        <div class="article-list-item-info">
-                            <h4 class="article-tag">{{$categoryTitle}}</h4>
+                            <div class="article-list-item-info">
+                                <h4 class="article-tag">{{$categoryTitle}}</h4>
 
-                            <div class="article-heading">
-                                <h3>{{$category['articles']->title}}</h3>
-                                <time>{{date('F d, Y', strtotime($category['articles']->created_at))}}</time>
+                                <div class="article-heading">
+                                    <h3>{{$category['articles']->title}}</h3>
+                                    <time>{{date('F d, Y', strtotime($category['articles']->created_at))}}</time>
+                                </div>
+
+                                <p>{{$category['articles']->body}}</p>
                             </div>
 
-                            <p>{{$category['articles']->body}}</p>
-                        </div>
-
-                    </article>
+                        </article>
+                    @endif
                 @endforeach
                 
             </section>
