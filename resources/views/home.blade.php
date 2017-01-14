@@ -7,11 +7,13 @@
         <div class="row">
             
             <section id="featured" class="col-md-8 col-sm-12">
+                @if($featuredArticle)
                 <article>
                     <h2>{{$featuredArticle->title}}</h2>
                     <h4>{{$featuredArticle->category->title}}</h4>
                     <p>{{$featuredArticle->body}}</p>
                 </article>
+                @endif
             </section>
             
             <section id="recent" class="col-md-4 col-sm-12">
