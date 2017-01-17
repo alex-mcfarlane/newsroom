@@ -4,6 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use App\Newsroom\Exceptions\CategoryNotFoundException;
+use App\Image;
 
 class Article extends Model
 {
@@ -43,6 +44,11 @@ class Article extends Model
     {
         return $this->belongsTo('App\Category');
     }
+
+    public function image()
+    {
+        return $this->hasOne('App\Image');
+    }
     
     public function setFeatured($featured)
     {
@@ -63,6 +69,11 @@ class Article extends Model
         $this->category()->associate($category);
         
         $this->save();
+    }
+
+    public function addImage(Image $image)
+    {
+        $this->image()->save($image);
     }
     
     private function markAsFeatured()

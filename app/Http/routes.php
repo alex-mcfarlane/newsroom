@@ -16,6 +16,8 @@ Route::group(['prefix' => 'api'], function(){
     Route::resource('users', 'API\UsersAPIController', ['only' =>
         'store'
     ]);
+
+    Route::post('articles/{id}/images', 'ArticlesController@addImage');
 });
 
 Route::post('/api/articles', 'ArticlesController@store');
