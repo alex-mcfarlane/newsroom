@@ -30,6 +30,7 @@ Route::group(['middleware' => ['web']], function() {
     Route::get('/', 'HomeController@index');
 
     Route::get('/register', 'UsersController@create');
-
     Route::post('/users', 'UsersController@store');
+    
+    Route::auth();
 });

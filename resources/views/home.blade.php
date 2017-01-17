@@ -12,6 +12,15 @@
                     <img src="{{$featuredArticle->image->path}}" class="img-responsive" alt="Featured Article alt"/>
 
                     <div class="article-info">
+                        @if(Auth::check())
+                            <button type="button" class="btn btn-default btn-lg">
+                                <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> New Feature Article
+                            </button>
+                        
+                            <button type="button" class="btn btn-default btn-lg">
+                                <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>Change Feature Article
+                            </button>
+                        @endif
                         <h4 class="article-tag">{{$featuredArticle->category->title}}</h4>
 
                         <div class="article-heading">
@@ -19,7 +28,7 @@
                             <time>{{date('F d, Y', strtotime($featuredArticle->created_at))}}</time>
                         </div>
 
-                        <p>{{$featuredArticle->body}}</p>
+                        <p>{{substr($featuredArticle->body, 0, 150)." ..."}}</p>
                     </div>
 
                 </article>
