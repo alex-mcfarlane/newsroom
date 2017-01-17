@@ -58,6 +58,15 @@ class Article extends Model
         return $this->hasOne('App\Image');
     }
     
+    public function getImagePath()
+    {
+        if(is_null($this->relations['image'])) {
+            $image = Image::defaultImage();
+            return $image->path;
+        }
+        return $this->image()->path;
+    }
+    
     public function setFeatured($featured)
     {
         if($featured === true) {

@@ -1,8 +1,11 @@
 // @import "node_modules/bootstrap-sass/assets/stylesheets/bootstrap";
-$border-color: #d7d7d7;
+$border-color: #95a5a6;
+$underline-color: #3498db;
 
 body{
+    font-family:'Open Sans', sans-serif;
 	font-size: 16px;
+    background:#f4f4f4;
 }
 
 h1, h2, h3, h4, h5, h6, p{
@@ -20,7 +23,7 @@ h3{
 	font-size: 1.5em;
 	font-weight:600;
 	line-height:1.2;
-	margin-bottom: 7px;
+	margin-bottom: 10px;
 }
 
 h4{
@@ -36,6 +39,7 @@ h5{
 
 p{
 	font-size:1em;
+    line-height: 1.5;
 	margin-bottom: 10px;
 }
 
@@ -45,10 +49,13 @@ time{
 
 .featured-article{
 	position:relative;
-
+    max-height:450px;
+    overflow-y:hidden;
+    
 	.article-info{
-		background-color: rgba(255,255,255,.9);
-		border: 1px solid $border-color;
+		background-color: rgba(255,255,255,.7);
+		border-left: 1px solid $border-color;
+        border-bottom: 1px solid $border-color;
 	    position: absolute;
 	    top: 0;
 	    right: 0;
@@ -65,24 +72,38 @@ time{
 	font-size: 1em;
 	letter-spacing:2px;
 	margin-bottom:10px;
+    color:$border-color;
 }
 
 .article-heading{
 	margin-bottom:1.5em;
 }
 
-.article-list-item-info{
-	.article-heading{
-		margin-bottom:1em;
-	}
-	p{
-		font-size:.667em;
-	}
+.article-list-item{
+    background: #fff;
+    
+    img{
+        border-bottom: 10px solid $underline-color;
+    }
+    
+    .article-list-item-info{
+        padding: 1em;
+        
+        .article-heading{
+            margin-bottom:1em;
+            h3{
+                margin-bottom: .444rem;
+            }
+        }
+        p{
+            font-size:14px;
+        }
+    }   
 }
 
 #recent{
-	> h3{
-		margin-bottom:1em;
+	> h2{
+		margin-bottom:16px;
 	}
 	article{
 		margin-bottom:1.5em;

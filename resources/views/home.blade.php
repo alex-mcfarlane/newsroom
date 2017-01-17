@@ -6,7 +6,7 @@
     <div id="page-header">
         <div class="row">
             
-            <section id="featured" class="col-md-8 col-sm-12">
+            <section id="featured" class="col-md-9 col-sm-12">
                 @if($featuredArticle)
                 <article class="featured-article">
                     <img src="{{$featuredArticle->image->path}}" class="img-responsive" alt="Featured Article alt"/>
@@ -26,13 +26,14 @@
                 @endif
             </section>
             
-            <section id="recent" class="col-md-4 col-sm-12">
-                <h3>Newest Articles</h3>
+            <section id="recent" class="col-md-3 col-sm-12">
+                <h2>Newest Articles</h2>
                 
                 @foreach($newestArticles as $categoryTitle => $category)
                     @if($category['articles']->count() > 0)
-                        <article>
-
+                        <article class="article-list-item">
+                            <img src="{{$category['articles']->getImagePath()}}" class="img-responsive" alt="Article image alt"/>
+                            
                             <div class="article-list-item-info">
                                 <h4 class="article-tag">{{$categoryTitle}}</h4>
 
@@ -41,7 +42,6 @@
                                     <time>{{date('F d, Y', strtotime($category['articles']->created_at))}}</time>
                                 </div>
 
-                                <p>{{$category['articles']->body}}</p>
                             </div>
 
                         </article>
