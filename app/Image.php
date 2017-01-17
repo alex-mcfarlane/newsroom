@@ -22,4 +22,12 @@ class Image extends Model
 
 	    return $image;
     }
+
+    public static function defaultImage()
+    {
+    	$image = new static;
+    	$image->path = $image->baseDir. '/default.jpg';
+
+    	return $image;
+    }
 }

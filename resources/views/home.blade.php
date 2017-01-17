@@ -9,7 +9,7 @@
             <section id="featured" class="col-md-8 col-sm-12">
                 @if($featuredArticle)
                 <article class="featured-article">
-                    <img src="http://placehold.it/1200x800" class="img-responsive" alt="Featured Article alt"/>
+                    <img src="{{$featuredArticle->image->path}}" class="img-responsive" alt="Featured Article alt"/>
 
                     <div class="article-info">
                         <h4 class="article-tag">{{$featuredArticle->category->title}}</h4>

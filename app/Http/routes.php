@@ -6,10 +6,7 @@
 Route::group(['prefix' => 'api'], function(){
     Route::get('categories/newestArticles', 'CategoriesNewestArticlesController@index');
 
-    Route::resource('categories', 'CategoriesController', ['only' => [
-        'store', 'show'
-    ]]);
-    
+    Route::post('articles/{id}/images', 'ArticlesController@addImage');
     Route::put('articles/{id}/feature', 'FeaturedArticlesController@feature');
     Route::delete('articles/{id}/feature', 'FeaturedArticlesController@unfeature');
     
@@ -17,10 +14,14 @@ Route::group(['prefix' => 'api'], function(){
         'store'
     ]);
 
-    Route::post('articles/{id}/images', 'ArticlesController@addImage');
-});
+    Route::resource('articles', 'ArticlesController', ['only' =>
+        ['store', 'index', 'show']
+    ]);
 
-Route::post('/api/articles', 'ArticlesController@store');
+    Route::resource('categories', 'CategoriesController', ['only' => [
+        'store', 'show'
+    ]]);
+});
 
 /*
  * Web Routes

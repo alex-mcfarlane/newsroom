@@ -32,12 +32,20 @@ class Article extends Model
     
     public static function withSubResources($id)
     {
-        return self::with('category')->findOrFail($id);
+        $article = self::with(['category', 'image'])->findOrFail($id);
+        
+        $article->setImage();
+
+        return $article;
     }
     
     public static function featured()
     {
-        return self::where('featured', true)->first();
+        $article = self::where('featured', true)->with('image')->first();
+
+        $article->setImage();
+
+        return $article;
     }
     
     public function category()
@@ -69,6 +77,13 @@ class Article extends Model
         $this->category()->associate($category);
         
         $this->save();
+    }
+
+    public function setImage()
+    {
+        if($this->relations['image'] == null) {
+            $this->relations['image'] = Image::defaultImage();
+        }
     }
 
     public function addImage(Image $image)
