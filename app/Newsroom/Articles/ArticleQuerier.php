@@ -13,7 +13,7 @@ use App\Article;
  */
 class ArticleQuerier extends Querier{
 
-    protected $validFilterableFields = ['title', 'body', 'start_date', 'end_date'];
+    protected $validFilterableFields = ['title', 'body', 'start_date', 'end_date', 'featured'];
 
     public function __construct($filters)
     {
