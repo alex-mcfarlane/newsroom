@@ -3,15 +3,15 @@
 namespace App\Newsroom\Exceptions;
 
 /**
- * CategoryException
+ * ImageException
  *
  * @author Alex McFarlane
  */
 
-class CategoryException extends BaseException
+class ImageException extends BaseException
 {
 	public function __construct($errors, $httpStatusCode = 400)
 	{
-		parent::__construct('Category exception', $errors, $httpStatusCode);
+		parent::__construct('Image exception', $errors, $httpStatusCode);
 	}
 }

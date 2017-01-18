@@ -13,12 +13,30 @@ use App\Article;
  */
 class ArticleQuerier extends Querier{
 
-    protected $validFilterableFields = ['title', 'body', 'start_date', 'end_date'];
-
+    protected $validFilterableFields = ['title', 'body', 'start_date', 'end_date', 'featured'];
+    protected $filters;
+    protected $model;
+    protected $query;
+    
     public function __construct($filters)
     {
         $this->filters = $filters;
         $this->model = new Article();
         $this->query = Article::query();
+    }
+    
+    protected function getFilters()
+    {
+        return $this->filters;
+    }
+    
+    protected function getModel()
+    {
+        return $this->model;
+    }
+    
+    protected function getValidFilterableFields()
+    {
+        return $this->validFilterableFields;
     }
 }

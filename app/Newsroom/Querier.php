@@ -11,23 +11,33 @@ use App\Newsroom\Interfaces\IQuerier;
  * @author Alex McFarlane
  */
 abstract class Querier implements IQuerier{
-
-    protected $validFilterableFields = [];
-    protected $filters = [];
-    protected $model;
+    
     protected $query;
     
+    abstract protected function getFilters();
+    abstract protected function getModel();
+    abstract protected function getValidFilterableFields();
+    
     public function search()
-    {        
-        foreach($this->filters as $field => $value)
+    {
+        $filters = $this->getFilters();
+        $model = $this->getModel();
+        $validFields = $this->getValidFilterableFields();
+        
+        return $this->applyFilters($filters, $model, $validFields);
+    }
+    
+    protected function applyFilters($filters, $model, $validFields)
+    {
+        foreach($filters as $field => $value)
         {
-            if(!in_array($field, $this->validFilterableFields)) {
+            if(!in_array($field, $validFields)) {
                 continue;
             }
             
             $method = 'filterBy'.camel_case($field);
-            
-            if(method_exists($this->model, 'scope'.$method)) {
+
+            if(method_exists($model, 'scope'.$method)) {
                 $this->query->$method($value);
             }
             else{
@@ -37,5 +47,4 @@ abstract class Querier implements IQuerier{
         
         return $this->query;
     }
-
 }

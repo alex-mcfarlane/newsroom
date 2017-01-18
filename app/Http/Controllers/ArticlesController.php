@@ -2,19 +2,27 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use App\Http\Requests;
 use App\Article;
 use App\Newsroom\Articles\ArticleCreator;
 use App\Newsroom\Articles\ArticleQuerier;
+use App\Newsroom\Images\ImageCreator;
 use App\Newsroom\Exceptions\ArticleException;
+use App\Newsroom\Exceptions\ImageException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class ArticlesController extends Controller
 {
-    public function __construct(ArticleCreator $articleCreator)
+    protected $articleCreator;
+    protected $imageCreator;
+
+    public function __construct(ArticleCreator $articleCreator, ImageCreator $imageCreator)
     {
+        //$this->middleware('jwt.auth', ['except' => ['index']]);
         $this->articleCreator = $articleCreator;
+        $this->imageCreator = $imageCreator;
     }
     
     public function index(Request $request)
@@ -48,6 +56,16 @@ class ArticlesController extends Controller
             return response()->json(Article::withSubResources($id));
         } catch(ModelNotFoundException $e) {
             return response()->json($e->getMessage());
+        }
+    }
+
+    public function addImage(Request $request, $articleId)
+    {
+        try{
+            $image = $this->imageCreator->make($articleId, $request->file('image'));
+            return response()->json($image);
+        } catch(ImageException $e) {
+            return response()->json($e->geterrors());
         }
     }
 }

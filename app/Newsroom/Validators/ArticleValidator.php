@@ -14,6 +14,7 @@ class ArticleValidator extends Validator{
     protected static $rules = [
         "title" => "required",
         "body" => "required",
-        "category_id" => "numeric"
+        "category_id" => "numeric",
+        "featured" => "boolean"
     ];
 }

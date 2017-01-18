@@ -1,9 +1,9 @@
 <?php
-namespace App\Newsroom\Factories;
+namespace App\Newsroom\Articles;
 
 use App\Category;
-use App\Newsroom\Categories\RecentArticle;
-use App\Newsroom\Categories\RecentArticles;
+use App\Newsroom\Articles\RecentArticle;
+use App\Newsroom\Articles\RecentArticles;
 
 /**
  * ArticleRetrieverFactory
