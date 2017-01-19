@@ -17,6 +17,7 @@ abstract class Querier implements IQuerier{
     abstract protected function getFilters();
     abstract protected function getModel();
     abstract protected function getValidFilterableFields();
+    abstract protected function addToQuery();
     
     public function search()
     {
@@ -24,7 +25,10 @@ abstract class Querier implements IQuerier{
         $model = $this->getModel();
         $validFields = $this->getValidFilterableFields();
         
-        return $this->applyFilters($filters, $model, $validFields);
+        $this->applyFilters($filters, $model, $validFields);
+        $this->addToQuery();
+
+        return $this->query->get();
     }
     
     protected function applyFilters($filters, $model, $validFields)
@@ -44,7 +48,5 @@ abstract class Querier implements IQuerier{
                 $this->query->where($field, $value);
             }
         }
-        
-        return $this->query;
     }
 }

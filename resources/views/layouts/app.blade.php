@@ -76,16 +76,13 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.3/jquery.min.js" integrity="sha384-I6F5OKECLVtK/BL+8iSLDEHowSAfUo76ZL9+kGAgTRdiByINKJaqTPH/QVNS1VDb" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
     <script src="https://unpkg.com/vue/dist/vue.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vue-resource/1.0.3/vue-resource.min.js"></script>
     
     <script>
         new Vue({
             el:"#admin-featured-article",
             data: {
-                imagePath: '',
-                title: '',
-                body: '',
-                category: '',
-                createdAt: ''
+                article: {}
             },
             created: function () {
                 this.getFeaturedArticle();
@@ -93,15 +90,10 @@
             methods: {
                 getFeaturedArticle: function() {
                     var self = this;
-                    this.$http.get('/api/articles/featured=1').then(function(response){
-                        console.log(response);
-                        self.imagePath = 'articles/images/default.jpg';
-                        self.title = 'New Test';
-                        self.body = 'Drumstick alcatra tail strip steak turkey cow doner. Sirloin brisket fatback hamburger kielbasa. Rump capicola andouille short ribs, beef ribs pork lorem ipsum blah ...';
-                        self.category = {
-                            title: "PHP"
-                        };
-                        self.createdAt = "January 13, 2017";
+                    this.$http.get('api/articles?featured=1').then(function(response){
+                        self.article = response.body[0];
+                        
+                        self.article.body = self.article.body.substring(0, 150) + " ...";
                     }, function(error){
                         console.log(error);
                     });

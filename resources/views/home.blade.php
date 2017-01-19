@@ -9,17 +9,17 @@
             @if(Auth::check())
                 <section id="featured" class="col-md-9 col-sm-12">
                     <article id="admin-featured-article" class="featured-article">
-                        <img v-bind:src="imagePath" class="img-responsive" alt="Featured Article alt"/>
+                        <img v-bind:src="article.image.path" class="img-responsive" alt="Featured Article alt"/>
 
                         <div class="article-info">
-                            <h4 class="article-tag">@{{category.title}}</h4>
+                            <h4 class="article-tag">@{{article.category.title}}</h4>
 
                             <div class="article-heading">
-                                <h2>@{{title}}</h2>
-                                <time>@{{createdAt}}</time>
+                                <h2>@{{article.title}}</h2>
+                                <time>@{{article.created_at}}</time>
                             </div>
 
-                            <p>@{{body}}</p>
+                            <p>@{{article.body}}</p>
                         </div>
 
                     </article>

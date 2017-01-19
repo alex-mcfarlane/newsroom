@@ -16,7 +16,6 @@ class ArticleQuerier extends Querier{
     protected $validFilterableFields = ['title', 'body', 'start_date', 'end_date', 'featured'];
     protected $filters;
     protected $model;
-    protected $query;
     
     public function __construct($filters)
     {
@@ -38,5 +37,10 @@ class ArticleQuerier extends Querier{
     protected function getValidFilterableFields()
     {
         return $this->validFilterableFields;
+    }
+
+    protected function addToQuery()
+    {
+        $this->query->with(['category','image']);
     }
 }

@@ -29,7 +29,7 @@ class ArticlesController extends Controller
     {
         if(count($request->all()) > 0) {
             $articleQuerier = new ArticleQuerier($request->all());
-            $articles = $articleQuerier->search()->get();
+            $articles = $articleQuerier->search();
         }
         else{
             $articles = Article::all();
