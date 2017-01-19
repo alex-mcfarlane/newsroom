@@ -14,18 +14,26 @@ class Article extends Model
         'featured' => false
     ];
     
-    public static function fromForm(array $attributes)
+    public static function fromForm($title, $body, $isFeatured)
     {        
         $article = self::create([
-            "title" => $attributes["title"],
-            "body" => $attributes["body"],
+            "title" => $title,
+            "body" => $body,
+            "featured" => false
         ]);
         
-        $article->setFeatured($attributes['featured']);
-        
-        if(isset($attributes["category_id"])) {
-            $article->setCategory($attributes["category_id"]);
+        if($isFeatured) {
+            $article->markAsFeatured();
         }
+        
+        return $article;
+    }
+    
+    public static function createCategorizedArticle($title, $body, $isFeatured, $categoryId)
+    {
+        $article = Article::fromForm($title, $body, $isFeatured);
+        
+        $article->setCategory($categoryId);
         
         return $article;
     }
@@ -100,7 +108,7 @@ class Article extends Model
         $this->image()->save($image);
     }
     
-    private function markAsFeatured()
+    public function markAsFeatured()
     {
         //if another article(s) is featured, we need to unfeature them
         foreach(Article::where('featured', true)->get() as $article) {
