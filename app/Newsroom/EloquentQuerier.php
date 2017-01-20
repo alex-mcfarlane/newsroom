@@ -3,35 +3,31 @@
 namespace App\Newsroom;
 
 use App\Newsroom\Interfaces\IQuerier;
-
+use Illuminate\Database\Eloquent\Model;
 /**
  * Abstract Querier Class
  * 
  *
  * @author Alex McFarlane
  */
-abstract class Querier implements IQuerier{
+abstract class EloquentQuerier implements IQuerier{
     
     protected $query;
-    
+
     abstract protected function getFilters();
     abstract protected function getModel();
     abstract protected function getValidFilterableFields();
     abstract protected function addToQuery();
     
     public function search()
-    {
-        $filters = $this->getFilters();
-        $model = $this->getModel();
-        $validFields = $this->getValidFilterableFields();
-        
-        $this->applyFilters($filters, $model, $validFields);
+    {   
+        $this->applyFilters($this->getFilters(), $this->getModel(), $this->getValidFilterableFields());
         $this->addToQuery();
 
         return $this->query->get();
     }
     
-    protected function applyFilters($filters, $model, $validFields)
+    protected function applyFilters(array $filters, Model $model, array $validFields)
     {
         foreach($filters as $field => $value)
         {
