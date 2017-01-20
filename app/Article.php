@@ -4,6 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use App\Newsroom\Exceptions\CategoryNotFoundException;
+use App\Image;
 
 class Article extends Model
 {
@@ -13,35 +14,65 @@ class Article extends Model
         'featured' => false
     ];
     
-    public static function fromForm(array $attributes)
+    public static function fromForm($title, $body, $isFeatured)
     {        
         $article = self::create([
-            "title" => $attributes["title"],
-            "body" => $attributes["body"],
+            "title" => $title,
+            "body" => $body,
+            "featured" => false
         ]);
         
-        $article->setFeatured($attributes['featured']);
-        
-        if(isset($attributes["category_id"])) {
-            $article->setCategory($attributes["category_id"]);
+        if($isFeatured) {
+            $article->markAsFeatured();
         }
+        
+        return $article;
+    }
+    
+    public static function createCategorizedArticle($title, $body, $isFeatured, $categoryId)
+    {
+        $article = Article::fromForm($title, $body, $isFeatured);
+        
+        $article->setCategory($categoryId);
         
         return $article;
     }
     
     public static function withSubResources($id)
     {
-        return self::with('category')->findOrFail($id);
+        $article = self::with(['category', 'image'])->findOrFail($id);
+        
+        $article->setImage();
+
+        return $article;
     }
     
     public static function featured()
     {
-        return self::where('featured', true)->first();
+        $article = self::where('featured', true)->with('image')->first();
+
+        $article->setImage();
+
+        return $article;
     }
     
     public function category()
     {
         return $this->belongsTo('App\Category');
+    }
+
+    public function image()
+    {
+        return $this->hasOne('App\Image');
+    }
+    
+    public function getImagePath()
+    {
+        if(is_null($this->relations['image'])) {
+            $image = Image::defaultImage();
+            return $image->path;
+        }
+        return $this->image()->path;
     }
     
     public function setFeatured($featured)
@@ -64,8 +95,20 @@ class Article extends Model
         
         $this->save();
     }
+
+    public function setImage()
+    {
+        if($this->relations['image'] == null) {
+            $this->relations['image'] = Image::defaultImage();
+        }
+    }
+
+    public function addImage(Image $image)
+    {
+        $this->image()->save($image);
+    }
     
-    private function markAsFeatured()
+    public function markAsFeatured()
     {
         //if another article(s) is featured, we need to unfeature them
         foreach(Article::where('featured', true)->get() as $article) {

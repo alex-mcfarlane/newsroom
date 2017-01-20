@@ -7,8 +7,9 @@ abstract class Validator {
 
     protected $errors;
     
-    public function isValid(array $attributes)
+    public function isValid(array $attributes = null)
     {
+        $attributes ? '': $attributes = [];
         $v = V::make($attributes, static::$rules);
         
         if($v->fails()) {
