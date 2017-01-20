@@ -11,6 +11,6 @@ class RecentArticles extends CategoryArticleRetriever
 {
     public function retrieval()
     {
-        return $this->output($this->query->newestArticles($this->limit));
+        return $this->query->newestArticles($this->limit);
     }
 }

@@ -3,6 +3,7 @@
 namespace App\Newsroom\Articles;
 
 use App\Category;
+use App\Newsroom\Interfaces\IRetrieverOutput;
 
 /**
  * Abstract CategoryArticleRetriever class
@@ -18,10 +19,13 @@ abstract class CategoryArticleRetriever
         $this->model = $category;
         $this->limit = $limit;
     }
+
+    protected abstract function retrieval();
     
-    public function get()
+    public function get(IRetrieverOutput $formatter)
     {
-        return $this->startQuery()->retrieval();
+        $articles = $this->startQuery()->retrieval();
+        return $formatter->output($this->model, $articles);
     }
     
     public function startQuery()
@@ -29,15 +33,4 @@ abstract class CategoryArticleRetriever
         $this->query = $this->model->newestArticlesQuery();
         return $this;
     }
-    
-    protected function output($collection)
-    {
-        $output = $this->model->toArray();
-        $output["articles"] = [];
-        $output["articles"] = $collection;
-        
-        return $output;
-    }
-    
-    protected abstract function retrieval();
 }
