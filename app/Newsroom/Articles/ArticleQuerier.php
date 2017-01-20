@@ -2,6 +2,7 @@
 
 namespace App\Newsroom\Articles;
 
+use Illuminate\Database\Eloquent\Builder;
 use App\Newsroom\EloquentQuerier;
 use App\Article;
 
@@ -12,17 +13,11 @@ use App\Article;
  * @author Alex McFarlane
  */
 class ArticleQuerier extends EloquentQuerier{
-    protected $filters;
-
-    public function __construct(array $filters)
-    {
-        $this->filters = $filters;
-        $this->query = Article::query();
-    }
     
-    protected function getFilters()
+
+    protected function getQuery()
     {
-        return $this->filters;
+        return Article::query();
     }
     
     protected function getModel()
@@ -35,8 +30,8 @@ class ArticleQuerier extends EloquentQuerier{
         return ['title', 'body', 'start_date', 'end_date', 'featured'];
     }
 
-    protected function addToQuery()
+    protected function addToQuery(Builder $query)
     {
-        $this->query->with(['category','image']);
+        return $query->with(['category','image']);
     }
 }

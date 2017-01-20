@@ -4,6 +4,7 @@ namespace App\Newsroom;
 
 use App\Newsroom\Interfaces\IQuerier;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Builder;
 /**
  * Abstract Querier Class
  * 
@@ -11,25 +12,29 @@ use Illuminate\Database\Eloquent\Model;
  * @author Alex McFarlane
  */
 abstract class EloquentQuerier implements IQuerier{
-    
-    protected $query;
+    private $filters;
 
-    abstract protected function getFilters();
     abstract protected function getModel();
     abstract protected function getValidFilterableFields();
-    abstract protected function addToQuery();
+    abstract protected function getQuery();
+    abstract protected function addToQuery(Builder $query);
     
+    public function __construct(array $filters)
+    {
+        $this->filters = $filters;
+    }
+
     public function search()
     {   
-        $this->applyFilters($this->getFilters(), $this->getModel(), $this->getValidFilterableFields());
-        $this->addToQuery();
+        $query = $this->applyFilters($this->getModel(), $this->getValidFilterableFields(), $this->getQuery());
+        $this->addToQuery($query);
 
-        return $this->query->get();
+        return $query->get();
     }
     
-    protected function applyFilters(array $filters, Model $model, array $validFields)
+    protected function applyFilters(Model $model, array $validFields, Builder $query)
     {
-        foreach($filters as $field => $value)
+        foreach($this->filters as $field => $value)
         {
             if(!in_array($field, $validFields)) {
                 continue;
@@ -38,11 +43,13 @@ abstract class EloquentQuerier implements IQuerier{
             $method = 'filterBy'.camel_case($field);
 
             if(method_exists($model, 'scope'.$method)) {
-                $this->query->$method($value);
+                $query->$method($value);
             }
             else{
-                $this->query->where($field, $value);
+                $query->where($field, $value);
             }
         }
+
+        return $query;
     }
 }
