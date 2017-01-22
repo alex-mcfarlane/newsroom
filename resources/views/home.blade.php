@@ -8,7 +8,29 @@
             
             @if(Auth::check())
                 <section id="featured" class="col-md-9 col-sm-12">
-                    <article id="admin-featured-article" class="featured-article">
+
+                    <div class="edit-overlay">
+                        <button type="button" class="btn btn-default btn-sm">
+                            <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> New Feature Article
+                        </button>
+
+                        <button v-on:click="edit_feature = true" type="button" class="btn btn-default btn-sm">
+                            <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>Change Feature Article
+                        </button>
+
+                        <div v-if="edit_feature">
+                            <select v-model="feature_article_id">
+                                <option v-for="article in articles" v-bind:value="article.id">
+                                    @{{ article.title }}
+                                </option>
+                            </select>
+
+                            <button v-on:click="changeFeatureArticle(feature_article_id)" class="btn btn-default btn-sm">Change Feature Article</button>
+                        </div>
+                    </div>
+
+                    <article class="featured-article">
+
                         <img v-bind:src="article.image.path" class="img-responsive" alt="Featured Article alt"/>
 
                         <div class="article-info">
@@ -23,6 +45,7 @@
                         </div>
 
                     </article>
+
                 </section>
             @else
                 <section id="featured" class="col-md-9 col-sm-12">
@@ -31,15 +54,6 @@
                         <img src="{{$featuredArticle->image->path}}" class="img-responsive" alt="Featured Article alt"/>
 
                         <div class="article-info">
-                            @if(Auth::check())
-                                <button type="button" class="btn btn-default btn-lg">
-                                    <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> New Feature Article
-                                </button>
-
-                                <button type="button" class="btn btn-default btn-lg">
-                                    <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>Change Feature Article
-                                </button>
-                            @endif
                             <h4 class="article-tag">{{$featuredArticle->category->title}}</h4>
 
                             <div class="article-heading">
