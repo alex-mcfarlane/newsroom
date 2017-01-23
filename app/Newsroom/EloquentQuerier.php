@@ -3,6 +3,7 @@
 namespace App\Newsroom;
 
 use App\Newsroom\Interfaces\IQuerier;
+use App\Newsroom\Interfaces\IModelFormatter;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
 /**
@@ -24,12 +25,17 @@ abstract class EloquentQuerier implements IQuerier{
         $this->filters = $filters;
     }
 
-    public function search()
+    public function search(IModelFormatter $formatter = null)
     {   
         $query = $this->applyFilters($this->getModel(), $this->getValidFilterableFields(), $this->getQuery());
-        $this->addToQuery($query);
+        
+        $collection = $this->addToQuery($query)->get();
 
-        return $query->get();
+        if($formatter) {
+            $collection = $this->format($collection, $formatter);
+        }
+
+        return $collection;
     }
     
     protected function applyFilters(Model $model, array $validFields, Builder $query)
@@ -51,5 +57,14 @@ abstract class EloquentQuerier implements IQuerier{
         }
 
         return $query;
+    }
+
+    private function format($collection, IModelFormatter $formatter)
+    {
+        foreach($collection as $model) {
+            $model = $formatter->format($model);
+        }
+
+        return $collection;
     }
 }

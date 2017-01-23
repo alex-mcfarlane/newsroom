@@ -8,6 +8,7 @@ use App\Http\Requests;
 use App\Article;
 use App\Newsroom\Articles\ArticleCreator;
 use App\Newsroom\Articles\ArticleQuerier;
+use App\Newsroom\Articles\ArticleFormatter;
 use App\Newsroom\Images\ImageCreator;
 use App\Newsroom\Exceptions\ArticleException;
 use App\Newsroom\Exceptions\ImageException;
@@ -29,7 +30,7 @@ class ArticlesController extends Controller
     {
         if(count($request->all()) > 0) {
             $articleQuerier = new ArticleQuerier($request->all());
-            $articles = $articleQuerier->search();
+            $articles = $articleQuerier->search(new ArticleFormatter);
         }
         else{
             $articles = Article::all();
