@@ -75,7 +75,7 @@
                 @foreach($newestArticles as $categoryTitle => $category)
                     @if($category['articles']->count() > 0)
                         <article class="article-list-item">
-                            <img src="{{$category['articles']->getImagePath()}}" class="img-responsive" alt="Article image alt"/>
+                            <img src="{{$category['articles']->image->path}}" class="img-responsive" alt="Article image alt"/>
                             
                             <div class="article-list-item-info">
                                 <h4 class="article-tag">{{$categoryTitle}}</h4>

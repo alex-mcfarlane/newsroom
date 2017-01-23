@@ -2,6 +2,8 @@
 
 namespace App\Newsroom\Articles;
 
+use App\Newsroom\Interfaces\IModelFormatter;
+
 /**
  * Description of RecentArticle
  *
@@ -9,8 +11,10 @@ namespace App\Newsroom\Articles;
  */
 class RecentArticle extends CategoryArticleRetriever
 {    
-    public function retrieval()
+    public function retrieval(IModelFormatter $formatter)
     {    
-        return $this->query->newestArticle();
+        $article = $this->query->newestArticle();
+
+        return $formatter->format($article);
     }
 }
