@@ -4,6 +4,7 @@ namespace App\Newsroom\Articles;
 
 use App\Category;
 use App\Newsroom\Interfaces\IRetrieverOutput;
+use App\Newsroom\Interfaces\IModelFormatter;
 
 /**
  * Abstract CategoryArticleRetriever class
@@ -12,20 +13,24 @@ use App\Newsroom\Interfaces\IRetrieverOutput;
  */
 abstract class CategoryArticleRetriever
 {
+    protected $model;
+    protected $limit;
     protected $query;
-    
-    public function __construct(Category $category, $limit = 1)
+    private $formatter;
+
+    public function __construct(Category $category, IModelFormatter $formatter, $limit = 1)
     {
         $this->model = $category;
+        $this->formatter = $formatter;
         $this->limit = $limit;
     }
 
-    protected abstract function retrieval();
+    protected abstract function retrieval(IModelFormatter $formatter);
     
-    public function get(IRetrieverOutput $formatter)
+    public function get(IRetrieverOutput $presenter)
     {
-        $articles = $this->startQuery()->retrieval();
-        return $formatter->output($this->model, $articles);
+        $articles = $this->startQuery()->retrieval($this->formatter);
+        return $presenter->output($this->model, $articles);
     }
     
     public function startQuery()

@@ -80,9 +80,21 @@
     
     <script>
         new Vue({
-            el:"#admin-featured-article",
+            el:"#featured",
             data: {
-                article: {}
+                articles: [
+                    {
+                        id: 1,
+                        title: "Test 1",
+                    },
+                    {
+                        id: 2,
+                        title: "Test 2",
+                    },
+                ],
+                article: {},
+                feature_article_id: {},
+                edit_feature: false
             },
             created: function () {
                 this.getFeaturedArticle();
@@ -94,6 +106,14 @@
                         self.article = response.body[0];
                         
                         self.article.body = self.article.body.substring(0, 150) + " ...";
+                    }, function(error){
+                        console.log(error);
+                    });
+                },
+                changeFeatureArticle: function(id) {
+                    var self = this;
+                    this.$http.put('api/articles/'+id+'/feature').then(function(response){
+                        console.log(response);
                     }, function(error){
                         console.log(error);
                     });

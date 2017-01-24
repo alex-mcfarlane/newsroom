@@ -51,6 +51,11 @@ time {
     .featured-article .article-info .article-tag {
       margin-bottom: 24px; }
 
+.edit-overlay {
+  position: absolute;
+  padding: 1em;
+  z-index: 1; }
+
 .article-tag {
   font-size: 1em;
   letter-spacing: 2px;
