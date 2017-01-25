@@ -34,7 +34,7 @@
                         <img v-bind:src="article.image.path" class="img-responsive" alt="Featured Article alt"/>
 
                         <div class="article-info">
-                            <h4 class="article-tag">@{{article.category.title}}</h4>
+                            <h4 v-if="article.category" class="article-tag">@{{article.category.title}}</h4>
 
                             <div class="article-heading">
                                 <h2>@{{article.title}}</h2>
@@ -54,7 +54,9 @@
                         <img src="{{$featuredArticle->image->path}}" class="img-responsive" alt="Featured Article alt"/>
 
                         <div class="article-info">
-                            <h4 class="article-tag">{{$featuredArticle->category->title}}</h4>
+                            @if($featuredArticle->category)
+                                <h4 class="article-tag">{{$featuredArticle->category->title}}</h4>
+                            @endif
 
                             <div class="article-heading">
                                 <h2>{{$featuredArticle->title}}</h2>

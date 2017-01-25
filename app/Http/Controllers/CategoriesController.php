@@ -4,25 +4,13 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Http\Requests;
-use App\Newsroom\Categories\CategoriesCreator;
-use App\Newsroom\Exceptions\CategoryException;
+use App\Category;
 
 class CategoriesController extends Controller
 {
-    public function __construct(CategoriesCreator $categoriesCreator)
+    public function show($id)
     {
-    	$this->categoriesCreator = $categoriesCreator;
-    }
-
-    public function store(Request $request)
-    {
-    	try{
-    		$category = $this->categoriesCreator->make($request->only('title', 'description'));
-    	}
-    	catch(CategoryException $e) {
-    		return response()->json($e->getErrors());
-    	}
-
-    	return response()->json($category);
+        $category = Category::find($id);
+        return view('categories.index', compact('category'));
     }
 }

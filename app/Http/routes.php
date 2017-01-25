@@ -18,7 +18,7 @@ Route::group(['prefix' => 'api'], function(){
         ['store', 'index', 'show']
     ]);
 
-    Route::resource('categories', 'CategoriesController', ['only' => [
+    Route::resource('categories', 'CategoriesAPIController', ['only' => [
         'store', 'show'
     ]]);
 });
@@ -31,6 +31,8 @@ Route::group(['middleware' => ['web']], function() {
 
     Route::get('/register', 'UsersController@create');
     Route::post('/users', 'UsersController@store');
+    
+    Route::get('/categories/{id}', 'CategoriesController@show');
     
     Route::auth();
 });
