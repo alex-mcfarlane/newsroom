@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Newsroom\Articles;
+namespace App\Newsroom\Categories;
 
 use App\Newsroom\Interfaces\IModelFormatter;
 
@@ -9,7 +9,7 @@ use App\Newsroom\Interfaces\IModelFormatter;
  *
  * @author Alex McFarlane
  */
-class RecentArticles extends CategoryArticleRetriever
+class CategoryRecentArticles extends CategoryRecentArticlesRetriever
 {
     public function retrieval(IModelFormatter $formatter)
     {

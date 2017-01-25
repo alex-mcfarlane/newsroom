@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Http\Requests;
 use App\Article;
+use App\Category;
 use App\Newsroom\Articles\ArticleRetrieverService;
 
 class HomeController extends Controller
@@ -19,7 +20,7 @@ class HomeController extends Controller
     public function index()
     {
         $featuredArticle = Article::featured();        
-        $newestArticles = $this->articleRetrieverService->retrieveArticlesForCategories();
+        $newestArticles = $this->articleRetrieverService->retrieveArticlesForCategories(Category::all());
 
         return view('home', compact('featuredArticle', 'newestArticles'));
     }

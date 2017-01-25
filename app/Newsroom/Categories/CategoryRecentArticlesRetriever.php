@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Newsroom\Articles;
+namespace App\Newsroom\Categories;
 
 use App\Category;
 use App\Newsroom\Interfaces\IRetrieverOutput;
@@ -11,7 +11,7 @@ use App\Newsroom\Interfaces\IModelFormatter;
  *
  * @author Alex McFarlane
  */
-abstract class CategoryArticleRetriever
+abstract class CategoryRecentArticlesRetriever
 {
     protected $model;
     protected $limit;

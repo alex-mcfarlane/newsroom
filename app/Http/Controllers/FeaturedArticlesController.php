@@ -19,8 +19,8 @@ class FeaturedArticlesController extends Controller
     public function feature($id)
     {   
         try{
-            $this->articleFeaturer->feature($id, true);
-            return response()->json(null, 204);
+            $article = $this->articleFeaturer->feature($id, true);
+            return response()->json($article, 200);
         } catch (\App\Newsroom\Exceptions\ArticleException $ex) {
             return response()->json($ex->getErrors(), $ex->getHttpStatusCode());
         }
