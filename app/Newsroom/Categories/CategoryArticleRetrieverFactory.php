@@ -1,9 +1,7 @@
 <?php
-namespace App\Newsroom\Articles;
+namespace App\Newsroom\Categories;
 
 use App\Category;
-use App\Newsroom\Articles\RecentArticle;
-use App\Newsroom\Articles\RecentArticles;
 use App\Newsroom\Articles\ArticleFormatter;
 
 /**
@@ -11,15 +9,15 @@ use App\Newsroom\Articles\ArticleFormatter;
  * Creates a concrete implementation of the abstract CategoryArticleRetriever
  * @author Alex McFarlane
  */
-class ArticleRetrieverFactory {
+class CategoryArticleRetrieverFactory {
     public static function create(Category $category, $limit)
     {
         switch(true){
             case $limit <= 1 || $limit == null:
-                return new RecentArticle($category, new ArticleFormatter);
+                return new CategoryRecentArticle($category, new ArticleFormatter);
                 break;
             case $limit > 1:
-                return new RecentArticles($category, new ArticleFormatter, $limit);
+                return new CategoryRecentArticles($category, new ArticleFormatter, $limit);
         }
     }
 }

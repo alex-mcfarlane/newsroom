@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Newsroom\Articles;
+namespace App\Newsroom\Categories;
 
 use App\Newsroom\Interfaces\IRetrieverOutput;
 use Illuminate\Database\Eloquent\Model;
