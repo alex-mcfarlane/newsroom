@@ -82,38 +82,43 @@
         new Vue({
             el:"#featured",
             data: {
-                articles: [
-                    {
-                        id: 1,
-                        title: "Test 1",
-                    },
-                    {
-                        id: 2,
-                        title: "Test 2",
-                    },
-                ],
+                articles: [],
                 article: {},
-                feature_article_id: {},
+                feature_article_id: 1,
                 edit_feature: false
             },
             created: function () {
+                this.getArticles();
                 this.getFeaturedArticle();
             },
             methods: {
+                getArticles: function() {
+                    var self = this;
+
+                    this.$http.get('api/articles').then(function(response){
+                        self.articles = response.body;
+                    }, function(error){
+                        console.log(error);
+                    });
+                },
                 getFeaturedArticle: function() {
                     var self = this;
+                    
                     this.$http.get('api/articles?featured=1').then(function(response){
                         self.article = response.body[0];
-                        
                         self.article.body = self.article.body.substring(0, 150) + " ...";
+
+                        self.feature_article_id = self.article.id;
                     }, function(error){
                         console.log(error);
                     });
                 },
                 changeFeatureArticle: function(id) {
                     var self = this;
+                    
                     this.$http.put('api/articles/'+id+'/feature').then(function(response){
-                        console.log(response);
+                        self.article = response.body;
+                        self.article.body = self.article.body.substring(0, 150) + " ...";
                     }, function(error){
                         console.log(error);
                     });

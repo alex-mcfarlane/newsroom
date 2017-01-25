@@ -28,13 +28,9 @@ class ArticlesController extends Controller
     
     public function index(Request $request)
     {
-        if(count($request->all()) > 0) {
+        
             $articleQuerier = new ArticleQuerier($request->all());
             $articles = $articleQuerier->search(new ArticleFormatter);
-        }
-        else{
-            $articles = Article::all();
-        }
 
         return response()->json($articles);
     }
