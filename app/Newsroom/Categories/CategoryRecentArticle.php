@@ -16,9 +16,6 @@ class CategoryRecentArticle extends CategoryRecentArticlesRetriever
     {
         $article = $this->query->newestArticle();
         
-        $collection = new Collection();
-        $collection->push($formatter->format($article));
-        
-        return $collection;
+        return $formatter->format($article);
     }
 }

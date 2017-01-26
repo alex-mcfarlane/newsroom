@@ -4,6 +4,7 @@ namespace App\Newsroom\Articles;
 
 use App\Category;
 use App\Newsroom\Categories\CategoryArticleRetrieverFactory;
+use App\Newsroom\Categories\CategoryArticlesRetrieverOutput;
 use App\Newsroom\Categories\CategoryArticleRetrieverOutput;
 
 /**
@@ -35,8 +36,20 @@ class ArticleRetrieverService {
     public function retrieveArticlesForCategory(Category $category, $limit = null)
     {   
         $retriever = CategoryArticleRetrieverFactory::create($category, $limit);
-        $result = $retriever->get(new CategoryArticleRetrieverOutput());
+        $presenter = $this->getPresenter($limit);
+        
+        $result = $retriever->get($presenter);
 
     	return $result;
+    }
+    
+    private function getPresenter($limit)
+    {
+        if($limit > 1 || $limit == null) {
+            return new CategoryArticlesRetrieverOutput;
+        }
+        else{
+            return new CategoryArticleRetrieverOutput;
+        }
     }
 }
