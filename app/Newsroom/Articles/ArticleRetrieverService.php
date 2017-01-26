@@ -19,25 +19,24 @@ class ArticleRetrieverService {
 
         foreach($categories as $category)
         {
-            $result = $this->retrieveArticlesForCategory($category, $limit);
-            $output = $output + $result; //TODO: Why won't array_merge($output, $result) work for union?
+            //I should use a formatter for this logic... not the responsibility of this class to create the map
+            $result = []; //map that will hold categories and their articles
+            $result[$category->title] = $this->retrieveArticlesForCategory($category, $limit);
+            
+            if(count($result) > 0)
+            {
+                $output = $output + $result; //TODO: Why won't array_merge($output, $result) work for union?   
+            }
         }
 
         return $output;
     }
 
     public function retrieveArticlesForCategory(Category $category, $limit = 0)
-    {
-        $newestArticlesPerCategory = []; //map that will hold categories and their articles
-        
+    {   
         $retriever = CategoryArticleRetrieverFactory::create($category, $limit);
         $result = $retriever->get(new CategoryArticleRetrieverOutput());
 
-        if($result)
-        {
-            $newestArticlesPerCategory[$category->title] = $result;
-        }
-
-    	return $newestArticlesPerCategory;
+    	return $result;
     }
 }

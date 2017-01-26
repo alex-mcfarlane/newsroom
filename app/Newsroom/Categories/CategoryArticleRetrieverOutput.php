@@ -9,10 +9,8 @@ class CategoryArticleRetrieverOutput implements IRetrieverOutput
 {
 	public function output(Model $category, $articles)
 	{
-		$output = $category->toArray();
-        $output["articles"] = [];
-        $output["articles"] = $articles;
+        $category["articles"] = $articles;
 
-        return $output;
+        return $category;
 	}
 }

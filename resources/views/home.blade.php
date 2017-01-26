@@ -77,14 +77,14 @@
                 @foreach($newestArticles as $categoryTitle => $category)
                     @if($category['articles']->count() > 0)
                         <article class="article-list-item">
-                            <img src="{{$category['articles']->image->path}}" class="img-responsive" alt="Article image alt"/>
+                            <img src="{{$category['articles'][0]->image->path}}" class="img-responsive" alt="Article image alt"/>
                             
                             <div class="article-list-item-info">
                                 <h4 class="article-tag">{{$categoryTitle}}</h4>
 
                                 <div class="article-heading">
-                                    <h3>{{$category['articles']->title}}</h3>
-                                    <time>{{date('F d, Y', strtotime($category['articles']->created_at))}}</time>
+                                    <h3>{{$category['articles'][0]->title}}</h3>
+                                    <time>{{date('F d, Y', strtotime($category['articles'][0]->created_at))}}</time>
                                 </div>
 
                             </div>

@@ -3,6 +3,7 @@
 namespace App\Newsroom\Categories;
 
 use App\Newsroom\Interfaces\IModelFormatter;
+use Illuminate\Support\Collection;
 
 /**
  * Description of RecentArticle
@@ -12,9 +13,12 @@ use App\Newsroom\Interfaces\IModelFormatter;
 class CategoryRecentArticle extends CategoryRecentArticlesRetriever
 {    
     public function retrieval(IModelFormatter $formatter)
-    {    
+    {
         $article = $this->query->newestArticle();
-
-        return $formatter->format($article);
+        
+        $collection = new Collection();
+        $collection->push($formatter->format($article));
+        
+        return $collection;
     }
 }
