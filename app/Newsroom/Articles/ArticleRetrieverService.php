@@ -13,7 +13,7 @@ use App\Newsroom\Categories\CategoryArticleRetrieverOutput;
  */
 class ArticleRetrieverService {
     
-    public function retrieveArticlesForCategories($categories, $limit = 0)
+    public function retrieveArticlesForCategories($categories, $limit = null)
     {
         $output = [];
 
@@ -32,7 +32,7 @@ class ArticleRetrieverService {
         return $output;
     }
 
-    public function retrieveArticlesForCategory(Category $category, $limit = 0)
+    public function retrieveArticlesForCategory(Category $category, $limit = null)
     {   
         $retriever = CategoryArticleRetrieverFactory::create($category, $limit);
         $result = $retriever->get(new CategoryArticleRetrieverOutput());

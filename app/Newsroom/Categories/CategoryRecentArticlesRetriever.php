@@ -18,7 +18,7 @@ abstract class CategoryRecentArticlesRetriever
     protected $query;
     private $formatter;
 
-    public function __construct(Category $category, IModelFormatter $formatter, $limit = 1)
+    public function __construct(Category $category, IModelFormatter $formatter, $limit)
     {
         $this->model = $category;
         $this->formatter = $formatter;
