@@ -57,8 +57,22 @@
                                 </div>
 
                                 <div class="modal-body">
-                                    <form>
-                                        <input v-model="article.title"></input>
+                                    <form v-on:submit.prevent="createFeatureArticle">
+                                        
+                                        <div class="form-group">
+                                            <label for="new-feature-title" class="control-label">Title</label>
+                                            
+                                            <input v-model="article.title" id="new-feature-title"></input>
+                                        </div>
+                                        
+                                        <div class="form-group">
+                                            <label for="new-feature-body" class="control-label">Body</label>
+                                            
+                                            <textarea v-model="article.body" id="new-feature-body"></textarea>
+                                        </div>
+                                        
+                                        <button type="submit" class="btn btn-success">Create</button>
+                                        
                                     </form>
                                 </div>
 

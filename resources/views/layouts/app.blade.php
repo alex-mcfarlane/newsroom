@@ -120,10 +120,16 @@
                     
                     this.$http.put('api/articles/'+id+'/feature').then(function(response){
                         self.feature_article = response.body;
-                        self.feature_article.body = self.article.body.substring(0, 150) + " ...";
+                        self.feature_article.body = self.feature_article.body.substring(0, 150) + " ...";
                     }, function(error){
                         console.log(error);
                     });
+                },
+                createFeatureArticle: function() {
+                    var self = this;
+                    this.$http.post('api/articles', self).then(function(response){
+                        self.feature_article = response.body;
+                    })
                 }
             }
         })
