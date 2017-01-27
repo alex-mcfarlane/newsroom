@@ -10,14 +10,14 @@
                 <section id="featured" class="col-md-9 col-sm-12">
 
                     <div class="edit-overlay">
-                        <button type="button" class="btn btn-default btn-sm">
+                        <button type="button" class="btn btn-default btn-sm" data-toggle="modal" data-target="#add_feature">
                             <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> New Feature Article
                         </button>
 
                         <button v-on:click="edit_feature = true" type="button" class="btn btn-default btn-sm">
                             <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>Change Feature Article
                         </button>
-
+                        
                         <div v-if="edit_feature">
                             <select v-model="feature_article_id">
                                 <option v-for="article in articles" v-bind:value="article.id">
@@ -31,22 +31,42 @@
 
                     <article class="featured-article">
 
-                        <img v-bind:src="article.image.path" class="img-responsive" alt="Featured Article alt"/>
+                        <img v-bind:src="feature_article.image.path" class="img-responsive" alt="Featured Article alt"/>
 
                         <div class="article-info">
-                            <h4 v-if="article.category" class="article-tag">@{{article.category.title}}</h4>
+                            <h4 v-if="feature_article.category" class="article-tag">@{{feature_article.category.title}}</h4>
 
                             <div class="article-heading">
-                                <h2>@{{article.title}}</h2>
-                                <time>@{{article.created_at}}</time>
+                                <h2>@{{feature_article.title}}</h2>
+                                <time>@{{feature_article.created_at}}</time>
                             </div>
 
-                            <p>@{{article.body}}</p>
+                            <p>@{{feature_article.body}}</p>
                         </div>
 
                     </article>
+                    
+                    <div id="add_feature" class="modal fade" role="dialog" aria-labelledby="myModalLabel">
+                        <div class="modal-dialog">
+                            <!-- Modal content-->
+                            <div class="modal-content">
 
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                    <h3>Create New Feature Article</h3>
+                                </div>
+
+                                <div class="modal-body">
+                                    <form>
+                                        <input v-model="article.title"></input>
+                                    </form>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
                 </section>
+            
             @else
                 <section id="featured" class="col-md-9 col-sm-12">
                     @if($featuredArticle)

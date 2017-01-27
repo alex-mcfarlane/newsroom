@@ -84,7 +84,9 @@
             data: {
                 articles: [],
                 article: {},
+                feature_article: {},
                 feature_article_id: 1,
+                add_feature: false,
                 edit_feature: false
             },
             created: function () {
@@ -105,8 +107,8 @@
                     var self = this;
                     
                     this.$http.get('api/articles?featured=1').then(function(response){
-                        self.article = response.body[0];
-                        self.article.body = self.article.body.substring(0, 150) + " ...";
+                        self.feature_article = response.body[0];
+                        self.feature_article.body = self.article.body.substring(0, 150) + " ...";
 
                         self.feature_article_id = self.article.id;
                     }, function(error){
@@ -117,8 +119,8 @@
                     var self = this;
                     
                     this.$http.put('api/articles/'+id+'/feature').then(function(response){
-                        self.article = response.body;
-                        self.article.body = self.article.body.substring(0, 150) + " ...";
+                        self.feature_article = response.body;
+                        self.feature_article.body = self.article.body.substring(0, 150) + " ...";
                     }, function(error){
                         console.log(error);
                     });

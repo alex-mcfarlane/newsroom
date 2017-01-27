@@ -89,7 +89,7 @@ class Article extends Model
 
     public function setImage()
     {
-        if($this->relations['image'] == null) {
+        if($this->relations && $this->relations['image'] == null) {
             $this->relations['image'] = Image::defaultImage();
         }
     }
@@ -143,7 +143,16 @@ class Article extends Model
     
     public function scopeNewestArticle($query)
     {
-        return $query->first();
+        $article = $query->first();
+        
+        if($article == null)
+        {
+            $article = new Article;
+            $article->relations['image'] = null;
+            return $article;
+        }
+        
+        return $article;
     }
     
     public function scopeNewestArticles($query, $num)
