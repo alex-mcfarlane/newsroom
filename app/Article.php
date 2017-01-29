@@ -51,7 +51,9 @@ class Article extends Model
     {
         $article = self::where('featured', true)->with('image')->first();
 
-        $article->setImage();
+        if($article) {
+            $article->setImage();
+        }
 
         return $article;
     }
@@ -89,7 +91,7 @@ class Article extends Model
 
     public function setImage()
     {
-        if($this->relations && $this->relations['image'] == null) {
+        if( !array_key_exists('image', $this->relations) || $this->relations['image'] == null) {
             $this->relations['image'] = Image::defaultImage();
         }
     }

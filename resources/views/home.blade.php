@@ -29,9 +29,9 @@
                         </div>
                     </div>
 
-                    <article class="featured-article">
+                    <article v-if="feature_article" class="featured-article">
 
-                        <img v-bind:src="feature_article.image.path" class="img-responsive" alt="Featured Article alt"/>
+                        <img :src="feature_article.image.path" class="img-responsive" alt="Featured Article alt"/>
 
                         <div class="article-info">
                             <h4 v-if="feature_article.category" class="article-tag">@{{feature_article.category.title}}</h4>

@@ -84,7 +84,12 @@
             data: {
                 articles: [],
                 article: {},
-                feature_article: {},
+                feature_article: {
+                    image:
+                    {
+                        path: ''
+                    }
+                },
                 feature_article_id: 1,
                 add_feature: false,
                 edit_feature: false
@@ -108,7 +113,7 @@
                     
                     this.$http.get('api/articles?featured=1').then(function(response){
                         self.feature_article = response.body[0];
-                        self.feature_article.body = self.article.body.substring(0, 150) + " ...";
+                        self.feature_article.body = self.feature_article.body.substring(0, 150) + " ...";
 
                         self.feature_article_id = self.article.id;
                     }, function(error){
@@ -127,9 +132,14 @@
                 },
                 createFeatureArticle: function() {
                     var self = this;
-                    this.$http.post('api/articles', self).then(function(response){
+                    this.article.featured = true;
+
+                    this.$http.post('api/articles', self.article).then(function(response){
                         self.feature_article = response.body;
-                    })
+                        self.feature_article.body = self.feature_article.body.substring(0, 150) + " ...";
+                    }, function(error){
+                        console.log(error);
+                    });
                 }
             }
         })

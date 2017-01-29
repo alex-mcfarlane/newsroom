@@ -30,14 +30,18 @@ class ArticleCreator {
         }
         
         try{
+            $formatter = new ArticleFormatter();
+
             if($attributes['category_id']) {
                 $article = Article::createCategorizedArticle($attributes['title'], $attributes['body'], $attributes['featured'], $attributes['category_id']);
             }
             else{
                 $article = Article::fromForm($attributes['title'], $attributes['body'], $attributes['featured']);
             }
+
+            $article = $formatter->format($article);
         } catch(CategoryNotFoundException $e) {
-                throw new ArticleException($e->getErrors());
+            throw new ArticleException($e->getErrors());
         }
         
         return $article;
