@@ -58,6 +58,7 @@ class ArticlesController extends Controller
 
     public function addImage(Request $request, $articleId)
     {
+        error_log(print_R($request->file('image'), true));
         try{
             $image = $this->imageCreator->make($articleId, $request->file('image'));
             return response()->json($image);

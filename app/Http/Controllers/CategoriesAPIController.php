@@ -6,12 +6,20 @@ use Illuminate\Http\Request;
 use App\Http\Requests;
 use App\Newsroom\Categories\CategoriesCreator;
 use App\Newsroom\Exceptions\CategoryException;
+use App\Category;
 
 class CategoriesAPIController extends Controller
 {
     public function __construct(CategoriesCreator $categoriesCreator)
     {
     	$this->categoriesCreator = $categoriesCreator;
+    }
+
+    public function index()
+    {
+        $categories = Category::all();
+
+        return response()->json($categories);
     }
 
     public function store(Request $request)

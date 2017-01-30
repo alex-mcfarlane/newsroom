@@ -83,6 +83,7 @@
             el:"#featured",
             data: {
                 articles: [],
+                categories: [],
                 article: {},
                 feature_article: {
                     image:
@@ -92,10 +93,12 @@
                 },
                 feature_article_id: 1,
                 add_feature: false,
-                edit_feature: false
+                edit_feature: false,
+                fileFormData: new FormData()
             },
             created: function () {
                 this.getArticles();
+                this.getCategories();
                 this.getFeaturedArticle();
             },
             methods: {
@@ -108,6 +111,17 @@
                         console.log(error);
                     });
                 },
+                getCategories: function() {
+                    self = this;
+
+                    this.$http.get('api/categories').then(function(response){
+                        self.categories = response.body;
+
+                        self.article.category_id = self.categories[0].id;
+                    }, function(error){
+                        console.log(error);
+                    });
+                },
                 getFeaturedArticle: function() {
                     var self = this;
                     
@@ -115,7 +129,7 @@
                         self.feature_article = response.body[0];
                         self.feature_article.body = self.feature_article.body.substring(0, 150) + " ...";
 
-                        self.feature_article_id = self.article.id;
+                        self.feature_article_id = self.feature_article.id;
                     }, function(error){
                         console.log(error);
                     });
@@ -137,9 +151,25 @@
                     this.$http.post('api/articles', self.article).then(function(response){
                         self.feature_article = response.body;
                         self.feature_article.body = self.feature_article.body.substring(0, 150) + " ...";
+                        
+                        //upload image for article
+                        this.$http.post('api/articles/'+self.feature_article.id+'/images', self.fileFormData).then(function(response){
+                            self.feature_article.image = response.body;
+
+                            //close modal and clear entry
+                            $('#add_feature').modal('toggle');
+                            self.article = {};
+
+                        }, function(error){
+                            console.log(error);
+                        })
+                        
                     }, function(error){
                         console.log(error);
                     });
+                },
+                onFileChange: function(e) {
+                    this.fileFormData.append('image', e.target.files[0]);
                 }
             }
         })

@@ -19,7 +19,7 @@ Route::group(['prefix' => 'api'], function(){
     ]);
 
     Route::resource('categories', 'CategoriesAPIController', ['only' => [
-        'store', 'show'
+        'index', 'store', 'show'
     ]]);
 });
 
