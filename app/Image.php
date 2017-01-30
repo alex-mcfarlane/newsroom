@@ -4,13 +4,14 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\UploadedFile;
+use App\Newsroom\Interfaces\IFileStore;
 
 class Image extends Model
 {
     protected $fillable = ['path'];
     protected $baseDir = 'articles/images';
 
-    public static function fromRequest(UploadedFile $file)
+    public static function fromRequest(UploadedFile $file, IFileStore $fileStore)
     {
     	$image = new static;
 
@@ -18,7 +19,8 @@ class Image extends Model
 
 	    $image->path = $image->baseDir. '/' . $name;
 
-	    $file->move($image->baseDir, $name);
+        $fileStore->store($file, $image->path, $name);
+	    //$file->move($image->baseDir, $name);
 
 	    return $image;
     }
