@@ -29,15 +29,6 @@ class Article extends Model
         return $article;
     }
     
-    public static function createCategorizedArticle($title, $body, $isFeatured, $categoryId)
-    {
-        $article = Article::fromForm($title, $body, $isFeatured);
-        
-        $article->setCategory($categoryId);
-        
-        return $article;
-    }
-    
     public static function withSubResources($id)
     {
         $article = self::with(['category', 'image'])->findOrFail($id);
