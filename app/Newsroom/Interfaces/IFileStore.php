@@ -11,5 +11,5 @@ use Illuminate\Http\UploadedFile;
  */
 interface IFileStore 
 {
-    public function store($uploadedFile, $path, $name);
+    public function store($uploadedFile, $directory, $fileName);
 }

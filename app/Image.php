@@ -15,12 +15,11 @@ class Image extends Model
     {
     	$image = new static;
 
-    	$name = time(). $file->getClientOriginalName();
+    	$name = time(). str_replace(" ", "_", $file->getClientOriginalName());
 
 	    $image->path = $image->baseDir. '/' . $name;
 
-        $fileStore->store($file, $image->path, $name);
-	    //$file->move($image->baseDir, $name);
+        $fileStore->store($file, $image->baseDir, $name);
 
 	    return $image;
     }

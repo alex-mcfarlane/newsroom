@@ -16,8 +16,8 @@ use App\Newsroom\Interfaces\IFileStore;
  */
 class LocalFileStore implements IFileStore
 {
-    public function store($uploadedFile, $path, $name)
+    public function store($uploadedFile, $baseDir, $fileName)
     {
-        $uploadedFile->move($image->baseDir, $name);
+        $uploadedFile->move($baseDir, $fileName);
     }
 }
