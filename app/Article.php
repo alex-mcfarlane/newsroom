@@ -59,6 +59,15 @@ class Article extends Model
         return $this->hasOne('App\Image');
     }
     
+    public function edit($fillableAttributes, $isFeatured)
+    {
+        $this->fill($fillableAttributes['title'], $fillableAttributes['body']);
+        
+        if($isFeatured) {
+            $this->setFeatured($featured);
+        }
+    }
+    
     public function setFeatured($featured)
     {
         if($featured === true) {

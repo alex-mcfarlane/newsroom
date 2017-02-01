@@ -1,19 +1,18 @@
 <?php
-namespace App\Newsroom\Articles;
 
 use App\Article;
 use App\Newsroom\Validators\ArticleValidator;
 use App\Newsroom\Exceptions\ArticleException;
 use App\Newsroom\Exceptions\CategoryNotFoundException;
 
+namespace App\Newsroom\Articles;
+
 /**
- * ArticleCreator Class
- * Validation and Business logic for creating an article
- * 
+ * Domain logic for updating an article
+ *
  * @author Alex McFarlane
  */
-class ArticleCreator {
-    
+class ArticleUpdater {
     protected $validator;
     
     public function __construct(ArticleValidator $validator)
@@ -21,27 +20,26 @@ class ArticleCreator {
         $this->validator = $validator;
     }
     
-    public function make($attributes)
+    public function update($attributes)
     {
-        //create the article
+        //validate the input
         if(! $this->validator->isValid($attributes)) {
             throw new ArticleException($this->validator->getErrors());
         }
         
-        $article = Article::fromForm($attributes['title'], $attributes['body'], $attributes['featured']);
+        if(!$article = Article::find($id))
+        {
+            throw new ArticleException(["Article not found"]);
+        }
+        
+        $article->edit([$attributes['title'], $attributes['body']], $attributes['featured']);
         
         try{
             if($attributes['category_id']) {
-                $article->setCategory($attributes['category_id']);
+                $this->setCategory($attributes['category_id']);
             }
-            
-            $formatter = new ArticleFormatter();
-            $article = $formatter->format($article);
         } catch(CategoryNotFoundException $e) {
-            $article->delete();
-            throw new ArticleException($e->getErrors());
-        }
         
-        return $article;
+        }
     }
 }
