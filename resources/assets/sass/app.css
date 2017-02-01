@@ -6,6 +6,10 @@ body {
 h1, h2, h3, h4, h5, h6, p {
   margin: 0; }
 
+h1 {
+  font-size: 3.375em;
+  margin-bottom: 2.25rem; }
+
 h2 {
   font-size: 2.25em;
   font-weight: 600;
@@ -66,10 +70,13 @@ time {
   margin-bottom: 1.5em; }
 
 .article-list-item {
-  background: #fff; }
-  .article-list-item img {
-    border-bottom: 10px solid #3498db; }
+  background: #fff;
+  margin-bottom: 1.5em; }
+  .article-list-item .article-image {
+    max-height: 200px;
+    overflow-y: hidden; }
   .article-list-item .article-list-item-info {
+    border-top: 10px solid #3498db;
     padding: 1em; }
     .article-list-item .article-list-item-info .article-heading {
       margin-bottom: 1em; }

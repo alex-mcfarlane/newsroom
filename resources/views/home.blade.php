@@ -18,7 +18,6 @@
                 @foreach($newestArticles as $categoryTitle => $category)
                     @if($category['article'])
                         <article class="article-list-item">
-                            <img src="{{$category['article']->image->path}}" class="img-responsive" alt="Article image alt"/>
                             
                             <div class="article-list-item-info">
                                 <h4 class="article-tag"><a href="{{url('/categories/'.$category->id)}}">{{$categoryTitle}}</a></h4>
