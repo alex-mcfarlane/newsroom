@@ -29,15 +29,6 @@ class Article extends Model
         return $article;
     }
     
-    public static function createCategorizedArticle($title, $body, $isFeatured, $categoryId)
-    {
-        $article = Article::fromForm($title, $body, $isFeatured);
-        
-        $article->setCategory($categoryId);
-        
-        return $article;
-    }
-    
     public static function withSubResources($id)
     {
         $article = self::with(['category', 'image'])->findOrFail($id);
@@ -66,6 +57,15 @@ class Article extends Model
     public function image()
     {
         return $this->hasOne('App\Image');
+    }
+    
+    public function edit($fillableAttributes, $isFeatured)
+    {
+        $this->fill($fillableAttributes['title'], $fillableAttributes['body']);
+        
+        if($isFeatured) {
+            $this->setFeatured($featured);
+        }
     }
     
     public function setFeatured($featured)
