@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Http\Requests;
 use App\Article;
 use App\Newsroom\Articles\ArticleCreator;
+use App\Newsroom\Articles\ArticleUpdater;
 use App\Newsroom\Articles\ArticleQuerier;
 use App\Newsroom\Articles\ArticleFormatter;
 use App\Newsroom\Images\ImageCreator;
@@ -19,10 +20,12 @@ class ArticlesController extends Controller
     protected $articleCreator;
     protected $imageCreator;
 
-    public function __construct(ArticleCreator $articleCreator, ImageCreator $imageCreator)
+    public function __construct(ArticleCreator $articleCreator, ArticleUpdater $articleUpdater,
+        ImageCreator $imageCreator)
     {
         //$this->middleware('jwt.auth', ['except' => ['index']]);
         $this->articleCreator = $articleCreator;
+        $this->articleUpdater = $articleUpdater;
         $this->imageCreator = $imageCreator;
     }
     
@@ -46,6 +49,17 @@ class ArticlesController extends Controller
         
         return response()->json($article);
     }
+
+    public function update(Request $request, $articleId)
+    {
+        try{
+            $article = $this->articleUpdater->update($articleId, $this->getInput($request));
+        } catch(ArticleException $e) {
+            return response()->json(["errors" => $e->getErrors()], 400);
+        }
+
+        response()->json($article, 200);
+    }
     
     public function show($id)
     {
@@ -64,5 +78,10 @@ class ArticlesController extends Controller
         } catch(ImageException $e) {
             return response()->json($e->geterrors());
         }
+    }
+
+    private function getInput(Request $request)
+    {
+        return $request->only('title', 'body', 'featured', 'category_id');
     }
 }

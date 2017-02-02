@@ -15,7 +15,7 @@ Route::group(['prefix' => 'api'], function(){
     ]);
 
     Route::resource('articles', 'ArticlesController', ['only' =>
-        ['store', 'index', 'show']
+        ['store', 'update', 'index', 'show']
     ]);
 
     Route::resource('categories', 'CategoriesAPIController', ['only' => [

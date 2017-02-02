@@ -28,6 +28,17 @@ class Article extends Model
         
         return $article;
     }
+
+    public function edit($title, $body, $isFeatured, $categoryId)
+    {
+        $this->fill(['title'=>$title, 'body' => $body]);
+        
+        $this->setCategory($categoryId);
+
+        $this->setFeatured($isFeatured);
+
+        $this->save();
+    }
     
     public static function withSubResources($id)
     {
@@ -59,34 +70,35 @@ class Article extends Model
         return $this->hasOne('App\Image');
     }
     
-    public function edit($fillableAttributes, $isFeatured)
-    {
-        $this->fill($fillableAttributes['title'], $fillableAttributes['body']);
-        
-        if($isFeatured) {
-            $this->setFeatured($featured);
-        }
-    }
-    
     public function setFeatured($featured)
     {
-        if($featured === true) {
-            $this->markAsFeatured();
-        } else {
-            $this->unfeature();
+        if(isset($featured)) {
+            if($featured === true) {
+                $this->markAsFeatured();
+            } else {
+                $this->unfeature();
+            }   
         }
     }
     
     public function setCategory($categoryId)
     {
-        //associate article with category
-        if(! $category = Category::find($categoryId)) {
-            throw new CategoryNotFoundException;
+        if(isset($categoryId)) {
+
+            if($categoryId === 0) {
+                $this->clearCategory();
+                return;
+            }
+
+            //associate article with category
+            if(! $category = Category::find($categoryId)) {
+                throw new CategoryNotFoundException;
+            }
+            
+            $this->category()->associate($category);
+            
+            $this->save();
         }
-        
-        $this->category()->associate($category);
-        
-        $this->save();
     }
 
     public function setImage()
@@ -94,6 +106,12 @@ class Article extends Model
         if( !array_key_exists('image', $this->relations) || $this->relations['image'] == null) {
             $this->relations['image'] = Image::defaultImage();
         }
+    }
+
+    private function clearCategory()
+    {
+        $this->category()->dissociate();
+        $this->save();
     }
 
     public function addImage(Image $image)
