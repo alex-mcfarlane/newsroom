@@ -23,7 +23,7 @@
                                 <h4 class="article-tag"><a href="{{url('/categories/'.$category->id)}}">{{$categoryTitle}}</a></h4>
 
                                 <div class="article-heading">
-                                    <h3>{{$category['article']->title}}</h3>
+                                    <h3><a href="{{url('/articles/'.$category['article']->id)}}">{{$category['article']->title}}</a></h3>
                                     <time>{{date('F d, Y', strtotime($category['article']->created_at))}}</time>
                                 </div>
 

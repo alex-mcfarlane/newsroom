@@ -14,7 +14,7 @@ class Article extends Model
         'featured' => false
     ];
     
-    public static function fromForm($title, $body, $isFeatured, $categoryId)
+    public static function fromForm($title, $body, $isFeatured = false, $categoryId = 0)
     {        
         $article = self::create([
             "title" => $title,
@@ -22,6 +22,7 @@ class Article extends Model
             "featured" => false
         ]);
         
+        // By default, category is null and featured is false. Only use setters if client explicitly passes them in
         $categoryId ? $article->setCategory($categoryId) : '';
         $isFeatured ? $article->markAsFeatured() : '';
         
@@ -80,7 +81,7 @@ class Article extends Model
     
     public function setCategory($categoryId)
     {
-        if(is_null($categoryId) || $categoryId === 0) {
+        if($categoryId === 0) {
             $this->clearCategory();
             return;
         }
