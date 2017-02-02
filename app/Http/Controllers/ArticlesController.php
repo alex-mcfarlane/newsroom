@@ -58,7 +58,7 @@ class ArticlesController extends Controller
             return response()->json(["errors" => $e->getErrors()], 400);
         }
 
-        response()->json($article, 200);
+        return response()->json($article, 200);
     }
     
     public function show($id)

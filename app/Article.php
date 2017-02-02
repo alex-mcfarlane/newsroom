@@ -22,11 +22,8 @@ class Article extends Model
             "featured" => false
         ]);
         
-        $article->setCategory($categoryId);
-
-        if($isFeatured) {
-            $article->markAsFeatured();
-        }
+        $categoryId ? $article->setCategory($categoryId) : '';
+        $isFeatured ? $article->markAsFeatured() : '';
         
         return $article;
     }
@@ -74,33 +71,28 @@ class Article extends Model
     
     public function setFeatured($featured)
     {
-        if(isset($featured)) {
-            if($featured === true) {
-                $this->markAsFeatured();
-            } else {
-                $this->unfeature();
-            }   
+        if($featured === true) {
+            $this->markAsFeatured();
+        } else {
+            $this->unfeature();
         }
     }
     
     public function setCategory($categoryId)
     {
-        if(isset($categoryId)) {
-
-            if($categoryId === 0) {
-                $this->clearCategory();
-                return;
-            }
-
-            //associate article with category
-            if(! $category = Category::find($categoryId)) {
-                throw new CategoryNotFoundException;
-            }
-            
-            $this->category()->associate($category);
-            
-            $this->save();
+        if(is_null($categoryId) || $categoryId === 0) {
+            $this->clearCategory();
+            return;
         }
+
+        //associate article with category
+        if(! $category = Category::find($categoryId)) {
+            throw new CategoryNotFoundException;
+        }
+
+        $this->category()->associate($category);
+
+        $this->save();
     }
 
     public function setImage()
