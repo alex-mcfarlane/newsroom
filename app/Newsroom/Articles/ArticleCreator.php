@@ -28,12 +28,14 @@ class ArticleCreator {
             throw new ArticleException($this->validator->getErrors());
         }
         
-        $article = Article::fromForm($attributes['title'], $attributes['body'], $attributes['featured']);
-        
         try{
+            /*
             if($attributes['category_id']) {
                 $article->setCategory($attributes['category_id']);
-            }
+            }*/
+
+            $article = Article::fromForm($attributes['title'], $attributes['body'], $attributes['featured'], 
+                                $attributes['category_id']);
             
             $formatter = new ArticleFormatter();
             $article = $formatter->format($article);

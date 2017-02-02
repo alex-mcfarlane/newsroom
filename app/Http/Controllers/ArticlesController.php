@@ -41,7 +41,7 @@ class ArticlesController extends Controller
     public function store(Request $request)
     {        
         try{
-            $article = $this->articleCreator->make($request->only('title', 'body', 'featured', 'category_id'));
+            $article = $this->articleCreator->make($this->getInput($request));
         }
         catch(ArticleException $e) {
             return response()->json($e->getErrors());

@@ -14,7 +14,7 @@ class Article extends Model
         'featured' => false
     ];
     
-    public static function fromForm($title, $body, $isFeatured)
+    public static function fromForm($title, $body, $isFeatured, $categoryId)
     {        
         $article = self::create([
             "title" => $title,
@@ -22,6 +22,8 @@ class Article extends Model
             "featured" => false
         ]);
         
+        $article->setCategory($categoryId);
+
         if($isFeatured) {
             $article->markAsFeatured();
         }
