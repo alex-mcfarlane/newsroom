@@ -71,7 +71,7 @@ class Article extends Model
     
     public function setFeatured($featured)
     {
-        if($featured === true) {
+        if($featured == true) {
             $this->markAsFeatured();
         } else {
             $this->unfeature();
@@ -116,7 +116,7 @@ class Article extends Model
     public function markAsFeatured()
     {
         //if another article(s) is featured, we need to unfeature them
-        foreach(Article::where('featured', true)->get() as $article) {
+        if($article = Article::featured()) {
             $article->unfeature();
         }
         
