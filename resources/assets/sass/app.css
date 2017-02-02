@@ -6,6 +6,10 @@ body {
 h1, h2, h3, h4, h5, h6, p {
   margin: 0; }
 
+h1 {
+  font-size: 3.375em;
+  margin-bottom: 2.25rem; }
+
 h2 {
   font-size: 2.25em;
   font-weight: 600;
@@ -37,7 +41,7 @@ time {
 
 .featured-article {
   position: relative;
-  max-height: 450px;
+  max-height: 500px;
   overflow-y: hidden; }
   .featured-article .article-info {
     background-color: rgba(255, 255, 255, 0.7);
@@ -51,6 +55,11 @@ time {
     .featured-article .article-info .article-tag {
       margin-bottom: 24px; }
 
+.edit-overlay {
+  position: absolute;
+  padding: 1em;
+  z-index: 1; }
+
 .article-tag {
   font-size: 1em;
   letter-spacing: 2px;
@@ -61,10 +70,13 @@ time {
   margin-bottom: 1.5em; }
 
 .article-list-item {
-  background: #fff; }
-  .article-list-item img {
-    border-bottom: 10px solid #3498db; }
+  background: #fff;
+  margin-bottom: 1.5em; }
+  .article-list-item .article-image {
+    max-height: 200px;
+    overflow-y: hidden; }
   .article-list-item .article-list-item-info {
+    border-top: 10px solid #3498db;
     padding: 1em; }
     .article-list-item .article-list-item-info .article-heading {
       margin-bottom: 1em; }

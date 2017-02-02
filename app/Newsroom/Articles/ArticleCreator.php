@@ -2,7 +2,6 @@
 namespace App\Newsroom\Articles;
 
 use App\Article;
-use App\Category;
 use App\Newsroom\Validators\ArticleValidator;
 use App\Newsroom\Exceptions\ArticleException;
 use App\Newsroom\Exceptions\CategoryNotFoundException;
@@ -30,9 +29,14 @@ class ArticleCreator {
         }
         
         try{
-            $article = Article::fromForm($attributes);
+            $article = Article::fromForm($attributes['title'], $attributes['body'], $attributes['featured'], 
+                                $attributes['category_id']);
+            
+            $formatter = new ArticleFormatter();
+            $article = $formatter->format($article);
         } catch(CategoryNotFoundException $e) {
-                throw new ArticleException($e->getErrors());
+            $article->delete();
+            throw new ArticleException($e->getErrors());
         }
         
         return $article;

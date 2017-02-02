@@ -26,7 +26,7 @@ class ImageCreator
 			throw new ImageException($this->validator->getErrors());
 		}
 	    
-	    $image = Image::fromRequest($file);
+	    $image = Image::fromRequest($file, new LocalFileStore);
 
 	    $article->addImage($image);
 

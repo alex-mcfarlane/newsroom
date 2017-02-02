@@ -12,6 +12,11 @@ h1, h2, h3, h4, h5, h6, p{
 	margin:0;
 }
 
+h1{
+	font-size: 3.375em;
+	margin-bottom: 2.25rem;
+}
+
 h2{
 	font-size: 2.25em;
 	font-weight:600;
@@ -49,7 +54,7 @@ time{
 
 .featured-article{
 	position:relative;
-    max-height:450px;
+    max-height:500px;
     overflow-y:hidden;
     
 	.article-info{
@@ -68,6 +73,12 @@ time{
 	}
 }
 
+.edit-overlay{
+	position: absolute;
+    padding: 1em;
+    z-index: 1;
+}
+
 .article-tag{
 	font-size: 1em;
 	letter-spacing:2px;
@@ -81,12 +92,15 @@ time{
 
 .article-list-item{
     background: #fff;
+    margin-bottom:1.5em;
     
-    img{
-        border-bottom: 10px solid $underline-color;
+    .article-image{
+    	max-height:200px;
+    	overflow-y: hidden;
     }
-    
+
     .article-list-item-info{
+    	border-top: 10px solid $underline-color;
         padding: 1em;
         
         .article-heading{

@@ -14,20 +14,30 @@ class Article extends Model
         'featured' => false
     ];
     
-    public static function fromForm(array $attributes)
+    public static function fromForm($title, $body, $isFeatured = false, $categoryId = 0)
     {        
         $article = self::create([
-            "title" => $attributes["title"],
-            "body" => $attributes["body"],
+            "title" => $title,
+            "body" => $body,
+            "featured" => false
         ]);
         
-        $article->setFeatured($attributes['featured']);
-        
-        if(isset($attributes["category_id"])) {
-            $article->setCategory($attributes["category_id"]);
-        }
+        // By default, category is null and featured is false. Only use setters if client explicitly passes them in
+        $categoryId ? $article->setCategory($categoryId) : '';
+        $isFeatured ? $article->markAsFeatured() : '';
         
         return $article;
+    }
+
+    public function edit($title, $body, $isFeatured, $categoryId)
+    {
+        $this->fill(['title'=>$title, 'body' => $body]);
+        
+        $this->setCategory($categoryId);
+
+        $this->setFeatured($isFeatured);
+
+        $this->save();
     }
     
     public static function withSubResources($id)
@@ -43,7 +53,9 @@ class Article extends Model
     {
         $article = self::where('featured', true)->with('image')->first();
 
-        $article->setImage();
+        if($article) {
+            $article->setImage();
+        }
 
         return $article;
     }
@@ -58,18 +70,9 @@ class Article extends Model
         return $this->hasOne('App\Image');
     }
     
-    public function getImagePath()
-    {
-        if(is_null($this->relations['image'])) {
-            $image = Image::defaultImage();
-            return $image->path;
-        }
-        return $this->image()->path;
-    }
-    
     public function setFeatured($featured)
     {
-        if($featured === true) {
+        if($featured == true) {
             $this->markAsFeatured();
         } else {
             $this->unfeature();
@@ -78,21 +81,32 @@ class Article extends Model
     
     public function setCategory($categoryId)
     {
+        if($categoryId === 0) {
+            $this->clearCategory();
+            return;
+        }
+
         //associate article with category
         if(! $category = Category::find($categoryId)) {
             throw new CategoryNotFoundException;
         }
-        
+
         $this->category()->associate($category);
-        
+
         $this->save();
     }
 
     public function setImage()
     {
-        if($this->relations['image'] == null) {
+        if( !array_key_exists('image', $this->relations) || $this->relations['image'] == null) {
             $this->relations['image'] = Image::defaultImage();
         }
+    }
+
+    private function clearCategory()
+    {
+        $this->category()->dissociate();
+        $this->save();
     }
 
     public function addImage(Image $image)
@@ -100,10 +114,10 @@ class Article extends Model
         $this->image()->save($image);
     }
     
-    private function markAsFeatured()
+    public function markAsFeatured()
     {
         //if another article(s) is featured, we need to unfeature them
-        foreach(Article::where('featured', true)->get() as $article) {
+        if($article = Article::featured()) {
             $article->unfeature();
         }
         
@@ -144,7 +158,16 @@ class Article extends Model
     
     public function scopeNewestArticle($query)
     {
-        return $query->first();
+        $article = $query->first();
+        
+        if($article == null)
+        {
+            $article = new Article;
+            $article->relations['image'] = null;
+            return $article;
+        }
+        
+        return $article;
     }
     
     public function scopeNewestArticles($query, $num)

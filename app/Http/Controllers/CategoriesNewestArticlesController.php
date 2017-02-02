@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Http\Requests;
+use App\Category;
 use App\Newsroom\Articles\ArticleRetrieverService;
 
 class CategoriesNewestArticlesController extends Controller
@@ -17,8 +18,8 @@ class CategoriesNewestArticlesController extends Controller
     
     public function index(Request $request)
     {
-        $articles = $this->articleRetrieverService->retrieveArticlesForCategories($request->input('limit'));
-        
-    	return response()->json($articles);
+        $output = $this->articleRetrieverService->retrieveArticlesForCategories(Category::all(), $request->input('limit'));
+
+    	return response()->json($output);
     }
 }

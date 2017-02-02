@@ -2,7 +2,8 @@
 
 namespace App\Newsroom\Articles;
 
-use App\Newsroom\Querier;
+use Illuminate\Database\Eloquent\Builder;
+use App\Newsroom\EloquentQuerier;
 use App\Article;
 
 /**
@@ -11,32 +12,26 @@ use App\Article;
  *
  * @author Alex McFarlane
  */
-class ArticleQuerier extends Querier{
+class ArticleQuerier extends EloquentQuerier{
+    
 
-    protected $validFilterableFields = ['title', 'body', 'start_date', 'end_date', 'featured'];
-    protected $filters;
-    protected $model;
-    protected $query;
-    
-    public function __construct($filters)
+    protected function getQuery()
     {
-        $this->filters = $filters;
-        $this->model = new Article();
-        $this->query = Article::query();
-    }
-    
-    protected function getFilters()
-    {
-        return $this->filters;
+        return Article::query();
     }
     
     protected function getModel()
     {
-        return $this->model;
+        return new Article();
     }
     
     protected function getValidFilterableFields()
     {
-        return $this->validFilterableFields;
+        return ['title', 'body', 'start_date', 'end_date', 'featured'];
+    }
+
+    protected function addToQuery(Builder $query)
+    {
+        return $query->with(['category','image']);
     }
 }

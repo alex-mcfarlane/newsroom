@@ -76,35 +76,100 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.3/jquery.min.js" integrity="sha384-I6F5OKECLVtK/BL+8iSLDEHowSAfUo76ZL9+kGAgTRdiByINKJaqTPH/QVNS1VDb" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
     <script src="https://unpkg.com/vue/dist/vue.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vue-resource/1.0.3/vue-resource.min.js"></script>
     
     <script>
         new Vue({
-            el:"#admin-featured-article",
+            el:"#featured",
             data: {
-                imagePath: '',
-                title: '',
-                body: '',
-                category: '',
-                createdAt: ''
+                articles: [],
+                categories: [],
+                article: {},
+                feature_article: {
+                    image:
+                    {
+                        path: ''
+                    }
+                },
+                feature_article_id: 1,
+                add_feature: false,
+                edit_feature: false,
+                fileFormData: new FormData()
             },
             created: function () {
+                this.getArticles();
+                this.getCategories();
                 this.getFeaturedArticle();
             },
             methods: {
-                getFeaturedArticle: function() {
+                getArticles: function() {
                     var self = this;
-                    this.$http.get('/api/articles/featured=1').then(function(response){
-                        console.log(response);
-                        self.imagePath = 'articles/images/default.jpg';
-                        self.title = 'New Test';
-                        self.body = 'Drumstick alcatra tail strip steak turkey cow doner. Sirloin brisket fatback hamburger kielbasa. Rump capicola andouille short ribs, beef ribs pork lorem ipsum blah ...';
-                        self.category = {
-                            title: "PHP"
-                        };
-                        self.createdAt = "January 13, 2017";
+
+                    this.$http.get('api/articles').then(function(response){
+                        self.articles = response.body;
                     }, function(error){
                         console.log(error);
                     });
+                },
+                getCategories: function() {
+                    self = this;
+
+                    this.$http.get('api/categories').then(function(response){
+                        self.categories = response.body;
+
+                        self.article.category_id = self.categories[0].id;
+                    }, function(error){
+                        console.log(error);
+                    });
+                },
+                getFeaturedArticle: function() {
+                    var self = this;
+                    
+                    this.$http.get('api/articles?featured=1').then(function(response){
+                        self.feature_article = response.body[0];
+                        self.feature_article.body = self.feature_article.body.substring(0, 150) + " ...";
+
+                        self.feature_article_id = self.feature_article.id;
+                    }, function(error){
+                        console.log(error);
+                    });
+                },
+                changeFeatureArticle: function(id) {
+                    var self = this;
+                    
+                    this.$http.put('api/articles/'+id+'/feature').then(function(response){
+                        self.feature_article = response.body;
+                        self.feature_article.body = self.feature_article.body.substring(0, 150) + " ...";
+                    }, function(error){
+                        console.log(error);
+                    });
+                },
+                createFeatureArticle: function() {
+                    var self = this;
+                    this.article.featured = true;
+
+                    this.$http.post('api/articles', self.article).then(function(response){
+                        self.feature_article = response.body;
+                        self.feature_article.body = self.feature_article.body.substring(0, 150) + " ...";
+                        
+                        //upload image for article
+                        this.$http.post('api/articles/'+self.feature_article.id+'/images', self.fileFormData).then(function(response){
+                            self.feature_article.image = response.body;
+
+                            //close modal and clear entry
+                            $('#add_feature').modal('toggle');
+                            self.article = {};
+
+                        }, function(error){
+                            console.log(error);
+                        })
+                        
+                    }, function(error){
+                        console.log(error);
+                    });
+                },
+                onFileChange: function(e) {
+                    this.fileFormData.append('image', e.target.files[0]);
                 }
             }
         })
