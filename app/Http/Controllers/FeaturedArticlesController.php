@@ -6,39 +6,20 @@ use Illuminate\Http\Request;
 use App\Http\Requests;
 use App\Article;
 use App\FeaturedArticle;
-use App\Newsroom\Articles\ArticleFeaturer;
+
 
 class FeaturedArticlesController extends Controller
 {
     protected $articleFeaturer;
-    
-    public function __construct(ArticleFeaturer $articleFeaturer)
-    {
-        $this->articleFeaturer = $articleFeaturer;
-    }
     
     public function index()
     {
         return response()->json(FeaturedArticle::all());
     }
     
-    public function feature($id)
-    {   
-        try{
-            $article = $this->articleFeaturer->feature($id, true);
-            return response()->json($article, 200);
-        } catch (\App\Newsroom\Exceptions\ArticleException $ex) {
-            return response()->json($ex->getErrors(), $ex->getHttpStatusCode());
-        }
-    }
-    
-    public function unfeature($id)
+    public function store(Request $request, $articleId)
     {
-        try{
-            $this->articleFeaturer->feature($id, false);
-            return response()->json(null, 204);
-        } catch (\App\Newsroom\Exceptions\ArticleException $ex) {
-            return response()->json($ex->getErrors(), $ex->getHttpStatusCode());
-        }
+        $article = FeaturedArticle::find($articleId);
+        $article->addSortOrder($request->input('order_id'));
     }
 }

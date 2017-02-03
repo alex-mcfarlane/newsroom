@@ -6,10 +6,10 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use App\Http\Requests;
 use App\Article;
-use App\FeaturedArticle;
 use App\Newsroom\Articles\ArticleCreator;
 use App\Newsroom\Articles\ArticleUpdater;
 use App\Newsroom\Articles\ArticleQuerier;
+use App\Newsroom\Articles\ArticleFeaturer;
 use App\Newsroom\Articles\ArticleFormatter;
 use App\Newsroom\Images\ImageCreator;
 use App\Newsroom\Exceptions\ArticleException;
@@ -21,12 +21,13 @@ class ArticlesAPIController extends Controller
     protected $imageCreator;
 
     public function __construct(ArticleCreator $articleCreator, ArticleUpdater $articleUpdater,
-        ImageCreator $imageCreator)
+        ImageCreator $imageCreator, ArticleFeaturer $articleFeaturer)
     {
         //$this->middleware('jwt.auth', ['except' => ['index']]);
         $this->articleCreator = $articleCreator;
         $this->articleUpdater = $articleUpdater;
         $this->imageCreator = $imageCreator;
+        $this->articleFeaturer = $articleFeaturer;
     }
     
     public function index(Request $request)
@@ -79,10 +80,24 @@ class ArticlesAPIController extends Controller
         }
     }
     
-    public function order(Request $request, $articleId)
+    public function makeHeadliner($id)
+    {   
+        try{
+            $article = $this->articleFeaturer->feature($id, true);
+            return response()->json($article, 200);
+        } catch (\App\Newsroom\Exceptions\ArticleException $ex) {
+            return response()->json($ex->getErrors(), $ex->getHttpStatusCode());
+        }
+    }
+    
+    public function removeHeadliner($id)
     {
-        $article = FeaturedArticle::find($articleId);
-        $article->addOrder($request->input('order_id'));
+        try{
+            $this->articleFeaturer->feature($id, false);
+            return response()->json(null, 204);
+        } catch (\App\Newsroom\Exceptions\ArticleException $ex) {
+            return response()->json($ex->getErrors(), $ex->getHttpStatusCode());
+        }
     }
 
     private function getInput(Request $request)

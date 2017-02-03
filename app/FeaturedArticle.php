@@ -14,7 +14,7 @@ class FeaturedArticle extends Article
     
     public static function all($columns = ['*'])
     {
-        return FeaturedArticle::featured()->select('articles.*', 'featured_articles.order_id')->get();
+        return FeaturedArticle::featured()->select('articles.*')->get();
     }
     
     public function getOrderAttribute()
@@ -28,7 +28,7 @@ class FeaturedArticle extends Article
         return $orderId;
     }
     
-    public function addOrder($order)
+    public function addSortOrder($order)
     {
         DB::table('featured_articles')->insert(['article_id'=> $this->id, 'order_id' => $order]);
     }
