@@ -51,12 +51,11 @@ time {
   overflow-y: hidden; }
   .featured-article .article-info {
     background-color: rgba(255, 255, 255, 0.7);
-    border-left: 1px solid #95a5a6;
-    border-bottom: 1px solid #95a5a6;
     position: absolute;
     top: 0;
     right: 0;
     width: 33.3%;
+    height: 100%;
     padding: 1em; }
     .featured-article .article-info .article-tag {
       margin-bottom: 24px; }
@@ -76,7 +75,8 @@ time {
   margin-bottom: 1.5em; }
 
 .article-image {
-  overflow-y: hidden; }
+  overflow-y: hidden;
+  max-height: 400px; }
 
 .article {
   background: #fff; }

@@ -1,7 +1,10 @@
-<section id="featured" class="col-md-9 col-sm-12">
+<section id="featured" class="col-md-12">
     @if($featuredArticle)
     <article class="featured-article">
-        <img src="{{$featuredArticle->image->path}}" class="img-responsive" alt="Featured Article alt"/>
+        
+        <div class="article-image">
+            <img src="{{$featuredArticle->image->path}}" class="img-responsive" alt="Featured Article alt"/>
+        </div>
 
         <div class="article-info">
             @if($featuredArticle->category)

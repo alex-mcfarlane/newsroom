@@ -1,4 +1,4 @@
-<section id="featured" class="col-md-9 col-sm-12">
+<section id="featured" class="col-md-12">
 
     <div class="edit-overlay">
         <button type="button" class="btn btn-default btn-sm" data-toggle="modal" data-target="#add_feature">
@@ -22,7 +22,9 @@
 
     <article v-if="feature_article" class="featured-article">
 
-        <img :src="feature_article.image.path" class="img-responsive" alt="Featured Article alt"/>
+        <div class="article-image">
+            <img :src="feature_article.image.path" class="img-responsive" alt="Featured Article alt"/>
+        </div>
 
         <div class="article-info">
             <h4 v-if="feature_article.category" class="article-tag">@{{feature_article.category.title}}</h4>
