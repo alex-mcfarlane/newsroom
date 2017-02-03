@@ -5,7 +5,6 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 use App\Newsroom\Exceptions\CategoryNotFoundException;
 use App\Image;
-use Illuminate\Support\Facades\DB;
 
 class Article extends Model
 {
@@ -13,10 +12,6 @@ class Article extends Model
     
     protected $attributes = [
         'featured' => false
-    ];
-    
-    protected $appends = [
-        'order'
     ];
     
     public static function fromForm($title, $body, $isFeatured = false, $categoryId = 0)
@@ -54,7 +49,7 @@ class Article extends Model
         return $article;
     }
     
-    public static function featured()
+    public static function headliner()
     {
         $article = self::where('featured', true)->with('image')->first();
 
@@ -63,13 +58,6 @@ class Article extends Model
         }
 
         return $article;
-    }
-    
-    public static function orderedArticles()
-    {
-        return DB::table('articles')->join('article_order', 'articles.id', '=', 'article_order.article_id')
-                                    ->select('articles.*', 'article_order.order_id')
-                                    ->get();
     }
     
     public function category()
@@ -114,22 +102,6 @@ class Article extends Model
             $this->relations['image'] = Image::defaultImage();
         }
     }
-    
-    public function getOrderAttribute()
-    {
-        $order = DB::table('articles')->join('article_order', 'articles.id', '=', 'article_order.article_id')
-                    ->where('article_order.article_id', '=', $this->id)
-                    ->select('article_order.order_id')->first();
-        
-        $order ? $orderId  = $order->order_id : $orderId = null;
-        
-        return $orderId;
-    }
-    
-    public function addOrder($order)
-    {
-        DB::table('article_order')->insert(['article_id'=> $this->id, 'order_id' => $order]);
-    }
 
     private function clearCategory()
     {
@@ -144,8 +116,8 @@ class Article extends Model
     
     public function markAsFeatured()
     {
-        //if another article(s) is featured, we need to unfeature them
-        if($article = Article::featured()) {
+        //if another article(s) is the headliner, we need to unfeature them
+        if($article = Article::headliner()) {
             $article->unfeature();
         }
         

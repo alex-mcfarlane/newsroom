@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Http\Requests;
 use App\Article;
+use App\FeaturedArticle;
 use App\Newsroom\Articles\ArticleFeaturer;
 
 class FeaturedArticlesController extends Controller
@@ -14,6 +15,11 @@ class FeaturedArticlesController extends Controller
     public function __construct(ArticleFeaturer $articleFeaturer)
     {
         $this->articleFeaturer = $articleFeaturer;
+    }
+    
+    public function index()
+    {
+        return response()->json(FeaturedArticle::all());
     }
     
     public function feature($id)

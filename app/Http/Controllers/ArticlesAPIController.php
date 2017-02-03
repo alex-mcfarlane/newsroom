@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use App\Http\Requests;
 use App\Article;
+use App\FeaturedArticle;
 use App\Newsroom\Articles\ArticleCreator;
 use App\Newsroom\Articles\ArticleUpdater;
 use App\Newsroom\Articles\ArticleQuerier;
@@ -80,7 +81,7 @@ class ArticlesAPIController extends Controller
     
     public function order(Request $request, $articleId)
     {
-        $article = Article::find($articleId);
+        $article = FeaturedArticle::find($articleId);
         $article->addOrder($request->input('order_id'));
     }
 

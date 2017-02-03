@@ -8,7 +8,7 @@ Route::group(['prefix' => 'api'], function(){
 
     Route::post('articles/{id}/images', 'ArticlesAPIController@addImage');
     Route::post('articles/{id}/order', 'ArticlesAPIController@order');
-    Route::get('articles/ordered', 'OrderedArticlesController@index');
+    Route::get('articles/ordered', 'featuredArticlesController@index');
     Route::put('articles/{id}/feature', 'FeaturedArticlesController@feature');
     Route::delete('articles/{id}/feature', 'FeaturedArticlesController@unfeature');
     

@@ -3,7 +3,7 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateArticleOrderTable extends Migration
+class CreateFeaturedArticlesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -12,7 +12,7 @@ class CreateArticleOrderTable extends Migration
      */
     public function up()
     {
-        Schema::create('article_order', function (Blueprint $table) {
+        Schema::create('featured_articles', function (Blueprint $table) {
             $table->integer('article_id');
             $table->integer('order_id');
             $table->timestamps();
@@ -26,6 +26,6 @@ class CreateArticleOrderTable extends Migration
      */
     public function down()
     {
-        Schema::drop('article_order');
+        Schema::drop('featured_articles');
     }
 }
