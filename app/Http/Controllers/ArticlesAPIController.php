@@ -9,6 +9,7 @@ use App\Article;
 use App\Newsroom\Articles\ArticleCreator;
 use App\Newsroom\Articles\ArticleUpdater;
 use App\Newsroom\Articles\ArticleQuerier;
+use App\Newsroom\Articles\ArticleFeaturer;
 use App\Newsroom\Articles\ArticleFormatter;
 use App\Newsroom\Images\ImageCreator;
 use App\Newsroom\Exceptions\ArticleException;
@@ -20,12 +21,13 @@ class ArticlesAPIController extends Controller
     protected $imageCreator;
 
     public function __construct(ArticleCreator $articleCreator, ArticleUpdater $articleUpdater,
-        ImageCreator $imageCreator)
+        ImageCreator $imageCreator, ArticleFeaturer $articleFeaturer)
     {
         //$this->middleware('jwt.auth', ['except' => ['index']]);
         $this->articleCreator = $articleCreator;
         $this->articleUpdater = $articleUpdater;
         $this->imageCreator = $imageCreator;
+        $this->articleFeaturer = $articleFeaturer;
     }
     
     public function index(Request $request)
@@ -75,6 +77,26 @@ class ArticlesAPIController extends Controller
             return response()->json($image);
         } catch(ImageException $e) {
             return response()->json($e->geterrors());
+        }
+    }
+    
+    public function makeHeadliner($id)
+    {   
+        try{
+            $article = $this->articleFeaturer->feature($id, true);
+            return response()->json($article, 200);
+        } catch (\App\Newsroom\Exceptions\ArticleException $ex) {
+            return response()->json($ex->getErrors(), $ex->getHttpStatusCode());
+        }
+    }
+    
+    public function removeHeadliner($id)
+    {
+        try{
+            $this->articleFeaturer->feature($id, false);
+            return response()->json(null, 204);
+        } catch (\App\Newsroom\Exceptions\ArticleException $ex) {
+            return response()->json($ex->getErrors(), $ex->getHttpStatusCode());
         }
     }
 

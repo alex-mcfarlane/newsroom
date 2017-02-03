@@ -137,7 +137,7 @@
                 changeFeatureArticle: function(id) {
                     var self = this;
                     
-                    this.$http.put('api/articles/'+id+'/feature').then(function(response){
+                    this.$http.put('api/articles/'+id+'/headline').then(function(response){
                         self.feature_article = response.body;
                         self.feature_article.body = self.feature_article.body.substring(0, 150) + " ...";
                     }, function(error){

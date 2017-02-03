@@ -19,7 +19,7 @@ class HomeController extends Controller
     
     public function index()
     {
-        $featuredArticle = Article::featured();        
+        $featuredArticle = Article::headliner();        
         $newestArticles = $this->articleRetrieverService->retrieveArticlesForCategories(Category::all(), 1);
 
         return view('home', compact('featuredArticle', 'newestArticles'));
