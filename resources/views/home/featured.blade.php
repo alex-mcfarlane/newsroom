@@ -5,7 +5,11 @@
 
         <div class="article-info">
             @if($featuredArticle->category)
-                <h4 class="article-tag">{{$featuredArticle->category->title}}</h4>
+                <h4 class="article-tag">
+                    <a href="{{url('/articles/'.$featuredArticle->id)}}">
+                        {{$featuredArticle->category->title}}
+                    </a>
+                </h4>
             @endif
 
             <div class="article-heading">

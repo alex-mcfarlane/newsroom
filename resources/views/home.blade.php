@@ -17,7 +17,7 @@
                 
                 @foreach($newestArticles as $categoryTitle => $category)
                     @if($category['article'])
-                        <article class="article-list-item">
+                        <article class="article article-list-item">
                             
                             <div class="article-list-item-info">
                                 <h4 class="article-tag"><a href="{{url('/categories/'.$category->id)}}">{{$categoryTitle}}</a></h4>

@@ -8,6 +8,10 @@ body{
     background:#f4f4f4;
 }
 
+.container{
+    width: 1080px;
+}
+
 h1, h2, h3, h4, h5, h6, p{
 	margin:0;
 }
@@ -46,6 +50,10 @@ p{
 	font-size:1em;
     line-height: 1.5;
 	margin-bottom: 10px;
+}
+
+a{
+    color:inherit;
 }
 
 time{
@@ -90,13 +98,32 @@ time{
 	margin-bottom:1.5em;
 }
 
-.article-list-item{
+.article-image{
+    overflow-y: hidden;
+}
+
+.article{
     background: #fff;
+}
+
+.article-item{
+    padding: 1em 2.25em;
+    
+    .article-image{
+        max-height: 400px;
+        margin-bottom:1.5em;
+    }
+}
+
+.article-list-item{
     margin-bottom:1.5em;
+    
+    .article-tag{
+        font-size:1em;
+    }
     
     .article-image{
     	max-height:200px;
-    	overflow-y: hidden;
     }
 
     .article-list-item-info{
