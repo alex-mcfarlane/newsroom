@@ -15,6 +15,10 @@ class Article extends Model
         'featured' => false
     ];
     
+    protected $appends = [
+        'order'
+    ];
+    
     public static function fromForm($title, $body, $isFeatured = false, $categoryId = 0)
     {        
         $article = self::create([
@@ -63,7 +67,9 @@ class Article extends Model
     
     public static function orderedArticles()
     {
-        return DB::table('articles')->join('article_order', 'articles.id', '=', 'article_order.article_id')->get();
+        return DB::table('articles')->join('article_order', 'articles.id', '=', 'article_order.article_id')
+                                    ->select('articles.*', 'article_order.order_id')
+                                    ->get();
     }
     
     public function category()
@@ -109,9 +115,15 @@ class Article extends Model
         }
     }
     
-    public function setOrder()
+    public function getOrderAttribute()
     {
+        $order = DB::table('articles')->join('article_order', 'articles.id', '=', 'article_order.article_id')
+                    ->where('article_order.article_id', '=', $this->id)
+                    ->select('article_order.order_id')->first();
         
+        $order ? $orderId  = $order->order_id : $orderId = null;
+        
+        return $orderId;
     }
     
     public function addOrder($order)
