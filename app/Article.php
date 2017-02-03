@@ -5,6 +5,7 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 use App\Newsroom\Exceptions\CategoryNotFoundException;
 use App\Image;
+use Illuminate\Support\Facades\DB;
 
 class Article extends Model
 {
@@ -60,6 +61,11 @@ class Article extends Model
         return $article;
     }
     
+    public static function orderedArticles()
+    {
+        return DB::table('articles')->join('article_order', 'articles.id', '=', 'article_order.article_id')->get();
+    }
+    
     public function category()
     {
         return $this->belongsTo('App\Category');
@@ -101,6 +107,16 @@ class Article extends Model
         if( !array_key_exists('image', $this->relations) || $this->relations['image'] == null) {
             $this->relations['image'] = Image::defaultImage();
         }
+    }
+    
+    public function setOrder()
+    {
+        
+    }
+    
+    public function addOrder($order)
+    {
+        DB::table('article_order')->insert(['article_id'=> $this->id, 'order_id' => $order]);
     }
 
     private function clearCategory()

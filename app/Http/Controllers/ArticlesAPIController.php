@@ -77,6 +77,12 @@ class ArticlesAPIController extends Controller
             return response()->json($e->geterrors());
         }
     }
+    
+    public function order(Request $request, $articleId)
+    {
+        $article = Article::find($articleId);
+        $article->addOrder($request->input('order_id'));
+    }
 
     private function getInput(Request $request)
     {
