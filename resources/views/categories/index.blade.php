@@ -12,7 +12,7 @@
 	        		<article class="article article-list-item">
 
 	        			<div class="article-image">
-	        				<img src="/public/{{$article->image->path}}" class="img-responsive" alt="Article image alt"/>
+	        				<img src="../{{$article->image->path}}" class="img-responsive" alt="Article image alt"/>
 	        			</div>
 
 	        			<div class="article-list-item-info">

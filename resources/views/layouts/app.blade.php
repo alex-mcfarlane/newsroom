@@ -80,26 +80,26 @@
     
     <script>
         new Vue({
-            el:"#featured",
+            el:"#headliner",
             data: {
                 articles: [],
                 categories: [],
                 article: {},
-                feature_article: {
+                headline_article: {
                     image:
                     {
                         path: ''
                     }
                 },
-                feature_article_id: 1,
-                add_feature: false,
-                edit_feature: false,
+                headline_article_id: 1,
+                add_headliner: false,
+                edit_headliner: false,
                 fileFormData: new FormData()
             },
             created: function () {
                 this.getArticles();
                 this.getCategories();
-                this.getFeaturedArticle();
+                this.getHeadlineArticle();
             },
             methods: {
                 getArticles: function() {
@@ -122,42 +122,42 @@
                         console.log(error);
                     });
                 },
-                getFeaturedArticle: function() {
+                getHeadlineArticle: function() {
                     var self = this;
                     
                     this.$http.get('api/articles?featured=1').then(function(response){
-                        self.feature_article = response.body[0];
-                        self.feature_article.body = self.feature_article.body.substring(0, 150) + " ...";
+                        self.headline_article = response.body[0];
+                        self.headline_article.body = self.headline_article.body.substring(0, 150) + " ...";
 
-                        self.feature_article_id = self.feature_article.id;
+                        self.headline_article_id = self.headline_article.id;
                     }, function(error){
                         console.log(error);
                     });
                 },
-                changeFeatureArticle: function(id) {
+                changeHeadlineArticle: function(id) {
                     var self = this;
                     
                     this.$http.put('api/articles/'+id+'/headline').then(function(response){
-                        self.feature_article = response.body;
-                        self.feature_article.body = self.feature_article.body.substring(0, 150) + " ...";
+                        self.headline_article = response.body;
+                        self.headline_article.body = self.headline_article.body.substring(0, 150) + " ...";
                     }, function(error){
                         console.log(error);
                     });
                 },
-                createFeatureArticle: function() {
+                createHeadlineArticle: function() {
                     var self = this;
                     this.article.featured = true;
 
                     this.$http.post('api/articles', self.article).then(function(response){
-                        self.feature_article = response.body;
-                        self.feature_article.body = self.feature_article.body.substring(0, 150) + " ...";
+                        self.headline_article = response.body;
+                        self.headline_article.body = self.headline_article.body.substring(0, 150) + " ...";
                         
                         //upload image for article
-                        this.$http.post('api/articles/'+self.feature_article.id+'/images', self.fileFormData).then(function(response){
-                            self.feature_article.image = response.body;
+                        this.$http.post('api/articles/'+self.headline_article.id+'/images', self.fileFormData).then(function(response){
+                            self.headline_article.image = response.body;
 
                             //close modal and clear entry
-                            $('#add_feature').modal('toggle');
+                            $('#add_headline').modal('toggle');
                             self.article = {};
 
                         }, function(error){

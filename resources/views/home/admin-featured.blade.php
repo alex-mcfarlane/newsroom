@@ -1,73 +1,73 @@
-<section id="featured" class="col-md-12">
+<section id="headliner" class="col-md-12">
 
     <div class="edit-overlay">
-        <button type="button" class="btn btn-default btn-sm" data-toggle="modal" data-target="#add_feature">
-            <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> New Feature Article
+        <button type="button" class="btn btn-default btn-sm" data-toggle="modal" data-target="#add_headliner">
+            <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> New Headline Article
         </button>
 
-        <button v-on:click="edit_feature = true" type="button" class="btn btn-default btn-sm">
-            <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>Change Feature Article
+        <button v-on:click="edit_headliner = true" type="button" class="btn btn-default btn-sm">
+            <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>Change Headline Article
         </button>
         
-        <div v-if="edit_feature">
-            <select v-model="feature_article_id">
+        <div v-if="edit_headliner">
+            <select v-model="headline_article_id">
                 <option v-for="article in articles" v-bind:value="article.id">
                     @{{ article.title }}
                 </option>
             </select>
 
-            <button v-on:click="changeFeatureArticle(feature_article_id)" class="btn btn-default btn-sm">Change Feature Article</button>
+            <button v-on:click="changeHeadlineArticle(headline_article_id)" class="btn btn-default btn-sm">Change Headline Article</button>
         </div>
     </div>
 
-    <article v-if="feature_article" class="featured-article">
+    <article v-if="headline_article" class="featured-article">
 
         <div class="article-image">
-            <img :src="feature_article.image.path" class="img-responsive" alt="Featured Article alt"/>
+            <img :src="headline_article.image.path" class="img-responsive" alt="headliner Article alt"/>
         </div>
 
         <div class="article-info">
-            <h4 v-if="feature_article.category" class="article-tag">@{{feature_article.category.title}}</h4>
+            <h4 v-if="headline_article.category" class="article-tag">@{{headline_article.category.title}}</h4>
 
             <div class="article-heading">
-                <h2>@{{feature_article.title}}</h2>
-                <time>@{{feature_article.created_at}}</time>
+                <h2>@{{headline_article.title}}</h2>
+                <time>@{{headline_article.created_at}}</time>
             </div>
 
-            <p>@{{feature_article.body}}</p>
+            <p>@{{headline_article.body}}</p>
         </div>
 
     </article>
 
-    <div id="add_feature" class="modal fade" role="dialog" aria-labelledby="myModalLabel">
+    <div id="add_headliner" class="modal fade" role="dialog" aria-labelledby="myModalLabel">
         <div class="modal-dialog">
             <!-- Modal content-->
             <div class="modal-content">
 
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
-                    <h3>Create New Feature Article</h3>
+                    <h3>Create New Headline Article</h3>
                 </div>
 
                 <div class="modal-body">
-                    <form v-on:submit.prevent="createFeatureArticle">
+                    <form v-on:submit.prevent="createHeadlineArticle">
                         
                         <div class="form-group">
                             <label for="new-feature-title">Title</label>
                             
-                            <input v-model="article.title" id="new-feature-title" class="form-control"></input>
+                            <input v-model="article.title" id="new-headline-title" class="form-control"></input>
                         </div>
                         
                         <div class="form-group">
                             <label for="new-feature-body">Body</label>
                             
-                            <textarea v-model="article.body" id="new-feature-body" class="form-control"></textarea>
+                            <textarea v-model="article.body" id="new-headline-body" class="form-control"></textarea>
                         </div>
 
                         <div class="form-group">
-                            <label for="new-feature-category">Category</label>
+                            <label for="new-headline-category">Category</label>
 
-                            <select v-model="article.category_id" id="new-feature-category" class="form-control">
+                            <select v-model="article.category_id" id="new-headline-category" class="form-control">
                                 <option v-for="category in categories" v-bind:value="category.id">
                                     @{{ category.title }}
                                 </option>
@@ -75,7 +75,7 @@
                         </div>
 
                         <div class="form-group">
-                            <label for="new-feature-image">Image</label>
+                            <label for="new-headline-image">Image</label>
 
                             <input v-on:change="onFileChange" type="file"></input>
                         </div>

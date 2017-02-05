@@ -19,7 +19,7 @@
                 </div>
 
                 <div class="article-image">
-                    <img src="/public/{{$article->image->path}}" class="img-responsive" alt="Image alt">
+                    <img src="../{{$article->image->path}}" class="img-responsive" alt="Image alt">
                 </div>
 
                 <p>{{$article->body}}</p>

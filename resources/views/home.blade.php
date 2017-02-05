@@ -12,7 +12,7 @@
                 @include('home.featured')
             @endif
             
-            <section id="recent" class="col-md-3 col-sm-12">
+            <section id="featured-articles" class="col-md-3 col-sm-12">
                 <h2>Newest Articles</h2>
                 
                 @foreach($newestArticles as $categoryTitle => $category)
