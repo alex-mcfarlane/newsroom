@@ -4,9 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Http\Requests;
-use App\Article;
 use App\FeaturedArticle;
-
+use App\Newsroom\Articles\ArticleFormatter;
 
 class FeaturedArticlesController extends Controller
 {
@@ -14,7 +13,7 @@ class FeaturedArticlesController extends Controller
     
     public function index()
     {
-        return response()->json(FeaturedArticle::all());
+        return response()->json(FeaturedArticle::all('*', new ArticleFormatter));
     }
     
     public function store(Request $request, $articleId)
