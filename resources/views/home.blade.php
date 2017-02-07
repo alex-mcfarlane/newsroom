@@ -4,7 +4,6 @@
 <div class="container">
     
     <div id="page-header">
-        <div class="row">
             
             @if(Auth::check())
                 @include('home.admin-featured')
@@ -12,34 +11,40 @@
                 @include('home.featured')
             @endif
             
-            <section id="featured-articles" class="col-md-3 col-sm-12">
-                <h2>Newest Articles</h2>
-                
-                @foreach($newestArticles as $categoryTitle => $category)
-                    @if($category['article'])
+        <section id="featured-articles">
+            <h2>Featured Articles</h2>
+            
+            <div class="row">
+                @foreach($featuredArticles as $article)
+                    <div class="col-sm-4">
                         <article class="article article-list-item">
                             
+                            <div class="article-image">
+                                <img src="{{$article->image->path}}" class="img-responsive" alt="Article image alt"/>
+                            </div>
+
                             <div class="article-list-item-info">
-                                <h4 class="article-tag"><a href="{{url('/categories/'.$category->id)}}">{{$categoryTitle}}</a></h4>
+                                @if($article->category)
+                                    <h4 class="article-tag">
+                                        <a href="{{url('/categories/'.$article->id)}}">
+                                            {{$article->category->title}}
+                                        </a>
+                                    </h4>
+                                @endif
 
                                 <div class="article-heading">
-                                    <h3><a href="{{url('/articles/'.$category['article']->id)}}">{{$category['article']->title}}</a></h3>
-                                    <time>{{date('F d, Y', strtotime($category['article']->created_at))}}</time>
+                                    <h3><a href="{{url('/articles/'.$article->id)}}">{{$article->title}}</a></h3>
+                                    <time>{{date('F d, Y', strtotime($article->created_at))}}</time>
                                 </div>
-
                             </div>
 
                         </article>
-                    @endif
+                    </div>
                 @endforeach
-                
-            </section>
-                 
-        </div>
-        
-        <div class="row">
+            </div>
             
-        </div>
+        </section>
+        
     </div>
         
 </div>

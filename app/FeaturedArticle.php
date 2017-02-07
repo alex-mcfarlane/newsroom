@@ -4,6 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
+use App\Newsroom\Interfaces\IModelFormatter;
 
 class FeaturedArticle extends Article
 {
@@ -12,9 +13,17 @@ class FeaturedArticle extends Article
         'order'
     ];
     
-    public static function all($columns = ['*'])
+    public static function all($columns = ['*'], IModelFormatter $formatter = null)
     {
-        return FeaturedArticle::featured()->select('articles.*')->get();
+        $featuredArticles = FeaturedArticle::with(['category', 'image'])->featured()->select('articles.*')->get();
+
+        if($formatter) {
+            foreach($featuredArticles as $article) {
+                $article = $formatter->format($article);
+            }
+        }
+
+        return $featuredArticles;
     }
     
     public function getOrderAttribute()
@@ -58,7 +67,8 @@ class FeaturedArticle extends Article
     
     public function scopeFeatured($query)
     {
-        return $query->join('featured_articles', 'articles.id', '=', 'featured_articles.article_id');
+        return $query->join('featured_articles', 'articles.id', '=', 'featured_articles.article_id')
+                        ->orderBy('featured_articles.order_id');
     }
 
     public function scopeFeaturedArticle($query, $articleId)
