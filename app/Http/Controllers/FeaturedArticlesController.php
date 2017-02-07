@@ -20,6 +20,6 @@ class FeaturedArticlesController extends Controller
     public function store(Request $request, $articleId)
     {
         $article = FeaturedArticle::find($articleId);
-        $article->addSortOrder($request->input('order_id'));
+        $article->setSortOrder($request->input('order_id'));
     }
 }
