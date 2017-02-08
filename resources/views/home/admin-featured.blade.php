@@ -1,4 +1,4 @@
-<section id="headliner" class="col-md-12">
+<section id="headliner">
 
     <div class="edit-overlay">
         <button type="button" class="btn btn-default btn-sm" data-toggle="modal" data-target="#add_headliner">

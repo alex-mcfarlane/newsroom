@@ -67,7 +67,7 @@ class Article extends Model
 
     public function image()
     {
-        return $this->hasOne('App\Image');
+        return $this->hasOne('App\Image', 'article_id');
     }
     
     public function setFeatured($featured)

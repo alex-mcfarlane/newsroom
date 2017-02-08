@@ -1,4 +1,4 @@
-<section id="featured" class="col-md-12">
+<section id="featured">
     @if($headlineArticle)
     <article class="featured-article">
         
