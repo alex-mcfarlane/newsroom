@@ -49,7 +49,7 @@ class Article extends Model
         return $article;
     }
     
-    public static function featured()
+    public static function headliner()
     {
         $article = self::where('featured', true)->with('image')->first();
 
@@ -67,7 +67,7 @@ class Article extends Model
 
     public function image()
     {
-        return $this->hasOne('App\Image');
+        return $this->hasOne('App\Image', 'article_id');
     }
     
     public function setFeatured($featured)
@@ -116,8 +116,8 @@ class Article extends Model
     
     public function markAsFeatured()
     {
-        //if another article(s) is featured, we need to unfeature them
-        if($article = Article::featured()) {
+        //if another article(s) is the headliner, we need to unfeature them
+        if($article = Article::headliner()) {
             $article->unfeature();
         }
         

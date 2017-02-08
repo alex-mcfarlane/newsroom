@@ -5,23 +5,17 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Http\Requests;
 use App\Article;
+use App\FeaturedArticle;
 use App\Category;
-use App\Newsroom\Articles\ArticleRetrieverService;
+use App\Newsroom\Articles\ArticleFormatter;
 
 class HomeController extends Controller
-{
-    protected $articleRetrieverService;
-    
-    public function __construct(ArticleRetrieverService $retrieverService)
-    {
-        $this->articleRetrieverService = $retrieverService;
-    }
-    
+{   
     public function index()
     {
-        $featuredArticle = Article::featured();        
-        $newestArticles = $this->articleRetrieverService->retrieveArticlesForCategories(Category::all(), 1);
+        $headlineArticle = Article::headliner();        
+        $featuredArticles = FeaturedArticle::all('*', new ArticleFormatter);
 
-        return view('home', compact('featuredArticle', 'newestArticles'));
+        return view('home', compact('headlineArticle', 'featuredArticles'));
     }
 }

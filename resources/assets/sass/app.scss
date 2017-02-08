@@ -8,6 +8,12 @@ body{
     background:#f4f4f4;
 }
 
+@media (min-width: 1200px) {
+    .container{
+        width: 1080px;
+    }
+}
+
 h1, h2, h3, h4, h5, h6, p{
 	margin:0;
 }
@@ -48,23 +54,48 @@ p{
 	margin-bottom: 10px;
 }
 
+a{
+    color:inherit;
+}
+
 time{
 	font-size: 1em;
+}
+
+.navbar-header{
+    h1{
+        font-size:2.25em;
+    }
+    
+    .navbar-brand{
+        font-size:inherit;
+        font-weight:700;
+        height:auto;
+        line-height: 1;
+    }
+}
+
+.navbar-nav > li{
+    padding: 10px 0;
+    > a{
+        font-size:1em;
+        text-transform: uppercase;
+    }
 }
 
 .featured-article{
 	position:relative;
     max-height:500px;
+    margin-bottom: 2.25em;
     overflow-y:hidden;
     
 	.article-info{
 		background-color: rgba(255,255,255,.7);
-		border-left: 1px solid $border-color;
-        border-bottom: 1px solid $border-color;
 	    position: absolute;
 	    top: 0;
 	    right: 0;
 	    width: 33.3%;
+        height:100%;
 	    padding: 1em;
 
 	    .article-tag{
@@ -90,13 +121,33 @@ time{
 	margin-bottom:1.5em;
 }
 
-.article-list-item{
+.article-image{
+    overflow-y: hidden;
+    max-height: 400px;
+}
+
+.article{
     background: #fff;
+}
+
+.article-item{
+    padding: 1em 2.25em;
+    
+    .article-image{
+        max-height: 400px;
+        margin-bottom:1.5em;
+    }
+}
+
+.article-list-item{
     margin-bottom:1.5em;
+    
+    .article-tag{
+        font-size:1em;
+    }
     
     .article-image{
     	max-height:200px;
-    	overflow-y: hidden;
     }
 
     .article-list-item-info{

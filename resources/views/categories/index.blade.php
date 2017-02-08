@@ -9,7 +9,7 @@
 
 	        @foreach($category->articles as $article)
 	        	<div class="col-md-4">
-	        		<article class="article-list-item">
+	        		<article class="article article-list-item">
 
 	        			<div class="article-image">
 	        				<img src="../{{$article->image->path}}" class="img-responsive" alt="Article image alt"/>
@@ -23,7 +23,7 @@
 	        				</h4>
 
 	        				<div class="article-heading">
-	            				<h3>{{$article->title}}</h3>
+                                <h3><a href="{{url('/articles/'.$article->id)}}">{{$article->title}}</a></h3>
 	            				<time>{{date('F d, Y', strtotime($article->created_at))}}</time>
 	            			</div>
 	            			
