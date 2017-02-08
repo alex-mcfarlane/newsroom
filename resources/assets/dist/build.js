@@ -178,6 +178,13 @@
 	        },
 	        categoryHref: function categoryHref(id) {
 	            return 'categories/' + id;
+	        },
+	        onMove: function onMove(event) {
+	            this.$http.post('api/articles/' + event.draggedContext.element.id + '/featured', {
+	                "order_id": event.draggedContext.futureIndex + 1
+	            }).then(function (response) {}, function (error) {
+	                console.log(error);
+	            });
 	        }
 	    }
 	});

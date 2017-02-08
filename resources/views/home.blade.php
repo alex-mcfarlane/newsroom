@@ -15,9 +15,11 @@
             <h2>Featured Articles</h2>
             <div class="row">
                 @if(Auth::check())
-                    <draggable :list="featured_articles">
+                    <draggable :list="featured_articles" :move="onMove">
                         <div v-for="featured_article in featured_articles" class="col-sm-4">
-                            <article class="article article-list-item">
+                            <article class="article article-list-item" 
+                                v-bind:data-article-id="featured_article.id"
+                                v-bind:data-order-id="featured_article.order">
 
                                 <div class="article-image">
                                     <img :src="featured_article.image.path" class="img-responsive" alt="Article image alt"/>
