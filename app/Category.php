@@ -3,6 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use DB;
 
 class Category extends Model
 {
@@ -16,5 +17,19 @@ class Category extends Model
     public function newestArticlesQuery()
     {
         return $this->articles()->with('image')->where('featured', false)->orderBy('created_at', 'desc');
+    }
+    
+    public static function popular($limit = null)
+    {
+        $builder = Category::select(DB::raw('categories.*, count(*) as article_count'))
+            ->join('articles', 'categories.id', '=', 'articles.category_id')
+            ->groupBy('category_id')
+            ->orderBy('article_count', 'desc');
+        
+        if($limit) {
+            $builder->limit($limit)->get();
+        }
+        
+        return $builder->get();
     }
 }
