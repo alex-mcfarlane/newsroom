@@ -8,8 +8,10 @@ body{
     background:#f4f4f4;
 }
 
-.container{
-    width: 1080px;
+@media (min-width: 1200px) {
+    .container{
+        width: 1080px;
+    }
 }
 
 h1, h2, h3, h4, h5, h6, p{
@@ -58,6 +60,27 @@ a{
 
 time{
 	font-size: 1em;
+}
+
+.navbar-header{
+    h1{
+        font-size:2.25em;
+    }
+    
+    .navbar-brand{
+        font-size:inherit;
+        font-weight:700;
+        height:auto;
+        line-height: 1;
+    }
+}
+
+.navbar-nav > li{
+    padding: 10px 0;
+    > a{
+        font-size:1em;
+        text-transform: uppercase;
+    }
 }
 
 .featured-article{

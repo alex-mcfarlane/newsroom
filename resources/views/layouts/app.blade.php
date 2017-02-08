@@ -38,7 +38,7 @@
                 <!-- Branding Image -->
                 <h1>
                     <a class="navbar-brand" href="{{ url('/') }}">
-                        Newsroom
+                        NewsRoom
                     </a>
                 </h1>
             </div>
