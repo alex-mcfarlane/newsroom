@@ -125,14 +125,16 @@ new Vue({
         categoryHref: function(id) {
             return 'categories/'+id;
         },
-        onMove: function(event) {
-            this.$http.post('api/articles/'+event.draggedContext.element.id+'/featured', {
-                "order_id": event.draggedContext.futureIndex+1
-            }).then(function(response){
+        onChange: function(object) {
+            if(object.hasOwnProperty("moved")) {
+                this.$http.post('api/articles/'+object.moved.element.id+'/featured', {
+                    "order_id": object.moved.newIndex + 1
+                }).then(function(response){
 
-            }, function(error){
-                console.log(error);
-            });
+                }, function(error){
+                    console.log(error);
+                });
+            }
         }
     }
 });

@@ -36,15 +36,17 @@ class FeaturedArticle extends Article
         return $orderId;
     }
     
-    public function setSortOrder($order)
+    public function setSortOrder($order, $originalOrder = 0)
     {
+        $originalOrder == 0 ? $originalOrder = $this->order : '';
+        
         if($this->hasSortOrder()) {
             $this->removeSortOrder();
         }
 
         if($article = Article::featured()->where('featured_articles.order_id', $order)->first()){
-
-            $article->setSortOrder($order + 1);
+            $newOrder = $order > $originalOrder ? $order - 1 : $order + 1;
+            $article->setSortOrder($newOrder, $originalOrder);
         }
 
         $this->addSortOrder($order);

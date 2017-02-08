@@ -15,7 +15,7 @@
             <h2>Featured Articles</h2>
             <div class="row">
                 @if(Auth::check())
-                    <draggable :list="featured_articles" :move="onMove">
+                    <draggable :list="featured_articles" @change="onChange">
                         <div v-for="featured_article in featured_articles" class="col-sm-4">
                             <article class="article article-list-item" 
                                 v-bind:data-article-id="featured_article.id"
