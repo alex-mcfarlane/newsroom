@@ -60,11 +60,12 @@
                     @else
                         <li class="dropdown">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-                                +
+                                <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
                             </a>
 
                             <ul class="dropdown-menu" role="menu">
-                                <li><a href="{{ url('/logout') }}"><i class="fa fa-btn fa-sign-out"></i>Logout</a></li>
+                                <li><a href="" data-toggle="modal" data-target="#add-article">Add Article</a></li>
+                                <li><a href="" data-toggle="modal" data-target="#add-category">Add Category</a></li>
                             </ul>
                         </li>
                         <li class="dropdown">
@@ -82,7 +83,109 @@
         </div>
     </nav>
 
-    @yield('content')
+    <div id="vue-app" class="container">
+        @yield('content')
+
+        <div id="add-resources">
+
+            <div id="add-article" class="modal fade" role="dialog" aria-labelledby="myModalLabel">
+                <div class="modal-dialog">
+                    <!-- Modal content-->
+                    <div class="modal-content">
+
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                            <h3>Add an Article</h3>
+                        </div>
+
+                        <div class="modal-body">
+                            <form v-on:submit.prevent="createArticle">
+                                
+                                <div class="form-group">
+                                    <label for="new-feature-title">Title</label>
+                                    
+                                    <input v-model="article.title" class="form-control"></input>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="new-feature-body">Body</label>
+                                    
+                                    <textarea v-model="article.body" class="form-control"></textarea>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="new-headline-category">Category</label>
+
+                                    <select v-model="article.category_id" class="form-control">
+                                        <option v-for="category in categories" v-bind:value="category.id">
+                                            @{{ category.title }}
+                                        </option>
+                                    </select>                               
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="new-headline-category">Headliner</label>
+
+                                    <select v-model="article.featured" class="form-control">
+                                        <option value="0">
+                                            No
+                                        </option>
+                                        <option value="1">
+                                            Yes
+                                        </option>
+                                    </select>                               
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="new-headline-image">Image</label>
+
+                                    <input v-on:change="onFileChange" type="file"></input>
+                                </div>
+                                
+                                <button type="submit" class="btn btn-success">Create</button>
+                                
+                            </form>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <div id="add-category" class="modal fade" role="dialog" aria-labelledby="myModalLabel">
+                <div class="modal-dialog">
+                    <!-- Modal content-->
+                    <div class="modal-content">
+
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                            <h3>Create New Category</h3>
+                        </div>
+
+                        <div class="modal-body">
+                            <form v-on:submit.prevent="createCategory">
+                                
+                                <div class="form-group">
+                                    <label for="new-feature-title">Title</label>
+                                    
+                                    <input v-model="category.title" class="form-control"></input>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="new-feature-body">Description</label>
+                                    
+                                    <textarea v-model="category.description" class="form-control"></textarea>
+                                </div>
+                                
+                                <button type="submit" class="btn btn-success">Create</button>
+                                
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div> <!-- end of #add-resources -->
+
+    </div> <!-- end of #vue-app -->
 
     <!-- JavaScripts -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.3/jquery.min.js" integrity="sha384-I6F5OKECLVtK/BL+8iSLDEHowSAfUo76ZL9+kGAgTRdiByINKJaqTPH/QVNS1VDb" crossorigin="anonymous"></script>

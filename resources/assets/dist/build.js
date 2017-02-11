@@ -76,10 +76,8 @@
 	    },
 	    methods: {
 	        getFeaturedArticles: function getFeaturedArticles() {
-	            var self = this;
-
 	            this.$http.get('api/articles/featured').then(function (response) {
-	                self.featured_articles = response.body;
+	                this.featured_articles = response.body;
 	            }, function (error) {
 	                console.log(error);
 	            });
@@ -123,58 +121,50 @@
 	    },
 	    methods: {
 	        getArticles: function getArticles() {
-	            var self = this;
-
 	            this.$http.get('api/articles').then(function (response) {
-	                self.articles = response.body;
+	                this.articles = response.body;
 	            }, function (error) {
 	                console.log(error);
 	            });
 	        },
 	        getCategories: function getCategories() {
-	            self = this;
-
 	            this.$http.get('api/categories').then(function (response) {
-	                self.categories = response.body;
+	                this.categories = response.body;
 
-	                self.article.category_id = self.categories[0].id;
+	                this.article.category_id = this.categories[0].id;
 	            }, function (error) {
 	                console.log(error);
 	            });
 	        },
 	        getHeadlineArticle: function getHeadlineArticle() {
-	            var self = this;
-
 	            this.$http.get('api/articles?featured=1').then(function (response) {
-	                self.headline_article = response.body[0];
-	                self.headline_article.body = self.headline_article.body.substring(0, 150) + " ...";
+	                this.headline_article = response.body[0];
+	                this.headline_article.body = this.headline_article.body.substring(0, 150) + " ...";
 
-	                self.headline_article_id = self.headline_article.id;
+	                this.headline_article_id = this.headline_article.id;
 	            }, function (error) {
 	                console.log(error);
 	            });
 	        },
 	        changeHeadlineArticle: function changeHeadlineArticle(id) {
-	            var self = this;
-
 	            this.$http.put('api/articles/' + id + '/headline').then(function (response) {
-	                self.headline_article = response.body;
-	                self.headline_article.body = self.headline_article.body.substring(0, 150) + " ...";
+	                this.headline_article = response.body;
+	                this.headline_article.body = this.headline_article.body.substring(0, 150) + " ...";
 	            }, function (error) {
 	                console.log(error);
 	            });
 	        },
 	        createArticle: function createArticle() {
-	            this.$http.post('api/articles', self.article).then(function (response) {
+	            this.$http.post('api/articles', this.article).then(function (response) {
 	                var article = response.body;
 
 	                //upload image for article
-	                this.$http.post('api/articles/' + article.id + '/images', self.fileFormData).then(function (response) {
+	                this.$http.post('api/articles/' + article.id + '/images', this.fileFormData).then(function (response) {
 	                    article.image = response.body;
 
 	                    //close modal and clear entry
 	                    $('#add-article').modal('toggle');
-	                    self.article = {};
+	                    this.article = {};
 	                }, function (error) {
 	                    console.log(error);
 	                });
@@ -183,20 +173,19 @@
 	            });
 	        },
 	        createHeadlineArticle: function createHeadlineArticle() {
-	            var self = this;
 	            this.article.featured = true;
 
-	            this.$http.post('api/articles', self.article).then(function (response) {
-	                self.headline_article = response.body;
-	                self.headline_article.body = self.headline_article.body.substring(0, 150) + " ...";
+	            this.$http.post('api/articles', this.article).then(function (response) {
+	                this.headline_article = response.body;
+	                this.headline_article.body = this.headline_article.body.substring(0, 150) + " ...";
 
 	                //upload image for article
-	                this.$http.post('api/articles/' + self.headline_article.id + '/images', self.fileFormData).then(function (response) {
-	                    self.headline_article.image = response.body;
+	                this.$http.post('api/articles/' + this.headline_article.id + '/images', this.fileFormData).then(function (response) {
+	                    this.headline_article.image = response.body;
 
 	                    //close modal and clear entry
 	                    $('#add_headline').modal('toggle');
-	                    self.article = {};
+	                    this.article = {};
 	                }, function (error) {
 	                    console.log(error);
 	                });
