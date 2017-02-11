@@ -7,21 +7,36 @@ use App\Http\Requests;
 use App\Article;
 use App\Category;
 use App\Newsroom\Articles\ArticleRetrieverService;
+use App\Newsroom\Articles\ArticleUpdater;
 
 class ArticlesController extends Controller
 {
     protected $articleRetrieverService;
-    
-    public function __construct(ArticleRetrieverService $articleRetrieverService)
+    protected $articleUpdater;
+
+    public function __construct(ArticleRetrieverService $articleRetrieverService, ArticleUpdater $articleUpdater)
     {
         $this->articleRetrieverService = $articleRetrieverService;
+        $this->articleUpdater = $articleUpdater;
     }
     
     public function show($id)
     {
         $article = Article::withSubResources($id);
+        $categories = Category::all();
         $newestArticles = $this->articleRetrieverService->retrieveArticlesForCategories(Category::all(), 1);
         
-        return view('articles.view', compact('article', 'newestArticles'));
+        return view('articles.view', compact('article', 'categories', 'newestArticles'));
+    }
+
+    public function update(Request $request, $articleId)
+    {
+        try{
+            $article = $this->articleUpdater->update($articleId, $request->only('title', 'body', 'featured', 'category_id'));
+        } catch(ArticleException $e) {
+            return response()->json(["errors" => $e->getErrors()], 400);
+        }
+
+        return back();
     }
 }

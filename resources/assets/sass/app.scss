@@ -108,6 +108,10 @@ time{
 	position: absolute;
     padding: 1em;
     z-index: 1;
+
+    &.right{
+        right:1em;
+    }
 }
 
 .article-tag{

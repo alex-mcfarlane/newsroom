@@ -37,6 +37,8 @@ Route::group(['middleware' => ['web']], function() {
     Route::get('/', 'HomeController@index');
     
     Route::get('/articles/{id}', 'ArticlesController@show');
+
+    Route::put('/articles/{id}', 'ArticlesController@update');
     
     Route::get('/categories/{id}', 'CategoriesController@show');
     

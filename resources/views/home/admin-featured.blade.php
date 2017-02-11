@@ -27,10 +27,18 @@
         </div>
 
         <div class="article-info">
-            <h4 v-if="headline_article.category" class="article-tag">@{{headline_article.category.title}}</h4>
+            <h4 v-if="headline_article.category" class="article-tag">
+                <a v-bind:href="'categories/'+headline_article.category.id">
+                    @{{headline_article.category.title}}
+                </a>
+            </h4>
 
             <div class="article-heading">
-                <h2>@{{headline_article.title}}</h2>
+                <h2>
+                    <a v-bind:href="'articles/'+headline_article.id">
+                        @{{headline_article.title}}
+                    </a>
+                </h2>
                 <time>@{{headline_article.created_at}}</time>
             </div>
 

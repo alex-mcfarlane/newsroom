@@ -79,6 +79,8 @@ time {
   position: absolute;
   padding: 1em;
   z-index: 1; }
+  .edit-overlay.right {
+    right: 1em; }
 
 .article-tag {
   font-size: 1em;

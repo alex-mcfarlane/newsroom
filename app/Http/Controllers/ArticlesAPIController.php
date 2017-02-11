@@ -18,6 +18,7 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 class ArticlesAPIController extends Controller
 {
     protected $articleCreator;
+    protected $articleUpdater;
     protected $imageCreator;
 
     public function __construct(ArticleCreator $articleCreator, ArticleUpdater $articleUpdater,

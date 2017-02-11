@@ -9,14 +9,18 @@
         <div class="article-info">
             @if($headlineArticle->category)
                 <h4 class="article-tag">
-                    <a href="{{url('/articles/'.$headlineArticle->id)}}">
+                    <a href="{{url('/categories/'.$headlineArticle->category->id)}}">
                         {{$headlineArticle->category->title}}
                     </a>
                 </h4>
             @endif
 
             <div class="article-heading">
-                <h2>{{$headlineArticle->title}}</h2>
+                <h2>
+                    <a href="{{url('/articles/'.$headlineArticle->id)}}">
+                        {{$headlineArticle->title}}
+                    </a>
+                </h2>
                 <time>{{date('F d, Y', strtotime($headlineArticle->created_at))}}</time>
             </div>
 
