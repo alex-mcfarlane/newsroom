@@ -64,11 +64,48 @@
 
 
 	new Vue({
-	    el: "#headliner",
+	    el: "#featured-articles",
+	    data: {
+	        featured_articles: []
+	    },
+	    components: {
+	        draggable: _vuedraggable2.default
+	    },
+	    created: function created() {
+	        this.getFeaturedArticles();
+	    },
+	    methods: {
+	        getFeaturedArticles: function getFeaturedArticles() {
+	            var self = this;
+
+	            this.$http.get('api/articles/featured').then(function (response) {
+	                self.featured_articles = response.body;
+	            }, function (error) {
+	                console.log(error);
+	            });
+	        },
+	        categoryHref: function categoryHref(id) {
+	            return 'categories/' + id;
+	        },
+	        onChange: function onChange(object) {
+	            if (object.hasOwnProperty("moved")) {
+	                this.$http.post('api/articles/' + object.moved.element.id + '/featured', {
+	                    "order_id": object.moved.newIndex + 1
+	                }).then(function (response) {}, function (error) {
+	                    console.log(error);
+	                });
+	            }
+	        }
+	    }
+	});
+
+	new Vue({
+	    el: "#vue-app",
 	    data: {
 	        articles: [],
 	        categories: [],
 	        article: {},
+	        category: {},
 	        headline_article: {
 	            image: {
 	                path: ''
@@ -127,6 +164,24 @@
 	                console.log(error);
 	            });
 	        },
+	        createArticle: function createArticle() {
+	            this.$http.post('api/articles', self.article).then(function (response) {
+	                var article = response.body;
+
+	                //upload image for article
+	                this.$http.post('api/articles/' + article.id + '/images', self.fileFormData).then(function (response) {
+	                    article.image = response.body;
+
+	                    //close modal and clear entry
+	                    $('#add-article').modal('toggle');
+	                    self.article = {};
+	                }, function (error) {
+	                    console.log(error);
+	                });
+	            }, function (error) {
+	                console.log(error);
+	            });
+	        },
 	        createHeadlineArticle: function createHeadlineArticle() {
 	            var self = this;
 	            this.article.featured = true;
@@ -149,44 +204,15 @@
 	                console.log(error);
 	            });
 	        },
-	        onFileChange: function onFileChange(e) {
-	            this.fileFormData.append('image', e.target.files[0]);
-	        }
-	    }
-	});
-
-	new Vue({
-	    el: "#featured-articles",
-	    data: {
-	        featured_articles: []
-	    },
-	    components: {
-	        draggable: _vuedraggable2.default
-	    },
-	    created: function created() {
-	        this.getFeaturedArticles();
-	    },
-	    methods: {
-	        getFeaturedArticles: function getFeaturedArticles() {
-	            var self = this;
-
-	            this.$http.get('api/articles/featured').then(function (response) {
-	                self.featured_articles = response.body;
+	        createCategory: function createCategory() {
+	            this.$http.post('api/categories', this.category).then(function (response) {
+	                $('#add-category').modal('toggle');
 	            }, function (error) {
 	                console.log(error);
 	            });
 	        },
-	        categoryHref: function categoryHref(id) {
-	            return 'categories/' + id;
-	        },
-	        onChange: function onChange(object) {
-	            if (object.hasOwnProperty("moved")) {
-	                this.$http.post('api/articles/' + object.moved.element.id + '/featured', {
-	                    "order_id": object.moved.newIndex + 1
-	                }).then(function (response) {}, function (error) {
-	                    console.log(error);
-	                });
-	            }
+	        onFileChange: function onFileChange(e) {
+	            this.fileFormData.append('image', e.target.files[0]);
 	        }
 	    }
 	});

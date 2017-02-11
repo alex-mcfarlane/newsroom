@@ -6,12 +6,52 @@ export default {
     }
 }
 
+
 new Vue({
-    el:"#headliner",
+    el:"#featured-articles",
+    data:{                
+        featured_articles: []
+    },
+    components: {
+        draggable
+    },
+    created: function() {
+        this.getFeaturedArticles();
+    },
+    methods: {
+        getFeaturedArticles: function() {
+            var self = this;
+
+            this.$http.get('api/articles/featured').then(function(response){
+                self.featured_articles = response.body;
+            }, function(error){
+                console.log(error);
+            })
+        },
+        categoryHref: function(id) {
+            return 'categories/'+id;
+        },
+        onChange: function(object) {
+            if(object.hasOwnProperty("moved")) {
+                this.$http.post('api/articles/'+object.moved.element.id+'/featured', {
+                    "order_id": object.moved.newIndex + 1
+                }).then(function(response){
+
+                }, function(error){
+                    console.log(error);
+                });
+            }
+        }
+    }
+});
+
+new Vue({
+    el:"#vue-app",
     data: {
         articles: [],
         categories: [],
         article: {},
+        category: {},
         headline_article: {
             image:
             {
@@ -71,6 +111,25 @@ new Vue({
                 console.log(error);
             });
         },
+        createArticle: function() {
+            this.$http.post('api/articles', self.article).then(function(response){
+                var article = response.body;
+                
+                //upload image for article
+                this.$http.post('api/articles/'+article.id+'/images', self.fileFormData).then(function(response){
+                    article.image = response.body;
+
+                    //close modal and clear entry
+                    $('#add-article').modal('toggle');
+                    self.article = {};
+                }, function(error){
+                    console.log(error);
+                })
+                
+            }, function(error){
+                console.log(error);
+            });
+        },
         createHeadlineArticle: function() {
             var self = this;
             this.article.featured = true;
@@ -95,46 +154,15 @@ new Vue({
                 console.log(error);
             });
         },
-        onFileChange: function(e) {
-            this.fileFormData.append('image', e.target.files[0]);
-        }
-    }
-});
-
-new Vue({
-    el:"#featured-articles",
-    data:{                
-        featured_articles: []
-    },
-    components: {
-        draggable
-    },
-    created: function() {
-        this.getFeaturedArticles();
-    },
-    methods: {
-        getFeaturedArticles: function() {
-            var self = this;
-
-            this.$http.get('api/articles/featured').then(function(response){
-                self.featured_articles = response.body;
+        createCategory: function() {
+            this.$http.post('api/categories', this.category).then(function(response){
+                $('#add-category').modal('toggle');
             }, function(error){
                 console.log(error);
-            })
+            });
         },
-        categoryHref: function(id) {
-            return 'categories/'+id;
-        },
-        onChange: function(object) {
-            if(object.hasOwnProperty("moved")) {
-                this.$http.post('api/articles/'+object.moved.element.id+'/featured', {
-                    "order_id": object.moved.newIndex + 1
-                }).then(function(response){
-
-                }, function(error){
-                    console.log(error);
-                });
-            }
+        onFileChange: function(e) {
+            this.fileFormData.append('image', e.target.files[0]);
         }
     }
 });
