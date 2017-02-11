@@ -130,9 +130,6 @@ new Vue({
                 console.log(error);
             });
         },
-        categoryHref: function(id) {
-            return 'categories/'+id;
-        },
         onChange: function(object) {
             if(object.hasOwnProperty("moved")) {
                 this.$http.post('api/articles/'+object.moved.element.id+'/featured', {

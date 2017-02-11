@@ -26,13 +26,13 @@
 
                                 <div class="article-list-item-info">
                                     <h4 v-if="featured_article.category" class="article-tag">
-                                        <a v-bind:href="categoryHref(featured_article.category.id)">
+                                        <a v-bind:href="'categories/'+featured_article.category.id">
                                             @{{featured_article.category.title}}
                                         </a>
                                     </h4>
 
                                     <div class="article-heading">
-                                        <h3><a v-bind:href="categoryHref(featured_article.id)">@{{featured_article.title}}</a></h3>
+                                        <h3><a v-bind:href="'articles/'+featured_article.id">@{{featured_article.title}}</a></h3>
                                         <time>@{{featured_article.created_at}}</time>
                                     </div>
                                 </div>
