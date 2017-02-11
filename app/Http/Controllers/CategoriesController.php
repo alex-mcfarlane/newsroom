@@ -18,6 +18,6 @@ class CategoriesController extends Controller
     {   
         $category = $this->articleRetrieverService->retrieveArticlesForCategory(Category::find($id));
         
-        return view('categories.index', compact('category'));
+        return view('categories.view', compact('category'));
     }
 }
