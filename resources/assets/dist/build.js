@@ -64,43 +64,10 @@
 
 
 	new Vue({
-	    el: "#featured-articles",
-	    data: {
-	        featured_articles: []
-	    },
-	    components: {
-	        draggable: _vuedraggable2.default
-	    },
-	    created: function created() {
-	        this.getFeaturedArticles();
-	    },
-	    methods: {
-	        getFeaturedArticles: function getFeaturedArticles() {
-	            this.$http.get('api/articles/featured').then(function (response) {
-	                this.featured_articles = response.body;
-	            }, function (error) {
-	                console.log(error);
-	            });
-	        },
-	        categoryHref: function categoryHref(id) {
-	            return 'categories/' + id;
-	        },
-	        onChange: function onChange(object) {
-	            if (object.hasOwnProperty("moved")) {
-	                this.$http.post('api/articles/' + object.moved.element.id + '/featured', {
-	                    "order_id": object.moved.newIndex + 1
-	                }).then(function (response) {}, function (error) {
-	                    console.log(error);
-	                });
-	            }
-	        }
-	    }
-	});
-
-	new Vue({
 	    el: "#vue-app",
 	    data: {
 	        articles: [],
+	        featured_articles: [],
 	        categories: [],
 	        article: {},
 	        category: {},
@@ -114,8 +81,12 @@
 	        edit_headliner: false,
 	        fileFormData: new FormData()
 	    },
+	    components: {
+	        draggable: _vuedraggable2.default
+	    },
 	    created: function created() {
 	        this.getArticles();
+	        this.getFeaturedArticles();
 	        this.getCategories();
 	        this.getHeadlineArticle();
 	    },
@@ -123,6 +94,13 @@
 	        getArticles: function getArticles() {
 	            this.$http.get('api/articles').then(function (response) {
 	                this.articles = response.body;
+	            }, function (error) {
+	                console.log(error);
+	            });
+	        },
+	        getFeaturedArticles: function getFeaturedArticles() {
+	            this.$http.get('api/articles/featured').then(function (response) {
+	                this.featured_articles = response.body;
 	            }, function (error) {
 	                console.log(error);
 	            });
@@ -162,6 +140,8 @@
 	                this.$http.post('api/articles/' + article.id + '/images', this.fileFormData).then(function (response) {
 	                    article.image = response.body;
 
+	                    //add new article to list of articles
+	                    this.articles.push(article);
 	                    //close modal and clear entry
 	                    $('#add-article').modal('toggle');
 	                    this.article = {};
@@ -184,7 +164,7 @@
 	                    this.headline_article.image = response.body;
 
 	                    //close modal and clear entry
-	                    $('#add_headline').modal('toggle');
+	                    $('#add_headliner').modal('toggle');
 	                    this.article = {};
 	                }, function (error) {
 	                    console.log(error);
@@ -195,10 +175,24 @@
 	        },
 	        createCategory: function createCategory() {
 	            this.$http.post('api/categories', this.category).then(function (response) {
+	                //add to list of categories
+	                this.categories.push(response.body);
 	                $('#add-category').modal('toggle');
 	            }, function (error) {
 	                console.log(error);
 	            });
+	        },
+	        categoryHref: function categoryHref(id) {
+	            return 'categories/' + id;
+	        },
+	        onChange: function onChange(object) {
+	            if (object.hasOwnProperty("moved")) {
+	                this.$http.post('api/articles/' + object.moved.element.id + '/featured', {
+	                    "order_id": object.moved.newIndex + 1
+	                }).then(function (response) {}, function (error) {
+	                    console.log(error);
+	                });
+	            }
 	        },
 	        onFileChange: function onFileChange(e) {
 	            this.fileFormData.append('image', e.target.files[0]);
