@@ -39,4 +39,11 @@ class ArticlesController extends Controller
 
         return back();
     }
+
+    public function delete($id)
+    {
+        Article::destroy($id);
+
+        return redirect()->route('home');
+    }
 }

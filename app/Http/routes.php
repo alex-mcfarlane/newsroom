@@ -34,11 +34,11 @@ Route::group(['middleware' => ['web']], function() {
     Route::get('/register', 'UsersController@create');
     Route::post('/users', 'UsersController@store');
     
-    Route::get('/', 'HomeController@index');
+    Route::get('/', ['as' => 'home', 'uses' => 'HomeController@index']);
     
     Route::get('/articles/{id}', 'ArticlesController@show');
-
     Route::put('/articles/{id}', 'ArticlesController@update');
+    Route::delete('/articles/{id}', 'ArticlesController@delete');
     
     Route::get('/categories/{id}', 'CategoriesController@show');
     
