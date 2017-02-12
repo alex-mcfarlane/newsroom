@@ -103,15 +103,27 @@ class Article extends Model
         }
     }
 
+    public function addImage(Image $image)
+    {
+        if($this->image()->count() >= 1) {
+            $this->changeImage($image);
+        }
+        else {
+            $this->image()->save($image);
+        }
+    }
+
+    public function changeImage(Image $image)
+    {
+        $this->image()->delete();
+
+        $this->image()->save($image);
+    }
+
     private function clearCategory()
     {
         $this->category()->dissociate();
         $this->save();
-    }
-
-    public function addImage(Image $image)
-    {
-        $this->image()->save($image);
     }
     
     public function markAsFeatured()

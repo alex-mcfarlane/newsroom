@@ -67,7 +67,7 @@
                 </div>
 
                 <div class="modal-body">
-                    <form action="{{url('articles/'.$article->id)}}" method="POST">
+                    <form action="{{url('articles/'.$article->id)}}" method="POST" enctype="multipart/form-data">
                         
                         {{ csrf_field() }}
 
@@ -97,6 +97,12 @@
 
                                 @endforeach
                             </select>                               
+                        </div>
+
+                        <div class="form-group">
+                            <label for="image">Image (leave blank to keep original)</label>
+
+                            <input type="file" id="image" name="image"></input>
                         </div>
 
                         <div class="form-group">
@@ -138,7 +144,7 @@
                         <input type="hidden" name="_method" value="DELETE"/>
 
                         <p>Are you sure you want to delete this article?</p>
-                        
+
                         <button type="submit" class="btn btn-danger">Delete</button>
                     </form> 
                 </div>

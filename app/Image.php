@@ -21,6 +21,8 @@ class Image extends Model
 
         $fileStore->store($file, $image->baseDir, $name);
 
+        $image->save();
+        
 	    return $image;
     }
 
