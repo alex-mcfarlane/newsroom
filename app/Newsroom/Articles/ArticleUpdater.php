@@ -40,7 +40,9 @@ class ArticleUpdater {
                             $attributes['category_id']);
 
             if($file) {
-                $this->imageCreator->make($id, $file);
+                $image = $this->imageCreator->make($file);
+
+                $article->changeImage($image);
             }
         } catch(ModelNotFoundException $e) {
             throw new ArticleException([$e->getMessage()]);

@@ -73,11 +73,18 @@ class ArticlesAPIController extends Controller
 
     public function addImage(Request $request, $articleId)
     {
+        if(!$article = Article::find($articleId)) {
+            return new ImageException(['Article not found'], 404);
+        }
+
         try{
-            $image = $this->imageCreator->make($articleId, $request->file('image'));
+            $image = $this->imageCreator->make($request->file('image'));
+            
+            $article->addImage($image);
+            
             return response()->json($image);
         } catch(ImageException $e) {
-            return response()->json($e->geterrors());
+            return response()->json($e->getErrors());
         }
     }
     

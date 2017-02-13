@@ -105,19 +105,14 @@ class Article extends Model
 
     public function addImage(Image $image)
     {
-        if($this->image()->count() >= 1) {
-            $this->changeImage($image);
-        }
-        else {
-            $this->image()->save($image);
-        }
+        $this->image()->save($image);
     }
 
     public function changeImage(Image $image)
     {
         $this->image()->delete();
 
-        $this->image()->save($image);
+        $this->addImage($image);
     }
 
     private function clearCategory()
