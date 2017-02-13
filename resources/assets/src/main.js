@@ -21,6 +21,7 @@ new Vue({
             }
         },
         headline_article_id: 1,
+        new_feature_article_id: 1,
         add_headliner: false,
         edit_headliner: false,
         fileFormData: new FormData()

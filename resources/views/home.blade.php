@@ -14,6 +14,21 @@
             <h2>Featured Articles</h2>
             <div class="row">
                 @if(Auth::check())
+                
+                    <div class="col-lg-12">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <select v-model="new_feature_article_id" class="form-control">
+                                    <option v-for="article in articles" v-bind:value="article.id">@{{article.title}}</option>
+                                </select>
+                            </div>
+                            
+                            <div class="col-md-2">
+                                <button class="btn btn-sm btn-primary">Feature an Article</button>
+                            </div>
+                        </div>
+                    </div>
+                
                     <draggable :list="featured_articles" @change="onChange">
                         <div v-for="featured_article in featured_articles" class="col-sm-4">
                             <article class="article article-list-item" 
@@ -40,6 +55,7 @@
                             </article>
                         </div>
                     </draggable>
+                
                 @else
                     @foreach($featuredArticles as $article)
                         <div class="col-sm-4">
