@@ -5,6 +5,7 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 use App\Newsroom\Exceptions\CategoryNotFoundException;
 use App\Image;
+use App\Newsroom\Images\LocalFileStore;
 
 class Article extends Model
 {
@@ -43,7 +44,7 @@ class Article extends Model
     public function delete()
     {
         if($this->hasImage()) {
-            $this->image->delete();
+            $this->image->remove(new LocalFileStore);
         }
 
         parent::delete();
