@@ -2,67 +2,50 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use App\Http\Requests;
 use App\Article;
-use App\Newsroom\Articles\ArticleCreator;
-use App\Newsroom\Articles\ArticleQuerier;
-use App\Newsroom\Articles\ArticleFormatter;
-use App\Newsroom\Images\ImageCreator;
-use App\Newsroom\Exceptions\ArticleException;
-use App\Newsroom\Exceptions\ImageException;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
+use App\Category;
+use App\Newsroom\Articles\ArticleRetrieverService;
+use App\Newsroom\Articles\ArticleUpdater;
 
 class ArticlesController extends Controller
 {
-    protected $articleCreator;
-    protected $imageCreator;
+    protected $articleRetrieverService;
+    protected $articleUpdater;
 
-    public function __construct(ArticleCreator $articleCreator, ImageCreator $imageCreator)
+    public function __construct(ArticleRetrieverService $articleRetrieverService, ArticleUpdater $articleUpdater)
     {
-        //$this->middleware('jwt.auth', ['except' => ['index']]);
-        $this->articleCreator = $articleCreator;
-        $this->imageCreator = $imageCreator;
-    }
-    
-    public function index(Request $request)
-    {
-        
-            $articleQuerier = new ArticleQuerier($request->all());
-            $articles = $articleQuerier->search(new ArticleFormatter);
-
-        return response()->json($articles);
-    }
-
-    public function store(Request $request)
-    {        
-        try{
-            $article = $this->articleCreator->make($request->only('title', 'body', 'featured', 'category_id'));
-        }
-        catch(ArticleException $e) {
-            return response()->json($e->getErrors());
-        }
-        
-        return response()->json($article);
+        $this->articleRetrieverService = $articleRetrieverService;
+        $this->articleUpdater = $articleUpdater;
     }
     
     public function show($id)
     {
-        try{
-            return response()->json(Article::withSubResources($id));
-        } catch(ModelNotFoundException $e) {
-            return response()->json($e->getMessage());
-        }
+        $article = Article::withSubResources($id);
+        $categories = Category::all();
+        $newestArticles = $this->articleRetrieverService->retrieveArticlesForCategories(Category::all(), 1);
+        
+        return view('articles.view', compact('article', 'categories', 'newestArticles'));
     }
 
-    public function addImage(Request $request, $articleId)
+    public function update(Request $request, $articleId)
     {
         try{
-            $image = $this->imageCreator->make($articleId, $request->file('image'));
-            return response()->json($image);
-        } catch(ImageException $e) {
-            return response()->json($e->geterrors());
+            $article = $this->articleUpdater->update($articleId, $request->only('title', 'body', 'featured', 'category_id'), $request->file('image'));
+        } catch(ArticleException $e) {
+            return response()->json(["errors" => $e->getErrors()], 400);
         }
+
+        return back();
+    }
+
+    public function delete($id)
+    {
+        $article = Article::find($id);
+
+        $article->delete();
+
+        return redirect()->route('home');
     }
 }

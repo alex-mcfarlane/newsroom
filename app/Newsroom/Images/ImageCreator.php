@@ -2,7 +2,6 @@
 
 namespace App\Newsroom\Images;
 
-use App\Article;
 use App\Image;
 use App\Newsroom\Validators\ImageValidator;
 use App\Newsroom\Exceptions\ImageException;
@@ -16,19 +15,13 @@ class ImageCreator
 		$this->validator = $validator;
 	}
 
-	public function make($articleId, $file)
+	public function make($file)
 	{
-		if(!$article = Article::find($articleId)) {
-			throw new ImageException(['Article not found'], 404);
-		}
-
 		if(!$this->validator->isValid(['image' => $file])) {
 			throw new ImageException($this->validator->getErrors());
 		}
 	    
-	    $image = Image::fromRequest($file);
-
-	    $article->addImage($image);
+	    $image = Image::fromRequest($file, new LocalFileStore);
 
 	    return $image;
 	}

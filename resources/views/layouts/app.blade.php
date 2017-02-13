@@ -36,16 +36,19 @@
                 </button>
 
                 <!-- Branding Image -->
-                <a class="navbar-brand" href="{{ url('/') }}">
-                    Newsroom
-                </a>
+                <h1>
+                    <a class="navbar-brand" href="{{ url('/') }}">
+                        NewsRoom
+                    </a>
+                </h1>
             </div>
 
             <div class="collapse navbar-collapse" id="app-navbar-collapse">
                 <!-- Left Side Of Navbar -->
                 <ul class="nav navbar-nav">
-                    <li><a href="{{ url('/home') }}">Articles</a></li>
-                    <li><a href="{{ url('/home') }}">Archives</a></li>
+                    @foreach($categories as $category)
+                        <li><a href="{{ url('/categories/'.$category->id) }}">{{$category->title}}</a></li>
+                    @endforeach
                 </ul>
 
                 <!-- Right Side Of Navbar -->
@@ -55,6 +58,16 @@
                         <li><a href="{{ url('/login') }}">Login</a></li>
                         <li><a href="{{ url('/register') }}">Register</a></li>
                     @else
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+                                <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                            </a>
+
+                            <ul class="dropdown-menu" role="menu">
+                                <li><a href="" data-toggle="modal" data-target="#add-article">Add Article</a></li>
+                                <li><a href="" data-toggle="modal" data-target="#add-category">Add Category</a></li>
+                            </ul>
+                        </li>
                         <li class="dropdown">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
                                 {{ Auth::user()->name }} <span class="caret"></span>
@@ -70,61 +83,120 @@
         </div>
     </nav>
 
-    @yield('content')
+    <div id="vue-app" class="container">
+        @yield('content')
+
+        <div id="add-resources">
+
+            <div id="add-article" class="modal fade" role="dialog" aria-labelledby="myModalLabel">
+                <div class="modal-dialog">
+                    <!-- Modal content-->
+                    <div class="modal-content">
+
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                            <h3>Add an Article</h3>
+                        </div>
+
+                        <div class="modal-body">
+                            <form v-on:submit.prevent="createArticle">
+                                
+                                <div class="form-group">
+                                    <label for="new-feature-title">Title</label>
+                                    
+                                    <input v-model="article.title" class="form-control"></input>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="new-feature-body">Body</label>
+                                    
+                                    <textarea v-model="article.body" class="form-control"></textarea>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="new-headline-category">Category</label>
+
+                                    <select v-model="article.category_id" class="form-control">
+                                        <option v-for="category in categories" v-bind:value="category.id">
+                                            @{{ category.title }}
+                                        </option>
+                                    </select>                               
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="new-headline-category">Headliner</label>
+
+                                    <select v-model="article.featured" class="form-control">
+                                        <option value="0">
+                                            No
+                                        </option>
+                                        <option value="1">
+                                            Yes
+                                        </option>
+                                    </select>                               
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="new-headline-image">Image</label>
+
+                                    <input v-on:change="onFileChange" type="file"></input>
+                                </div>
+                                
+                                <button type="submit" class="btn btn-success">Create</button>
+                                
+                            </form>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <div id="add-category" class="modal fade" role="dialog" aria-labelledby="myModalLabel">
+                <div class="modal-dialog">
+                    <!-- Modal content-->
+                    <div class="modal-content">
+
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                            <h3>Create New Category</h3>
+                        </div>
+
+                        <div class="modal-body">
+                            <form v-on:submit.prevent="createCategory">
+                                
+                                <div class="form-group">
+                                    <label for="new-feature-title">Title</label>
+                                    
+                                    <input v-model="category.title" class="form-control"></input>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="new-feature-body">Description</label>
+                                    
+                                    <textarea v-model="category.description" class="form-control"></textarea>
+                                </div>
+                                
+                                <button type="submit" class="btn btn-success">Create</button>
+                                
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div> <!-- end of #add-resources -->
+
+    </div> <!-- end of #vue-app -->
 
     <!-- JavaScripts -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.3/jquery.min.js" integrity="sha384-I6F5OKECLVtK/BL+8iSLDEHowSAfUo76ZL9+kGAgTRdiByINKJaqTPH/QVNS1VDb" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
     <script src="https://unpkg.com/vue/dist/vue.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/vue-resource/1.0.3/vue-resource.min.js"></script>
+    <script src="{{ asset('../resources/assets/dist/build.js') }}"></script>
     
     <script>
-        new Vue({
-            el:"#featured",
-            data: {
-                articles: [],
-                article: {},
-                feature_article_id: 1,
-                edit_feature: false
-            },
-            created: function () {
-                this.getArticles();
-                this.getFeaturedArticle();
-            },
-            methods: {
-                getArticles: function() {
-                    var self = this;
 
-                    this.$http.get('api/articles').then(function(response){
-                        self.articles = response.body;
-                    }, function(error){
-                        console.log(error);
-                    });
-                },
-                getFeaturedArticle: function() {
-                    var self = this;
-                    
-                    this.$http.get('api/articles?featured=1').then(function(response){
-                        self.article = response.body[0];
-                        self.article.body = self.article.body.substring(0, 150) + " ...";
-
-                        self.feature_article_id = self.article.id;
-                    }, function(error){
-                        console.log(error);
-                    });
-                },
-                changeFeatureArticle: function(id) {
-                    var self = this;
-                    
-                    this.$http.put('api/articles/'+id+'/feature').then(function(response){
-                        self.article = response.body;
-                        self.article.body = self.article.body.substring(0, 150) + " ...";
-                    }, function(error){
-                        console.log(error);
-                    });
-                }
-            }
-        })
+        
     </script>
     {{-- <script src="{{ elixir('js/app.js') }}"></script> --}}
 </body>

@@ -7,12 +7,10 @@ use Illuminate\Database\Eloquent\Model;
 
 class CategoryArticleRetrieverOutput implements IRetrieverOutput
 {
-	public function output(Model $category, $articles)
+	public function output(Model $category, $article)
 	{
-		$output = $category->toArray();
-        $output["articles"] = [];
-        $output["articles"] = $articles;
+        $category["article"] = $article;
 
-        return $output;
+        return $category;
 	}
 }

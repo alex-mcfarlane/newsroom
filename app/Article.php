@@ -14,7 +14,7 @@ class Article extends Model
         'featured' => false
     ];
     
-    public static function fromForm($title, $body, $isFeatured)
+    public static function fromForm($title, $body, $isFeatured = false, $categoryId = 0)
     {        
         $article = self::create([
             "title" => $title,
@@ -22,22 +22,33 @@ class Article extends Model
             "featured" => false
         ]);
         
-        if($isFeatured) {
-            $article->markAsFeatured();
-        }
+        // By default, category is null and featured is false. Only use setters if client explicitly passes them in
+        $categoryId ? $article->setCategory($categoryId) : '';
+        $isFeatured ? $article->markAsFeatured() : '';
         
         return $article;
     }
-    
-    public static function createCategorizedArticle($title, $body, $isFeatured, $categoryId)
+
+    public function edit($title, $body, $isFeatured, $categoryId)
     {
-        $article = Article::fromForm($title, $body, $isFeatured);
+        $this->fill(['title'=>$title, 'body' => $body]);
         
-        $article->setCategory($categoryId);
-        
-        return $article;
+        $this->setCategory($categoryId);
+
+        $this->setFeatured($isFeatured);
+
+        $this->save();
     }
     
+    public function delete()
+    {
+        if($this->hasImage()) {
+            $this->image->delete();
+        }
+
+        parent::delete();
+    }
+
     public static function withSubResources($id)
     {
         $article = self::with(['category', 'image'])->findOrFail($id);
@@ -47,11 +58,13 @@ class Article extends Model
         return $article;
     }
     
-    public static function featured()
+    public static function headliner()
     {
         $article = self::where('featured', true)->with('image')->first();
 
-        $article->setImage();
+        if($article) {
+            $article->setImage();
+        }
 
         return $article;
     }
@@ -63,12 +76,12 @@ class Article extends Model
 
     public function image()
     {
-        return $this->hasOne('App\Image');
+        return $this->hasOne('App\Image', 'article_id');
     }
     
     public function setFeatured($featured)
     {
-        if($featured === true) {
+        if($featured == true) {
             $this->markAsFeatured();
         } else {
             $this->unfeature();
@@ -77,19 +90,24 @@ class Article extends Model
     
     public function setCategory($categoryId)
     {
+        if($categoryId === 0) {
+            $this->clearCategory();
+            return;
+        }
+
         //associate article with category
         if(! $category = Category::find($categoryId)) {
             throw new CategoryNotFoundException;
         }
-        
+
         $this->category()->associate($category);
-        
+
         $this->save();
     }
 
     public function setImage()
     {
-        if($this->relations['image'] == null) {
+        if( !array_key_exists('image', $this->relations) || $this->relations['image'] == null) {
             $this->relations['image'] = Image::defaultImage();
         }
     }
@@ -98,11 +116,29 @@ class Article extends Model
     {
         $this->image()->save($image);
     }
+
+    public function changeImage(Image $image)
+    {
+        $this->image()->delete();
+
+        $this->addImage($image);
+    }
+
+    public function hasImage()
+    {
+        return is_null($this->image) === false;
+    }
+
+    private function clearCategory()
+    {
+        $this->category()->dissociate();
+        $this->save();
+    }
     
     public function markAsFeatured()
     {
-        //if another article(s) is featured, we need to unfeature them
-        foreach(Article::where('featured', true)->get() as $article) {
+        //if another article(s) is the headliner, we need to unfeature them
+        if($article = Article::headliner()) {
             $article->unfeature();
         }
         
@@ -143,7 +179,16 @@ class Article extends Model
     
     public function scopeNewestArticle($query)
     {
-        return $query->first();
+        $article = $query->first();
+        
+        if($article == null)
+        {
+            $article = new Article;
+            $article->relations['image'] = null;
+            return $article;
+        }
+        
+        return $article;
     }
     
     public function scopeNewestArticles($query, $num)

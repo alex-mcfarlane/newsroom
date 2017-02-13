@@ -4,6 +4,7 @@ namespace App\Newsroom\Articles;
 
 use App\Category;
 use App\Newsroom\Categories\CategoryArticleRetrieverFactory;
+use App\Newsroom\Categories\CategoryArticlesRetrieverOutput;
 use App\Newsroom\Categories\CategoryArticleRetrieverOutput;
 
 /**
@@ -13,31 +14,42 @@ use App\Newsroom\Categories\CategoryArticleRetrieverOutput;
  */
 class ArticleRetrieverService {
     
-    public function retrieveArticlesForCategories($categories, $limit = 0)
+    public function retrieveArticlesForCategories($categories, $limit = null)
     {
         $output = [];
 
         foreach($categories as $category)
         {
-            $result = $this->retrieveArticlesForCategory($category, $limit);
-            $output = $output + $result; //TODO: Why won't array_merge($output, $result) work for union?
+            //I should use a formatter for this logic... not the responsibility of this class to create the map
+            $result = []; //map that will hold categories and their articles
+            $result[$category->title] = $this->retrieveArticlesForCategory($category, $limit);
+            
+            if(count($result) > 0)
+            {
+                $output = $output + $result; //TODO: Why won't array_merge($output, $result) work for union?   
+            }
         }
 
         return $output;
     }
 
-    public function retrieveArticlesForCategory(Category $category, $limit = 0)
-    {
-        $newestArticlesPerCategory = []; //map that will hold categories and their articles
-        
+    public function retrieveArticlesForCategory(Category $category, $limit = null)
+    {   
         $retriever = CategoryArticleRetrieverFactory::create($category, $limit);
-        $result = $retriever->get(new CategoryArticleRetrieverOutput());
+        $presenter = $this->getPresenter($limit);
+        
+        $result = $retriever->get($presenter);
 
-        if($result)
-        {
-            $newestArticlesPerCategory[$category->title] = $result;
+    	return $result;
+    }
+    
+    private function getPresenter($limit)
+    {
+        if($limit > 1 || $limit == null) {
+            return new CategoryArticlesRetrieverOutput;
         }
-
-    	return $newestArticlesPerCategory;
+        else{
+            return new CategoryArticleRetrieverOutput;
+        }
     }
 }
