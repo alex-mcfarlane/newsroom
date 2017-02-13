@@ -33,4 +33,10 @@ class Image extends Model
 
     	return $image;
     }
+
+    public function delete()
+    {
+        // TODO: remove from storage
+        parent::delete();
+    }
 }

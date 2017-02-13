@@ -40,6 +40,15 @@ class Article extends Model
         $this->save();
     }
     
+    public function delete()
+    {
+        if($this->hasImage()) {
+            $this->image->delete();
+        }
+
+        parent::delete();
+    }
+
     public static function withSubResources($id)
     {
         $article = self::with(['category', 'image'])->findOrFail($id);
@@ -113,6 +122,11 @@ class Article extends Model
         $this->image()->delete();
 
         $this->addImage($image);
+    }
+
+    public function hasImage()
+    {
+        return is_null($this->image) === false;
     }
 
     private function clearCategory()

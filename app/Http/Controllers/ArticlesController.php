@@ -42,7 +42,9 @@ class ArticlesController extends Controller
 
     public function delete($id)
     {
-        Article::destroy($id);
+        $article = Article::find($id);
+
+        $article->delete();
 
         return redirect()->route('home');
     }
