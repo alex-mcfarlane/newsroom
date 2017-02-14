@@ -77,6 +77,7 @@
 	            }
 	        },
 	        headline_article_id: 1,
+	        new_feature_article_id: 1,
 	        add_headliner: false,
 	        edit_headliner: false,
 	        fileFormData: new FormData()
@@ -173,6 +174,12 @@
 	                console.log(error);
 	            });
 	        },
+	        featureArticle: function featureArticle(id) {
+	            var orderId = this.featured_articles.length + 1;
+	            this.$http.post('api/articles/' + id + '/featured', { "order_id": orderId }).then(function (response) {}, function (error) {
+	                console.log(error);
+	            });
+	        },
 	        createCategory: function createCategory() {
 	            this.$http.post('api/categories', this.category).then(function (response) {
 	                //add to list of categories
@@ -181,9 +188,6 @@
 	            }, function (error) {
 	                console.log(error);
 	            });
-	        },
-	        categoryHref: function categoryHref(id) {
-	            return 'categories/' + id;
 	        },
 	        onChange: function onChange(object) {
 	            if (object.hasOwnProperty("moved")) {

@@ -122,6 +122,14 @@ new Vue({
                 console.log(error);
             });
         },
+        featureArticle: function(id) {
+            var orderId = this.featured_articles.length + 1;
+            this.$http.post('api/articles/'+id+'/featured', {"order_id": orderId}).then(function(response){
+                // TODO:: push article on to featured_articles
+            }, function(error){
+                console.log(error);
+            })
+        },
         createCategory: function() {
             this.$http.post('api/categories', this.category).then(function(response){
                 //add to list of categories
