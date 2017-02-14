@@ -11,11 +11,13 @@
                 </div>
             @endif
             <div class="article article-item">
-                <h4 class="article-tag">
-                    <a href="{{url('/categories/'.$article->category->id)}}">
-                        {{$article->category->title}}
-                    </a>
-                </h4>
+                @if($article->category)
+                    <h4 class="article-tag">
+                        <a href="{{url('/categories/'.$article->category->id)}}">
+                            {{$article->category->title}}
+                        </a>
+                    </h4>
+                @endif
 
                 <div class="article-heading">
                     <h2>{{$article->title}}</h2>
@@ -91,7 +93,7 @@
                             <select id="category_id" name="category_id" class="form-control">
                                 @foreach($categories as $category)
 
-                                    <option value="{{$category->id}}" {{$article->category->id == $category->id ? "selected='selected'" : ''}}>
+                                    <option value="{{$category->id}}" {{$article->category == $category ? "selected='selected'" : ''}}>
                                         {{ $category->title }}
                                     </option>
 

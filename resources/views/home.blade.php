@@ -24,7 +24,7 @@
                             </div>
                             
                             <div class="col-md-2">
-                                <button class="btn btn-sm btn-primary">Feature an Article</button>
+                                <button v-on:click="featureArticle(new_feature_article_id)" class="btn btn-sm btn-primary">Feature an Article</button>
                             </div>
                         </div>
                     </div>
