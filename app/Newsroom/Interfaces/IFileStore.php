@@ -12,4 +12,6 @@ use Illuminate\Http\UploadedFile;
 interface IFileStore 
 {
     public function store($uploadedFile, $directory, $fileName);
+    
+    public function delete($path);
 }
