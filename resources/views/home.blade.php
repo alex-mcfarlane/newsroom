@@ -19,7 +19,7 @@
                         <div class="row">
                             <div class="col-md-4">
                                 <select v-model="new_feature_article_id" class="form-control">
-                                    <option v-for="article in articles" v-bind:value="article.id">@{{article.title}}</option>
+                                    <option v-for="article in getUnfeaturedArticles()" v-bind:value="article.id">@{{article.title}}</option>
                                 </select>
                             </div>
                             

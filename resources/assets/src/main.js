@@ -10,6 +10,7 @@ new Vue({
     el:"#vue-app",
     data: {
         articles: [],
+        articles_map: [],
         featured_articles: [],
         categories: [],
         article: {},
@@ -39,6 +40,10 @@ new Vue({
         getArticles: function() {
             this.$http.get('api/articles').then(function(response){
                 this.articles = response.body;
+                
+                this.articles.filter(function(article){
+                    this.articles_map[article.id] = article;
+                });
             }, function(error){
                 console.log(error);
             });
@@ -143,7 +148,10 @@ new Vue({
         featureArticle: function(id) {
             var orderId = this.featured_articles.length + 1;
             this.$http.post('api/articles/'+id+'/featured', {"order_id": orderId}).then(function(response){
+                var article = 
+
                 // TODO:: push article on to featured_articles
+                this.featured_articles.push(article);
             }, function(error){
                 console.log(error);
             })
