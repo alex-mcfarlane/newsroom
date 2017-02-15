@@ -50,6 +50,24 @@ new Vue({
                 console.log(error);
             })
         },
+        getUnfeaturedArticles: function() {
+            var unFeatured = [];
+            
+            //create map of featured articles, using its id as the index
+            var lookup = [];
+            
+            for(var i=0; i < this.featured_articles.length; i++) {
+                var featured_article = this.featured_articles[i];
+                
+                lookup[featured_article.id] = featured_article;
+            }
+            
+            var unfeatured = this.articles.filter(function(article){
+                return !lookup[article.id];
+            });
+            
+            return unfeatured;
+        },
         getCategories: function() {
             this.$http.get('api/categories').then(function(response){
                 this.categories = response.body;
