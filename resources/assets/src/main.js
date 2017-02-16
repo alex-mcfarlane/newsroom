@@ -40,6 +40,14 @@ new Vue({
         getArticles: function() {
             this.$http.get('api/articles').then(function(response){
                 this.articles = response.body;
+
+                // Create a lookup dictionary of featured articles
+                // This will allow for easier searching in the future
+                for(var i = 0; i < this.articles.length; i++) {
+                    var article = this.articles[i];
+
+                    this.lookup[article.id] = article;
+                }
             }, function(error){
                 console.log(error);
             });
@@ -47,15 +55,6 @@ new Vue({
         getFeaturedArticles: function() {
             this.$http.get('api/articles/featured').then(function(response){
                 this.featured_articles = response.body;
-
-                // Create a lookup dictionary of featured articles
-                // This will allow for easier searching in the future
-                for(var i = 0; i < this.featured_articles.length; i++) {
-                    var featured_article = this.featured_articles[i];
-
-                    this.lookup[featured_article.id] = featured_article;
-                }
-
             }, function(error){
                 console.log(error);
             })
@@ -64,12 +63,17 @@ new Vue({
             var unFeatured = [];
             var self = this;
 
-            var unfeatured = this.articles.filter(function(article){
-                return !self.lookup[article.id];
+            var unfeatured = this.articles;
+
+            this.featured_articles.filter(function(article){
+                var index = unfeatured.indexOf(self.lookup[article.id]);
+                if(index >= 0) {
+                    unfeatured.splice(index, 1);
+                }
             });
             
             if(unfeatured[0]) {
-                this.new_feature_article_id = unfeatured[0].id;
+                //this.new_feature_article_id = unfeatured[0].id;
             }
 
             return unfeatured;
@@ -149,9 +153,9 @@ new Vue({
         featureArticle: function(id) {
             var orderId = this.featured_articles.length + 1;
             this.$http.post('api/articles/'+id+'/featured', {"order_id": orderId}).then(function(response){
-                var article = 
+                var article = this.lookup[id];
 
-                // TODO:: push article on to featured_articles
+                //push article on to featured_articles
                 this.featured_articles.push(article);
             }, function(error){
                 console.log(error);
