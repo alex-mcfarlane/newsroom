@@ -68,6 +68,7 @@
 	    data: {
 	        articles: [],
 	        featured_articles: [],
+	        lookup: [],
 	        categories: [],
 	        article: {},
 	        category: {},
@@ -102,25 +103,29 @@
 	        getFeaturedArticles: function getFeaturedArticles() {
 	            this.$http.get('api/articles/featured').then(function (response) {
 	                this.featured_articles = response.body;
+
+	                // Create a lookup dictionary of featured articles
+	                // This will allow for easier searching in the future
+	                for (var i = 0; i < this.featured_articles.length; i++) {
+	                    var featured_article = this.featured_articles[i];
+
+	                    this.lookup[featured_article.id] = featured_article;
+	                }
 	            }, function (error) {
 	                console.log(error);
 	            });
 	        },
 	        getUnfeaturedArticles: function getUnfeaturedArticles() {
 	            var unFeatured = [];
-
-	            //create map of featured articles, using its id as the index
-	            var lookup = [];
-
-	            for (var i = 0; i < this.featured_articles.length; i++) {
-	                var featured_article = this.featured_articles[i];
-
-	                lookup[featured_article.id] = featured_article;
-	            }
+	            var self = this;
 
 	            var unfeatured = this.articles.filter(function (article) {
-	                return !lookup[article.id];
+	                return !self.lookup[article.id];
 	            });
+
+	            if (unfeatured[0]) {
+	                this.new_feature_article_id = unfeatured[0].id;
+	            }
 
 	            return unfeatured;
 	        },
@@ -195,7 +200,10 @@
 	        featureArticle: function featureArticle(id) {
 	            var orderId = this.featured_articles.length + 1;
 	            this.$http.post('api/articles/' + id + '/featured', { "order_id": orderId }).then(function (response) {
+	                var article =
+
 	                // TODO:: push article on to featured_articles
+	                this.featured_articles.push(article);
 	            }, function (error) {
 	                console.log(error);
 	            });

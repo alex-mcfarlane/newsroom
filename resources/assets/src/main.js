@@ -10,8 +10,8 @@ new Vue({
     el:"#vue-app",
     data: {
         articles: [],
-        articles_map: [],
         featured_articles: [],
+        lookup: [],
         categories: [],
         article: {},
         category: {},
@@ -40,10 +40,6 @@ new Vue({
         getArticles: function() {
             this.$http.get('api/articles').then(function(response){
                 this.articles = response.body;
-                
-                this.articles.filter(function(article){
-                    this.articles_map[article.id] = article;
-                });
             }, function(error){
                 console.log(error);
             });
@@ -51,26 +47,31 @@ new Vue({
         getFeaturedArticles: function() {
             this.$http.get('api/articles/featured').then(function(response){
                 this.featured_articles = response.body;
+
+                // Create a lookup dictionary of featured articles
+                // This will allow for easier searching in the future
+                for(var i = 0; i < this.featured_articles.length; i++) {
+                    var featured_article = this.featured_articles[i];
+
+                    this.lookup[featured_article.id] = featured_article;
+                }
+
             }, function(error){
                 console.log(error);
             })
         },
         getUnfeaturedArticles: function() {
             var unFeatured = [];
-            
-            //create map of featured articles, using its id as the index
-            var lookup = [];
-            
-            for(var i=0; i < this.featured_articles.length; i++) {
-                var featured_article = this.featured_articles[i];
-                
-                lookup[featured_article.id] = featured_article;
-            }
-            
+            var self = this;
+
             var unfeatured = this.articles.filter(function(article){
-                return !lookup[article.id];
+                return !self.lookup[article.id];
             });
             
+            if(unfeatured[0]) {
+                this.new_feature_article_id = unfeatured[0].id;
+            }
+
             return unfeatured;
         },
         getCategories: function() {
