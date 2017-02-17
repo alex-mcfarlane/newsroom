@@ -4,6 +4,8 @@
  * API routes
  */
 Route::group(['prefix' => 'api'], function(){
+    Route::post('auth', "Auth\AuthController@authenticate");
+    
     Route::get('categories/newestArticles', 'CategoriesNewestArticlesController@index');
 
     Route::post('articles/{id}/images', 'ArticlesAPIController@addImage');
@@ -34,6 +36,10 @@ Route::group(['middleware' => ['web']], function() {
     Route::get('/register', 'UsersController@create');
     Route::post('/users', 'UsersController@store');
     
+    Route::get('/login', function(){
+       return view('auth.login'); 
+    });
+    
     Route::get('/', ['as' => 'home', 'uses' => 'HomeController@index']);
     
     Route::get('/articles/{id}', 'ArticlesController@show');
@@ -42,5 +48,5 @@ Route::group(['middleware' => ['web']], function() {
     
     Route::get('/categories/{id}', 'CategoriesController@show');
     
-    Route::auth();
+    //Route::auth();
 });
