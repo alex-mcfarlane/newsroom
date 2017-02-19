@@ -66,6 +66,7 @@
 	new Vue({
 	    el: "#vue-app",
 	    data: {
+	        user: {},
 	        articles: [],
 	        featured_articles: [],
 	        lookup: [],
@@ -93,6 +94,13 @@
 	        this.getHeadlineArticle();
 	    },
 	    methods: {
+	        login: function login() {
+	            this.$http.post('api/auth', this.user).then(function (response) {
+	                console.log(response);
+	            }, function (error) {
+	                console.log(error);
+	            });
+	        },
 	        getArticles: function getArticles() {
 	            this.$http.get('api/articles').then(function (response) {
 	                this.articles = response.body;
@@ -207,10 +215,8 @@
 	            this.$http.post('api/articles/' + id + '/featured', { "order_id": orderId }).then(function (response) {
 	                var article = this.lookup[id];
 
-	                // TODO:: push article on to featured_articles
+	                //push article on to featured_articles
 	                this.featured_articles.push(article);
-
-	                this.unfeatured_articles.slice(this.unfeatured_articles.indexOf(article), 1);
 	            }, function (error) {
 	                console.log(error);
 	            });

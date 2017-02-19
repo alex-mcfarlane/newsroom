@@ -9,6 +9,7 @@ export default {
 new Vue({
     el:"#vue-app",
     data: {
+        user: {},
         articles: [],
         featured_articles: [],
         lookup: [],
@@ -37,6 +38,13 @@ new Vue({
         this.getHeadlineArticle();
     },
     methods: {
+        login: function() {
+            this.$http.post('api/auth', this.user).then(function(response){
+                console.log(response);
+            }, function(error){
+                console.log(error);
+            });
+        },
         getArticles: function() {
             this.$http.get('api/articles').then(function(response){
                 this.articles = response.body;
