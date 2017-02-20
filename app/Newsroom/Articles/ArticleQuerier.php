@@ -27,7 +27,7 @@ class ArticleQuerier extends EloquentQuerier{
     
     protected function getValidFilterableFields()
     {
-        return ['title', 'body', 'start_date', 'end_date', 'featured'];
+        return ['title', 'body', 'start_date', 'end_date', 'headliner'];
     }
 
     protected function addToQuery(Builder $query)

@@ -29,7 +29,7 @@ class ArticleCreator {
         }
         
         try{
-            $article = Article::fromForm($attributes['title'], $attributes['body'], $attributes['featured'], 
+            $article = Article::fromForm($attributes['title'], $attributes['body'], $attributes['headliner'], 
                                 $attributes['category_id']);
             
             $formatter = new ArticleFormatter();

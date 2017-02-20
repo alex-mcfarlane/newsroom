@@ -10,14 +10,14 @@ use App\Newsroom\Exceptions\ArticleException;
  *
  * @author AlexMc
  */
-class ArticleFeaturer {
-    public function feature($id, $value)
+class ArticleHeadliner {
+    public function headline($id, $value)
     {
         if(! $article = Article::withSubResources($id)) {
             throw new ArticleException("Article not found", 404);
         }
         
-        $article->setFeatured($value);
+        $article->setHeadliner($value);
 
         return $article;
     }

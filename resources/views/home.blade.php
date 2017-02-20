@@ -5,10 +5,10 @@
     <div id="page-header">
             
         <div v-if="isLoggedIn()">
-            @include('home.admin-featured')
+            @include('home.admin-headline')
         </div>
         <div v-else>
-            @include('home.featured')
+            @include('home.headline')
         </div>
             
         <section id="featured-articles">

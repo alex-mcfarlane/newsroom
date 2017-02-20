@@ -137,7 +137,7 @@ new Vue({
             });
         },
         getHeadlineArticle: function() {
-            this.$http.get('api/articles?featured=1').then(function(response){
+            this.$http.get('api/articles?headliner=1').then(function(response){
                 this.headline_article = response.body[0];
                 this.headline_article.body = this.headline_article.body.substring(0, 150) + " ...";
 
@@ -147,7 +147,11 @@ new Vue({
             });
         },
         changeHeadlineArticle: function(id) {
-            this.$http.put('api/articles/'+id+'/headline').then(function(response){
+            this.$http.put('api/articles/'+id+'/headline', {}, {
+                headers: {
+                    "Authorization": "Bearer "+ this.getToken()
+                }
+            }).then(function(response){
                 this.headline_article = response.body;
                 this.headline_article.body = this.headline_article.body.substring(0, 150) + " ...";
             }, function(error){
@@ -155,11 +159,21 @@ new Vue({
             });
         },
         createArticle: function() {
-            this.$http.post('api/articles', this.article).then(function(response){
+            var token = this.getToken();
+
+            this.$http.post('api/articles', this.article, {
+                headers: {
+                    "Authorization": "Bearer "+ token
+                }
+            }).then(function(response){
                 var article = response.body;
                 
                 //upload image for article
-                this.$http.post('api/articles/'+article.id+'/images', this.fileFormData).then(function(response){
+                this.$http.post('api/articles/'+article.id+'/images', this.fileFormData, {
+                    headers: {
+                        "Authorization": "Bearer "+ token
+                    }
+                }).then(function(response){
                     article.image = response.body;
 
                     //add new article to list of articles
@@ -177,14 +191,23 @@ new Vue({
             });
         },
         createHeadlineArticle: function() {
-            this.article.featured = true;
+            var token = this.getToken();
+            this.article.headliner = true;
 
-            this.$http.post('api/articles', this.article).then(function(response){
+            this.$http.post('api/articles', this.article, {
+                headers: {
+                    "Authorization": "Bearer "+ token
+                }
+            }).then(function(response){
                 this.headline_article = response.body;
                 this.headline_article.body = this.headline_article.body.substring(0, 150) + " ...";
                 
                 //upload image for article
-                this.$http.post('api/articles/'+this.headline_article.id+'/images', this.fileFormData).then(function(response){
+                this.$http.post('api/articles/'+this.headline_article.id+'/images', this.fileFormData, {
+                    headers: {
+                        "Authorization": "Bearer "+ token
+                    }
+                }).then(function(response){
                     this.headline_article.image = response.body;
 
                     //close modal and clear entry
@@ -201,7 +224,11 @@ new Vue({
         },
         featureArticle: function(id) {
             var orderId = this.featured_articles.length + 1;
-            this.$http.post('api/articles/'+id+'/featured', {"order_id": orderId}).then(function(response){
+            this.$http.post('api/articles/'+id+'/featured', {"order_id": orderId}, {
+                headers: {
+                    "Authorization": "Bearer "+ this.getToken()
+                }
+            }).then(function(response){
                 var article = this.lookup[id];
 
                 //push article on to featured_articles
@@ -211,7 +238,11 @@ new Vue({
             })
         },
         createCategory: function() {
-            this.$http.post('api/categories', this.category).then(function(response){
+            this.$http.post('api/categories', this.category, {
+                headers: {
+                    "Authorization": "Bearer "+ this.getToken()
+                }
+            }).then(function(response){
                 //add to list of categories
                 this.categories.push(response.body);
                 $('#add-category').modal('toggle');
@@ -223,6 +254,10 @@ new Vue({
             if(object.hasOwnProperty("moved")) {
                 this.$http.post('api/articles/'+object.moved.element.id+'/featured', {
                     "order_id": object.moved.newIndex + 1
+                }, {
+                    headers: {
+                        "Authorization": "Bearer "+ this.getToken()
+                    }
                 }).then(function(response){
 
                 }, function(error){

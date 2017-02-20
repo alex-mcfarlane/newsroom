@@ -12,31 +12,31 @@ class Article extends Model
     protected $fillable = ["title", "body"];
     
     protected $attributes = [
-        'featured' => false
+        'headliner' => false
     ];
     
-    public static function fromForm($title, $body, $isFeatured = false, $categoryId = 0)
+    public static function fromForm($title, $body, $isHeadliner = false, $categoryId = 0)
     {        
         $article = self::create([
             "title" => $title,
             "body" => $body,
-            "featured" => false
+            "headliner" => false
         ]);
         
-        // By default, category is null and featured is false. Only use setters if client explicitly passes them in
+        // By default, category is null and headliner is false. Only use setters if client explicitly passes them in
         $categoryId ? $article->setCategory($categoryId) : '';
-        $isFeatured ? $article->markAsFeatured() : '';
+        $isHeadliner ? $article->markAsHeadliner() : '';
         
         return $article;
     }
 
-    public function edit($title, $body, $isFeatured, $categoryId)
+    public function edit($title, $body, $isHeadliner, $categoryId)
     {
         $this->fill(['title'=>$title, 'body' => $body]);
         
         $this->setCategory($categoryId);
 
-        $this->setFeatured($isFeatured);
+        $this->setHeadliner($isHeadliner);
 
         $this->save();
     }
@@ -61,7 +61,7 @@ class Article extends Model
     
     public static function headliner()
     {
-        $article = self::where('featured', true)->with('image')->first();
+        $article = self::where('headliner', true)->with('image')->first();
 
         if($article) {
             $article->setImage();
@@ -80,12 +80,12 @@ class Article extends Model
         return $this->hasOne('App\Image', 'article_id');
     }
     
-    public function setFeatured($featured)
+    public function setHeadliner($headliner)
     {
-        if($featured == true) {
-            $this->markAsFeatured();
+        if($headliner == true) {
+            $this->markAsHeadliner();
         } else {
-            $this->unfeature();
+            $this->removeAsHeadliner();
         }
     }
     
@@ -136,20 +136,20 @@ class Article extends Model
         $this->save();
     }
     
-    public function markAsFeatured()
+    public function markAsHeadliner()
     {
         //if another article(s) is the headliner, we need to unfeature them
         if($article = Article::headliner()) {
-            $article->unfeature();
+            $article->removeAsHeadliner();
         }
         
-        $this->featured = true;
+        $this->headliner = true;
         $this->save();
     }
     
-    private function unfeature()
+    private function removeAsHeadliner()
     {
-        $this->featured = false;
+        $this->headliner = false;
         $this->save();
     }
     

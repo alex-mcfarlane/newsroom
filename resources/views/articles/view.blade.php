@@ -110,11 +110,11 @@
                         <div class="form-group">
                             <label for="headliner">Headline Article</label>
 
-                            <select id="headliner" name="featured" class="form-control">
+                            <select id="headliner" name="headliner" class="form-control">
                                 <option value="0">
                                     No
                                 </option>
-                                <option value="1" {{$article->featured ? "selected='selected'" : ''}}>
+                                <option value="1" {{$article->headliner ? "selected='selected'" : ''}}>
                                     Yes
                                 </option>
                             <select>

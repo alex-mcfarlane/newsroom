@@ -47,6 +47,17 @@
 
     </article>
 
+    <article v-else class="featured-article">
+        <div class="article-info">
+
+            <div class="article-heading">
+                <h2>There is no headline article yet.</h2>
+            </div>
+
+            <p>Create a new headline article or add an xisting one.</p>
+        </div>
+    </article>
+
     <div id="add_headliner" class="modal fade" role="dialog" aria-labelledby="myModalLabel">
         <div class="modal-dialog">
             <!-- Modal content-->
