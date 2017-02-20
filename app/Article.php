@@ -33,10 +33,12 @@ class Article extends Model
     public function edit($title, $body, $isHeadliner, $categoryId)
     {
         $this->fill(['title'=>$title, 'body' => $body]);
-        
-        $this->setCategory($categoryId);
 
         $this->setHeadliner($isHeadliner);
+
+        if(isset($categoryId)) {
+            $this->setCategory($categoryId);
+        }
 
         $this->save();
     }

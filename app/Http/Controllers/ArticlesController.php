@@ -8,6 +8,7 @@ use App\Article;
 use App\Category;
 use App\Newsroom\Articles\ArticleRetrieverService;
 use App\Newsroom\Articles\ArticleUpdater;
+use App\Newsroom\Exceptions\ArticleException;
 
 class ArticlesController extends Controller
 {
