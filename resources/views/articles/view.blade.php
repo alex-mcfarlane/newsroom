@@ -4,18 +4,20 @@
     <div class="row">
         
         <section class="col-sm-9">
-            @if(Auth::check())
+            <div v-if="isLoggedIn()">
                 <div class="edit-overlay right">
                     <button class="btn btn-sm btn-primary" data-toggle="modal" data-target="#edit-article">Edit Article</button>
                     <button class="btn btn-sm btn-danger" data-toggle="modal" data-target="#delete-article">Delete Article</button>
                 </div>
-            @endif
+            </div>
             <div class="article article-item">
-                <h4 class="article-tag">
-                    <a href="{{url('/categories/'.$article->category->id)}}">
-                        {{$article->category->title}}
-                    </a>
-                </h4>
+                @if($article->category)
+                    <h4 class="article-tag">
+                        <a href="{{url('/categories/'.$article->category->id)}}">
+                            {{$article->category->title}}
+                        </a>
+                    </h4>
+                @endif
 
                 <div class="article-heading">
                     <h2>{{$article->title}}</h2>
@@ -91,7 +93,7 @@
                             <select id="category_id" name="category_id" class="form-control">
                                 @foreach($categories as $category)
 
-                                    <option value="{{$category->id}}" {{$article->category->id == $category->id ? "selected='selected'" : ''}}>
+                                    <option value="{{$category->id}}" {{$article->category == $category ? "selected='selected'" : ''}}>
                                         {{ $category->title }}
                                     </option>
 
@@ -118,7 +120,7 @@
                             <select>
                         </div>
                         
-                        <button type="submit" class="btn btn-success">Create</button>
+                        <button type="submit" class="btn btn-success">Save</button>
                         
                     </form>
                 </div>

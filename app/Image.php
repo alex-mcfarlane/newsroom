@@ -34,9 +34,10 @@ class Image extends Model
     	return $image;
     }
 
-    public function delete()
+    public function remove(IFileStore $fileStore)
     {
-        // TODO: remove from storage
+        $fileStore->delete($this->path);
+        
         parent::delete();
     }
 }

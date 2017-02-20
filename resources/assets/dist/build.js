@@ -44,7 +44,7 @@
 /* 0 */
 /***/ function(module, exports, __webpack_require__) {
 
-	'use strict';
+	"use strict";
 
 	Object.defineProperty(exports, "__esModule", {
 	    value: true
@@ -63,11 +63,60 @@
 	};
 
 
+	var auth = {
+	    data: {
+	        user: {
+	            "username": "",
+	            "email": ""
+	        }
+	    },
+	    methods: {
+	        login: function login() {
+	            this.$http.post('api/auth', this.user).then(function (response) {
+	                this.saveToken(response.body.token);
+
+	                var index = window.location.href.lastIndexOf('/login');
+	                var homeUrl = window.location.href.substring(0, index);
+	                window.location.href = homeUrl;
+	            }, function (error) {
+	                console.log(error);
+	            });
+	        },
+	        isLoggedIn: function isLoggedIn() {
+	            var token = this.getToken();
+
+	            if (token) {
+	                var payload = JSON.parse(window.atob(token.split('.')[1]));
+
+	                if (payload.exp > Date.now() / 1000) {
+	                    return true;
+	                } else {
+	                    return false;
+	                }
+	            } else {
+	                return false;
+	            }
+	        },
+	        logout: function logout() {
+	            localStorage.removeItem('newsroom-token');
+	            window.location.href = window.location.href;
+	        },
+	        saveToken: function saveToken(token) {
+	            localStorage.setItem('newsroom-token', token);
+	        },
+	        getToken: function getToken() {
+	            return localStorage.getItem('newsroom-token');
+	        }
+	    }
+	};
+
 	new Vue({
 	    el: "#vue-app",
+	    mixins: [auth],
 	    data: {
 	        articles: [],
 	        featured_articles: [],
+	        lookup: [],
 	        categories: [],
 	        article: {},
 	        category: {},
@@ -77,6 +126,7 @@
 	            }
 	        },
 	        headline_article_id: 1,
+	        new_feature_article_id: 1,
 	        add_headliner: false,
 	        edit_headliner: false,
 	        fileFormData: new FormData()
@@ -94,6 +144,14 @@
 	        getArticles: function getArticles() {
 	            this.$http.get('api/articles').then(function (response) {
 	                this.articles = response.body;
+
+	                // Create a lookup dictionary of featured articles
+	                // This will allow for easier searching in the future
+	                for (var i = 0; i < this.articles.length; i++) {
+	                    var article = this.articles[i];
+
+	                    this.lookup[article.id] = article;
+	                }
 	            }, function (error) {
 	                console.log(error);
 	            });
@@ -104,6 +162,25 @@
 	            }, function (error) {
 	                console.log(error);
 	            });
+	        },
+	        getUnfeaturedArticles: function getUnfeaturedArticles() {
+	            var unFeatured = [];
+	            var self = this;
+
+	            var unfeatured = this.articles;
+
+	            this.featured_articles.filter(function (article) {
+	                var index = unfeatured.indexOf(self.lookup[article.id]);
+	                if (index >= 0) {
+	                    unfeatured.splice(index, 1);
+	                }
+	            });
+
+	            if (unfeatured[0]) {
+	                //this.new_feature_article_id = unfeatured[0].id;
+	            }
+
+	            return unfeatured;
 	        },
 	        getCategories: function getCategories() {
 	            this.$http.get('api/categories').then(function (response) {
@@ -173,6 +250,17 @@
 	                console.log(error);
 	            });
 	        },
+	        featureArticle: function featureArticle(id) {
+	            var orderId = this.featured_articles.length + 1;
+	            this.$http.post('api/articles/' + id + '/featured', { "order_id": orderId }).then(function (response) {
+	                var article = this.lookup[id];
+
+	                //push article on to featured_articles
+	                this.featured_articles.push(article);
+	            }, function (error) {
+	                console.log(error);
+	            });
+	        },
 	        createCategory: function createCategory() {
 	            this.$http.post('api/categories', this.category).then(function (response) {
 	                //add to list of categories
@@ -181,9 +269,6 @@
 	            }, function (error) {
 	                console.log(error);
 	            });
-	        },
-	        categoryHref: function categoryHref(id) {
-	            return 'categories/' + id;
 	        },
 	        onChange: function onChange(object) {
 	            if (object.hasOwnProperty("moved")) {
@@ -198,6 +283,11 @@
 	            this.fileFormData.append('image', e.target.files[0]);
 	        }
 	    }
+	});
+
+	new Vue({
+	    el: "#vue-navigation",
+	    mixins: [auth]
 	});
 
 /***/ },

@@ -23,7 +23,7 @@
     </style>
 </head>
 <body id="app-layout">
-    <nav class="navbar navbar-default navbar-static-top">
+    <nav id="vue-navigation" class="navbar navbar-default navbar-static-top">
         <div class="container">
             <div class="navbar-header">
 
@@ -52,32 +52,31 @@
                 </ul>
 
                 <!-- Right Side Of Navbar -->
-                <ul class="nav navbar-nav navbar-right">
+                <ul class="nav navbar-nav navbar-right" id="vue-navigation">
                     <!-- Authentication Links -->
-                    @if (Auth::guest())
-                        <li><a href="{{ url('/login') }}">Login</a></li>
-                        <li><a href="{{ url('/register') }}">Register</a></li>
-                    @else
-                        <li class="dropdown">
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-                                <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
-                            </a>
+                    
+                    <li v-if="!isLoggedIn()"><a href="{{ url('/login') }}">Login</a></li>
+                    <li v-if="!isLoggedIn()"><a href="{{ url('/register') }}">Register</a></li>
+                
+                    <li v-if="isLoggedIn()" class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+                            <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                        </a>
 
-                            <ul class="dropdown-menu" role="menu">
-                                <li><a href="" data-toggle="modal" data-target="#add-article">Add Article</a></li>
-                                <li><a href="" data-toggle="modal" data-target="#add-category">Add Category</a></li>
-                            </ul>
-                        </li>
-                        <li class="dropdown">
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-                                {{ Auth::user()->name }} <span class="caret"></span>
-                            </a>
+                        <ul class="dropdown-menu" role="menu">
+                            <li><a href="" data-toggle="modal" data-target="#add-article">Add Article</a></li>
+                            <li><a href="" data-toggle="modal" data-target="#add-category">Add Category</a></li>
+                        </ul>
+                    </li>
+                    <li v-if="isLoggedIn()" class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+                            Hello <span class="caret"></span>
+                        </a>
 
-                            <ul class="dropdown-menu" role="menu">
-                                <li><a href="{{ url('/logout') }}"><i class="fa fa-btn fa-sign-out"></i>Logout</a></li>
-                            </ul>
-                        </li>
-                    @endif
+                        <ul class="dropdown-menu" role="menu">
+                            <li><a href="" v-on:click="logout()"><i class="fa fa-btn fa-sign-out"></i>Logout</a></li>
+                        </ul>
+                    </li>
                 </ul>
             </div>
         </div>

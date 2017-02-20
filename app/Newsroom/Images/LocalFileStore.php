@@ -9,6 +9,8 @@
 namespace App\Newsroom\Images;
 
 use App\Newsroom\Interfaces\IFileStore;
+use App\Image;
+
 /**
  * Description of LocalFileStore
  *
@@ -19,5 +21,14 @@ class LocalFileStore implements IFileStore
     public function store($uploadedFile, $baseDir, $fileName)
     {
         $uploadedFile->move($baseDir, $fileName);
+    }
+    
+    public function delete($path)
+    {
+        if(! @unlink($path)) {
+            return false;
+        }
+        
+        return true;
     }
 }
