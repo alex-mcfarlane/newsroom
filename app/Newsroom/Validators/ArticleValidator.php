@@ -15,6 +15,6 @@ class ArticleValidator extends Validator{
         "title" => "required",
         "body" => "required",
         "category_id" => "numeric",
-        "featured" => "boolean"
+        "headliner" => "boolean"
     ];
 }

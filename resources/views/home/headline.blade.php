@@ -3,7 +3,7 @@
         <article class="featured-article">
             
             <div class="article-image">
-                <img src="{{$headlineArticle->image->path}}" class="img-responsive" alt="Featured Article alt"/>
+                <img src="{{$headlineArticle->image->path}}" class="img-responsive" alt="Headline Article alt"/>
             </div>
 
             <div class="article-info">

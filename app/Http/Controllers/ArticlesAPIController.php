@@ -9,7 +9,7 @@ use App\Article;
 use App\Newsroom\Articles\ArticleCreator;
 use App\Newsroom\Articles\ArticleUpdater;
 use App\Newsroom\Articles\ArticleQuerier;
-use App\Newsroom\Articles\ArticleFeaturer;
+use App\Newsroom\Articles\ArticleHeadliner;
 use App\Newsroom\Articles\ArticleFormatter;
 use App\Newsroom\Images\ImageCreator;
 use App\Newsroom\Exceptions\ArticleException;
@@ -22,13 +22,13 @@ class ArticlesAPIController extends Controller
     protected $imageCreator;
 
     public function __construct(ArticleCreator $articleCreator, ArticleUpdater $articleUpdater,
-        ImageCreator $imageCreator, ArticleFeaturer $articleFeaturer)
+        ImageCreator $imageCreator, ArticleHeadliner $articleHeadliner)
     {
         $this->middleware('jwt.auth', ['except' => ['index']]);
         $this->articleCreator = $articleCreator;
         $this->articleUpdater = $articleUpdater;
         $this->imageCreator = $imageCreator;
-        $this->articleFeaturer = $articleFeaturer;
+        $this->articleHeadliner = $articleHeadliner;
     }
     
     public function index(Request $request)
@@ -91,7 +91,7 @@ class ArticlesAPIController extends Controller
     public function makeHeadliner($id)
     {   
         try{
-            $article = $this->articleFeaturer->feature($id, true);
+            $article = $this->articleHeadliner->headline($id, true);
             return response()->json($article, 200);
         } catch (\App\Newsroom\Exceptions\ArticleException $ex) {
             return response()->json($ex->getErrors(), $ex->getHttpStatusCode());
@@ -101,7 +101,7 @@ class ArticlesAPIController extends Controller
     public function removeHeadliner($id)
     {
         try{
-            $this->articleFeaturer->feature($id, false);
+            $this->articleHeadliner->headline($id, false);
             return response()->json(null, 204);
         } catch (\App\Newsroom\Exceptions\ArticleException $ex) {
             return response()->json($ex->getErrors(), $ex->getHttpStatusCode());
@@ -110,6 +110,6 @@ class ArticlesAPIController extends Controller
 
     private function getInput(Request $request)
     {
-        return $request->only('title', 'body', 'featured', 'category_id');
+        return $request->only('title', 'body', 'headliner', 'category_id');
     }
 }

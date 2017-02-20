@@ -16,7 +16,7 @@ class Category extends Model
     
     public function newestArticlesQuery()
     {
-        return $this->articles()->with('image')->where('featured', false)->orderBy('created_at', 'desc');
+        return $this->articles()->with('image')->where('headliner', false)->orderBy('created_at', 'desc');
     }
     
     public static function popular($limit = null)

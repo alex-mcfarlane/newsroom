@@ -192,7 +192,7 @@
 	            });
 	        },
 	        getHeadlineArticle: function getHeadlineArticle() {
-	            this.$http.get('api/articles?featured=1').then(function (response) {
+	            this.$http.get('api/articles?headliner=1').then(function (response) {
 	                this.headline_article = response.body[0];
 	                this.headline_article.body = this.headline_article.body.substring(0, 150) + " ...";
 
@@ -214,9 +214,11 @@
 	            });
 	        },
 	        createArticle: function createArticle() {
+	            var token = this.getToken();
+
 	            this.$http.post('api/articles', this.article, {
 	                headers: {
-	                    "Authorization": "Bearer " + this.getToken()
+	                    "Authorization": "Bearer " + token
 	                }
 	            }).then(function (response) {
 	                var article = response.body;
@@ -224,7 +226,7 @@
 	                //upload image for article
 	                this.$http.post('api/articles/' + article.id + '/images', this.fileFormData, {
 	                    headers: {
-	                        "Authorization": "Bearer " + this.getToken()
+	                        "Authorization": "Bearer " + token
 	                    }
 	                }).then(function (response) {
 	                    article.image = response.body;
@@ -242,18 +244,23 @@
 	            });
 	        },
 	        createHeadlineArticle: function createHeadlineArticle() {
-	            this.article.featured = true;
+	            var token = this.getToken();
+	            this.article.headliner = true;
 
 	            this.$http.post('api/articles', this.article, {
 	                headers: {
-	                    "Authorization": "Bearer " + this.getToken()
+	                    "Authorization": "Bearer " + token
 	                }
 	            }).then(function (response) {
 	                this.headline_article = response.body;
 	                this.headline_article.body = this.headline_article.body.substring(0, 150) + " ...";
 
 	                //upload image for article
-	                this.$http.post('api/articles/' + this.headline_article.id + '/images', this.fileFormData).then(function (response) {
+	                this.$http.post('api/articles/' + this.headline_article.id + '/images', this.fileFormData, {
+	                    headers: {
+	                        "Authorization": "Bearer " + token
+	                    }
+	                }).then(function (response) {
 	                    this.headline_article.image = response.body;
 
 	                    //close modal and clear entry

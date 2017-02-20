@@ -36,7 +36,7 @@ class ArticleUpdater {
         try{
             $article = Article::findOrFail($id);
 
-            $article->edit($attributes['title'], $attributes['body'], $attributes['featured'], 
+            $article->edit($attributes['title'], $attributes['body'], $attributes['headliner'], 
                             $attributes['category_id']);
 
             if($file) {
