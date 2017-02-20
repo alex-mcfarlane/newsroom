@@ -11,6 +11,11 @@ class FeaturedArticlesController extends Controller
 {
     protected $articleFeaturer;
     
+    public function __construct()
+    {
+        $this->middleware('jwt.auth', ['except' => ['index']]);
+    }
+    
     public function index()
     {
         return response()->json(FeaturedArticle::all('*', new ArticleFormatter));

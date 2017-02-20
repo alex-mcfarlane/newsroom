@@ -24,7 +24,7 @@ class ArticlesAPIController extends Controller
     public function __construct(ArticleCreator $articleCreator, ArticleUpdater $articleUpdater,
         ImageCreator $imageCreator, ArticleFeaturer $articleFeaturer)
     {
-        //$this->middleware('jwt.auth', ['except' => ['index']]);
+        $this->middleware('jwt.auth', ['except' => ['index']]);
         $this->articleCreator = $articleCreator;
         $this->articleUpdater = $articleUpdater;
         $this->imageCreator = $imageCreator;
