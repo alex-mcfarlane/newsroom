@@ -199,8 +199,7 @@ new Vue({
     }
 });
 
-new Vue({
-    el: "#vue-navigation",
+var auth = {
     methods: {
         getToken: function() {
             return localStorage.getItem('newsroom-token');
@@ -226,4 +225,9 @@ new Vue({
             window.location.href = window.location.href;
         }
     }
+}
+
+new Vue({
+    el: "#vue-navigation",
+    mixins: [auth]
 });
