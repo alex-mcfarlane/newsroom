@@ -96,7 +96,11 @@
 	    methods: {
 	        login: function login() {
 	            this.$http.post('api/auth', this.user).then(function (response) {
-	                console.log(response);
+	                localStorage.setItem('newsroom-token', response.body.token);
+
+	                var index = window.location.href.lastIndexOf('/login');
+	                var homeUrl = window.location.href.substring(0, index);
+	                window.location.href = homeUrl;
 	            }, function (error) {
 	                console.log(error);
 	            });
@@ -241,6 +245,34 @@
 	        },
 	        onFileChange: function onFileChange(e) {
 	            this.fileFormData.append('image', e.target.files[0]);
+	        }
+	    }
+	});
+
+	new Vue({
+	    el: "#vue-navigation",
+	    methods: {
+	        getToken: function getToken() {
+	            return localStorage.getItem('newsroom-token');
+	        },
+	        isLoggedIn: function isLoggedIn() {
+	            var token = this.getToken();
+
+	            if (token) {
+	                var payload = JSON.parse(window.atob(token.split('.')[1]));
+
+	                if (payload.exp > Date.now() / 1000) {
+	                    return true;
+	                } else {
+	                    return false;
+	                }
+	            } else {
+	                return false;
+	            }
+	        },
+	        logout: function logout() {
+	            localStorage.removeItem('newsroom-token');
+	            window.location.href = window.location.href;
 	        }
 	    }
 	});
