@@ -4,17 +4,17 @@
     
     <div id="page-header">
             
-        @if(Auth::check())
+        <div v-if="isLoggedIn()">
             @include('home.admin-featured')
-        @else
+        </div>
+        <div v-else>
             @include('home.featured')
-        @endif
+        </div>
             
         <section id="featured-articles">
             <h2>Featured Articles</h2>
             <div class="row">
-                @if(Auth::check())
-                
+                <div v-if="isLoggedIn()">
                     <div class="col-lg-12">
                         <div class="row">
                             <div class="col-md-4">
@@ -55,8 +55,9 @@
                             </article>
                         </div>
                     </draggable>
+                </div>
                 
-                @else
+                <div v-else>
                     @foreach($featuredArticles as $article)
                         <div class="col-sm-4">
                             <article class="article article-list-item">
@@ -83,7 +84,7 @@
                             </article>
                         </div>
                     @endforeach
-                @endif
+                </div>
 
             </div>
             

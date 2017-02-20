@@ -4,12 +4,12 @@
     <div class="row">
         
         <section class="col-sm-9">
-            @if(Auth::check())
+            <div v-if="isLoggedIn()">
                 <div class="edit-overlay right">
                     <button class="btn btn-sm btn-primary" data-toggle="modal" data-target="#edit-article">Edit Article</button>
                     <button class="btn btn-sm btn-danger" data-toggle="modal" data-target="#delete-article">Delete Article</button>
                 </div>
-            @endif
+            </div>
             <div class="article article-item">
                 @if($article->category)
                     <h4 class="article-tag">
@@ -120,7 +120,7 @@
                             <select>
                         </div>
                         
-                        <button type="submit" class="btn btn-success">Create</button>
+                        <button type="submit" class="btn btn-success">Save</button>
                         
                     </form>
                 </div>
