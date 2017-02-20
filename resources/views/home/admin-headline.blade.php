@@ -54,7 +54,7 @@
                 <h2>There is no headline article yet.</h2>
             </div>
 
-            <p>Create a new headline article or add an xisting one.</p>
+            <p>Create a new headline article or add an existing one.</p>
         </div>
     </article>
 
