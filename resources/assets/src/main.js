@@ -6,10 +6,58 @@ export default {
     }
 }
 
+var auth = {
+    data: {
+        user: {
+            "username": "",
+            "email": ""
+        },
+    },
+    methods: {
+        login: function() {
+            this.$http.post('api/auth', this.user).then(function(response){
+                this.saveToken(response.body.token);
+
+                var index = window.location.href.lastIndexOf('/login');
+                var homeUrl = window.location.href.substring(0, index);
+                window.location.href = homeUrl;
+            }, function(error){
+                console.log(error);
+            });
+        },
+        isLoggedIn: function() {
+            var token = this.getToken();
+            
+            if(token) {
+                var payload = JSON.parse(window.atob(token.split('.')[1]));
+
+                if(payload.exp > Date.now() / 1000) {
+                    return true;
+                }
+                else{
+                    return false;
+                }
+                
+            }
+            else{ return false; }
+        },
+        logout: function() {
+            localStorage.removeItem('newsroom-token');
+            window.location.href = window.location.href;
+        },
+        saveToken: function(token) {
+            localStorage.setItem('newsroom-token', token);
+        },
+        getToken: function() {
+            return localStorage.getItem('newsroom-token');
+        },
+    }
+}
+
 new Vue({
     el:"#vue-app",
+    mixins: [auth],
     data: {
-        user: {},
         articles: [],
         featured_articles: [],
         lookup: [],
@@ -38,17 +86,6 @@ new Vue({
         this.getHeadlineArticle();
     },
     methods: {
-        login: function() {
-            this.$http.post('api/auth', this.user).then(function(response){
-                localStorage.setItem('newsroom-token', response.body.token);
-
-                var index = window.location.href.lastIndexOf('/login');
-                var homeUrl = window.location.href.substring(0, index);
-                window.location.href = homeUrl;
-            }, function(error){
-                console.log(error);
-            });
-        },
         getArticles: function() {
             this.$http.get('api/articles').then(function(response){
                 this.articles = response.body;
@@ -198,34 +235,6 @@ new Vue({
         }
     }
 });
-
-var auth = {
-    methods: {
-        getToken: function() {
-            return localStorage.getItem('newsroom-token');
-        },
-        isLoggedIn: function() {
-            var token = this.getToken();
-            
-            if(token) {
-                var payload = JSON.parse(window.atob(token.split('.')[1]));
-
-                if(payload.exp > Date.now() / 1000) {
-                    return true;
-                }
-                else{
-                    return false;
-                }
-                
-            }
-            else{ return false; }
-        },
-        logout: function() {
-            localStorage.removeItem('newsroom-token');
-            window.location.href = window.location.href;
-        }
-    }
-}
 
 new Vue({
     el: "#vue-navigation",

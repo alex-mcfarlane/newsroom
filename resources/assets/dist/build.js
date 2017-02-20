@@ -44,7 +44,7 @@
 /* 0 */
 /***/ function(module, exports, __webpack_require__) {
 
-	'use strict';
+	"use strict";
 
 	Object.defineProperty(exports, "__esModule", {
 	    value: true
@@ -63,10 +63,57 @@
 	};
 
 
+	var auth = {
+	    data: {
+	        user: {
+	            "username": "",
+	            "email": ""
+	        }
+	    },
+	    methods: {
+	        login: function login() {
+	            this.$http.post('api/auth', this.user).then(function (response) {
+	                this.saveToken(response.body.token);
+
+	                var index = window.location.href.lastIndexOf('/login');
+	                var homeUrl = window.location.href.substring(0, index);
+	                window.location.href = homeUrl;
+	            }, function (error) {
+	                console.log(error);
+	            });
+	        },
+	        isLoggedIn: function isLoggedIn() {
+	            var token = this.getToken();
+
+	            if (token) {
+	                var payload = JSON.parse(window.atob(token.split('.')[1]));
+
+	                if (payload.exp > Date.now() / 1000) {
+	                    return true;
+	                } else {
+	                    return false;
+	                }
+	            } else {
+	                return false;
+	            }
+	        },
+	        logout: function logout() {
+	            localStorage.removeItem('newsroom-token');
+	            window.location.href = window.location.href;
+	        },
+	        saveToken: function saveToken(token) {
+	            localStorage.setItem('newsroom-token', token);
+	        },
+	        getToken: function getToken() {
+	            return localStorage.getItem('newsroom-token');
+	        }
+	    }
+	};
+
 	new Vue({
 	    el: "#vue-app",
+	    mixins: [auth],
 	    data: {
-	        user: {},
 	        articles: [],
 	        featured_articles: [],
 	        lookup: [],
@@ -94,17 +141,6 @@
 	        this.getHeadlineArticle();
 	    },
 	    methods: {
-	        login: function login() {
-	            this.$http.post('api/auth', this.user).then(function (response) {
-	                localStorage.setItem('newsroom-token', response.body.token);
-
-	                var index = window.location.href.lastIndexOf('/login');
-	                var homeUrl = window.location.href.substring(0, index);
-	                window.location.href = homeUrl;
-	            }, function (error) {
-	                console.log(error);
-	            });
-	        },
 	        getArticles: function getArticles() {
 	            this.$http.get('api/articles').then(function (response) {
 	                this.articles = response.body;
@@ -251,30 +287,7 @@
 
 	new Vue({
 	    el: "#vue-navigation",
-	    methods: {
-	        getToken: function getToken() {
-	            return localStorage.getItem('newsroom-token');
-	        },
-	        isLoggedIn: function isLoggedIn() {
-	            var token = this.getToken();
-
-	            if (token) {
-	                var payload = JSON.parse(window.atob(token.split('.')[1]));
-
-	                if (payload.exp > Date.now() / 1000) {
-	                    return true;
-	                } else {
-	                    return false;
-	                }
-	            } else {
-	                return false;
-	            }
-	        },
-	        logout: function logout() {
-	            localStorage.removeItem('newsroom-token');
-	            window.location.href = window.location.href;
-	        }
-	    }
+	    mixins: [auth]
 	});
 
 /***/ },
