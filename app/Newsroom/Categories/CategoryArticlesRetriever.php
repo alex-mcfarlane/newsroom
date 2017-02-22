@@ -16,7 +16,7 @@ abstract class CategoryArticlesRetriever
     protected $model;
     protected $limit;
     protected $query;
-    private $formatter;
+    protected $formatter;
     private $presenter;
 
     public function __construct(Category $category, $limit, IRetrieverOutput $presenter)
