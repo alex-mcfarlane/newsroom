@@ -28,7 +28,7 @@
                     <img src="../{{$article->image->path}}" class="img-responsive" alt="Image alt">
                 </div>
 
-                <p>{{$article->body}}</p>
+                <p>{!!html_entity_decode($article->body)!!}</p>
             </div>
         </section>
         
