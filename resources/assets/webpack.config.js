@@ -4,7 +4,7 @@ module.exports = {
   // Where should the compiled file go?
   output: {
     // To the `dist` folder
-    path: './../../../public/js',
+    path: '../../public/js',
     // With the filename `build.js` so it's dist/build.js
     filename: 'build.js'
   },
