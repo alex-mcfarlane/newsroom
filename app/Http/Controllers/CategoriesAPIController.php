@@ -12,6 +12,7 @@ class CategoriesAPIController extends Controller
 {
     public function __construct(CategoriesCreator $categoriesCreator)
     {
+        $this->middleware('jwt.auth', ['except' => ['index']]);
     	$this->categoriesCreator = $categoriesCreator;
     }
 
@@ -28,7 +29,7 @@ class CategoriesAPIController extends Controller
     		$category = $this->categoriesCreator->make($request->only('title', 'description'));
     	}
     	catch(CategoryException $e) {
-    		return response()->json($e->getErrors());
+    		return response()->json($e->getErrors(), 400);
     	}
 
     	return response()->json($category);

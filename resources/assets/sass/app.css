@@ -61,6 +61,7 @@ time {
 
 .featured-article {
   position: relative;
+  min-height: 300px;
   max-height: 500px;
   margin-bottom: 2.25em;
   overflow-y: hidden; }

@@ -6,13 +6,61 @@ export default {
     }
 }
 
+var auth = {
+    data: {
+        user: {
+            "username": "",
+            "email": ""
+        },
+    },
+    methods: {
+        login: function() {
+            this.$http.post('api/auth', this.user).then(function(response){
+                this.saveToken(response.body.token);
+
+                var index = window.location.href.lastIndexOf('/login');
+                var homeUrl = window.location.href.substring(0, index);
+                window.location.href = homeUrl;
+            }, function(error){
+                console.log(error);
+            });
+        },
+        isLoggedIn: function() {
+            var token = this.getToken();
+            
+            if(token) {
+                var payload = JSON.parse(window.atob(token.split('.')[1]));
+
+                if(payload.exp > Date.now() / 1000) {
+                    return true;
+                }
+                else{
+                    return false;
+                }
+                
+            }
+            else{ return false; }
+        },
+        logout: function() {
+            localStorage.removeItem('newsroom-token');
+            window.location.href = window.location.href;
+        },
+        saveToken: function(token) {
+            localStorage.setItem('newsroom-token', token);
+        },
+        getToken: function() {
+            return localStorage.getItem('newsroom-token');
+        },
+    }
+}
+
 new Vue({
     el:"#vue-app",
+    mixins: [auth],
     data: {
-        user: {},
         articles: [],
-        articles_map: [],
         featured_articles: [],
+        lookup: [],
         categories: [],
         article: {},
         category: {},
@@ -38,20 +86,17 @@ new Vue({
         this.getHeadlineArticle();
     },
     methods: {
-        login: function() {
-            this.$http.post('api/auth', this.user).then(function(response){
-                console.log(response);
-            }, function(error){
-                console.log(error);
-            });
-        },
         getArticles: function() {
             this.$http.get('api/articles').then(function(response){
                 this.articles = response.body;
-                
-                this.articles.filter(function(article){
-                    this.articles_map[article.id] = article;
-                });
+
+                // Create a lookup dictionary of featured articles
+                // This will allow for easier searching in the future
+                for(var i = 0; i < this.articles.length; i++) {
+                    var article = this.articles[i];
+
+                    this.lookup[article.id] = article;
+                }
             }, function(error){
                 console.log(error);
             });
@@ -65,20 +110,21 @@ new Vue({
         },
         getUnfeaturedArticles: function() {
             var unFeatured = [];
-            
-            //create map of featured articles, using its id as the index
-            var lookup = [];
-            
-            for(var i=0; i < this.featured_articles.length; i++) {
-                var featured_article = this.featured_articles[i];
-                
-                lookup[featured_article.id] = featured_article;
-            }
-            
-            var unfeatured = this.articles.filter(function(article){
-                return !lookup[article.id];
+            var self = this;
+
+            var unfeatured = this.articles;
+
+            this.featured_articles.filter(function(article){
+                var index = unfeatured.indexOf(self.lookup[article.id]);
+                if(index >= 0) {
+                    unfeatured.splice(index, 1);
+                }
             });
             
+            if(unfeatured[0]) {
+                //this.new_feature_article_id = unfeatured[0].id;
+            }
+
             return unfeatured;
         },
         getCategories: function() {
@@ -91,7 +137,7 @@ new Vue({
             });
         },
         getHeadlineArticle: function() {
-            this.$http.get('api/articles?featured=1').then(function(response){
+            this.$http.get('api/articles?headliner=1').then(function(response){
                 this.headline_article = response.body[0];
                 this.headline_article.body = this.headline_article.body.substring(0, 150) + " ...";
 
@@ -101,7 +147,11 @@ new Vue({
             });
         },
         changeHeadlineArticle: function(id) {
-            this.$http.put('api/articles/'+id+'/headline').then(function(response){
+            this.$http.put('api/articles/'+id+'/headline', {}, {
+                headers: {
+                    "Authorization": "Bearer "+ this.getToken()
+                }
+            }).then(function(response){
                 this.headline_article = response.body;
                 this.headline_article.body = this.headline_article.body.substring(0, 150) + " ...";
             }, function(error){
@@ -109,11 +159,21 @@ new Vue({
             });
         },
         createArticle: function() {
-            this.$http.post('api/articles', this.article).then(function(response){
+            var token = this.getToken();
+
+            this.$http.post('api/articles', this.article, {
+                headers: {
+                    "Authorization": "Bearer "+ token
+                }
+            }).then(function(response){
                 var article = response.body;
                 
                 //upload image for article
-                this.$http.post('api/articles/'+article.id+'/images', this.fileFormData).then(function(response){
+                this.$http.post('api/articles/'+article.id+'/images', this.fileFormData, {
+                    headers: {
+                        "Authorization": "Bearer "+ token
+                    }
+                }).then(function(response){
                     article.image = response.body;
 
                     //add new article to list of articles
@@ -131,14 +191,23 @@ new Vue({
             });
         },
         createHeadlineArticle: function() {
-            this.article.featured = true;
+            var token = this.getToken();
+            this.article.headliner = true;
 
-            this.$http.post('api/articles', this.article).then(function(response){
+            this.$http.post('api/articles', this.article, {
+                headers: {
+                    "Authorization": "Bearer "+ token
+                }
+            }).then(function(response){
                 this.headline_article = response.body;
                 this.headline_article.body = this.headline_article.body.substring(0, 150) + " ...";
                 
                 //upload image for article
-                this.$http.post('api/articles/'+this.headline_article.id+'/images', this.fileFormData).then(function(response){
+                this.$http.post('api/articles/'+this.headline_article.id+'/images', this.fileFormData, {
+                    headers: {
+                        "Authorization": "Bearer "+ token
+                    }
+                }).then(function(response){
                     this.headline_article.image = response.body;
 
                     //close modal and clear entry
@@ -155,17 +224,25 @@ new Vue({
         },
         featureArticle: function(id) {
             var orderId = this.featured_articles.length + 1;
-            this.$http.post('api/articles/'+id+'/featured', {"order_id": orderId}).then(function(response){
-                var article = 
+            this.$http.post('api/articles/'+id+'/featured', {"order_id": orderId}, {
+                headers: {
+                    "Authorization": "Bearer "+ this.getToken()
+                }
+            }).then(function(response){
+                var article = this.lookup[id];
 
-                // TODO:: push article on to featured_articles
+                //push article on to featured_articles
                 this.featured_articles.push(article);
             }, function(error){
                 console.log(error);
             })
         },
         createCategory: function() {
-            this.$http.post('api/categories', this.category).then(function(response){
+            this.$http.post('api/categories', this.category, {
+                headers: {
+                    "Authorization": "Bearer "+ this.getToken()
+                }
+            }).then(function(response){
                 //add to list of categories
                 this.categories.push(response.body);
                 $('#add-category').modal('toggle');
@@ -177,6 +254,10 @@ new Vue({
             if(object.hasOwnProperty("moved")) {
                 this.$http.post('api/articles/'+object.moved.element.id+'/featured', {
                     "order_id": object.moved.newIndex + 1
+                }, {
+                    headers: {
+                        "Authorization": "Bearer "+ this.getToken()
+                    }
                 }).then(function(response){
 
                 }, function(error){
@@ -188,4 +269,9 @@ new Vue({
             this.fileFormData.append('image', e.target.files[0]);
         }
     }
+});
+
+new Vue({
+    el: "#vue-navigation",
+    mixins: [auth]
 });

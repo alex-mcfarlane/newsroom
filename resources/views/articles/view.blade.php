@@ -4,12 +4,12 @@
     <div class="row">
         
         <section class="col-sm-9">
-            @if(Auth::check())
+            <div v-if="isLoggedIn()">
                 <div class="edit-overlay right">
                     <button class="btn btn-sm btn-primary" data-toggle="modal" data-target="#edit-article">Edit Article</button>
                     <button class="btn btn-sm btn-danger" data-toggle="modal" data-target="#delete-article">Delete Article</button>
                 </div>
-            @endif
+            </div>
             <div class="article article-item">
                 @if($article->category)
                     <h4 class="article-tag">
@@ -110,17 +110,17 @@
                         <div class="form-group">
                             <label for="headliner">Headline Article</label>
 
-                            <select id="headliner" name="featured" class="form-control">
+                            <select id="headliner" name="headliner" class="form-control">
                                 <option value="0">
                                     No
                                 </option>
-                                <option value="1" {{$article->featured ? "selected='selected'" : ''}}>
+                                <option value="1" {{$article->headliner ? "selected='selected'" : ''}}>
                                     Yes
                                 </option>
                             <select>
                         </div>
                         
-                        <button type="submit" class="btn btn-success">Create</button>
+                        <button type="submit" class="btn btn-success">Save</button>
                         
                     </form>
                 </div>
