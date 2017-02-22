@@ -2,8 +2,8 @@
 namespace App\Newsroom\Categories;
 
 use App\Category;
-use App\Newsroom\Articles\ArticleFormatter;
-use App\Newsroom\Articles\ArticlesFormatter;
+use App\Newsroom\Categories\CategoryArticlesRetrieverOutput;
+use App\Newsroom\Categories\CategoryArticleRetrieverOutput;
 
 /**
  * ArticleRetrieverFactory
@@ -15,12 +15,12 @@ class CategoryArticleRetrieverFactory {
     {
         switch(true){
             case $limit == 1:
-                return new CategoryRecentArticle($category, new ArticleFormatter, $limit);
+                return new RecentArticle($category, $limit, new ArticleRetrieverOutput);
                 break;
             case $limit > 1:
-                return new CategoryRecentArticles($category, new ArticleFormatter, $limit);
+                return new RecentArticles($category, $limit, new ArticlesRetrieverOutput);
             case $limit == null:
-                return new CategoryAllRecentArticles($category, new ArticleFormatter, $limit);
+                return new AllRecentArticles($category, $limit, new ArticlesRetrieverOutput);
         }
     }
 }
