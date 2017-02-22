@@ -1,0 +1,129 @@
+body {
+  font-family: 'Open Sans', sans-serif;
+  font-size: 16px;
+  background: #f4f4f4; }
+
+@media (min-width: 1200px) {
+  .container {
+    width: 1080px; } }
+h1, h2, h3, h4, h5, h6, p {
+  margin: 0; }
+
+h1 {
+  font-size: 3.375em;
+  margin-bottom: 2.25rem; }
+
+h2 {
+  font-size: 2.25em;
+  font-weight: 600;
+  line-height: 1.2;
+  margin-bottom: 10px; }
+
+h3 {
+  font-size: 1.5em;
+  font-weight: 600;
+  line-height: 1.2;
+  margin-bottom: 10px; }
+
+h4 {
+  font-size: 1em;
+  line-height: 1.2;
+  margin-bottom: 10.667px; }
+
+h5 {
+  font-size: .667em;
+  font-weight: 600; }
+
+p {
+  font-size: 1em;
+  line-height: 1.5;
+  margin-bottom: 10px; }
+
+a {
+  color: inherit; }
+
+time {
+  font-size: 1em; }
+
+.navbar-header h1 {
+  font-size: 2.25em; }
+.navbar-header .navbar-brand {
+  font-size: inherit;
+  font-weight: 700;
+  height: auto;
+  line-height: 1; }
+
+.navbar-nav > li {
+  padding: 10px 0; }
+  .navbar-nav > li > a {
+    font-size: 1em;
+    text-transform: uppercase; }
+
+.featured-article {
+  position: relative;
+  min-height: 300px;
+  max-height: 500px;
+  margin-bottom: 2.25em;
+  overflow-y: hidden; }
+  .featured-article .article-info {
+    background-color: rgba(255, 255, 255, 0.7);
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 33.3%;
+    height: 100%;
+    padding: 1em; }
+    .featured-article .article-info .article-tag {
+      margin-bottom: 24px; }
+
+.edit-overlay {
+  position: absolute;
+  padding: 1em;
+  z-index: 1; }
+  .edit-overlay.right {
+    right: 1em; }
+
+.article-tag {
+  font-size: 1em;
+  letter-spacing: 2px;
+  margin-bottom: 10px;
+  color: #95a5a6; }
+
+.article-heading {
+  margin-bottom: 1.5em; }
+
+.article-image {
+  overflow-y: hidden;
+  max-height: 400px; }
+
+.article {
+  background: #fff; }
+
+.article-item {
+  padding: 1em 2.25em; }
+  .article-item .article-image {
+    max-height: 400px;
+    margin-bottom: 1.5em; }
+
+.article-list-item {
+  margin-bottom: 1.5em; }
+  .article-list-item .article-tag {
+    font-size: 1em; }
+  .article-list-item .article-image {
+    max-height: 200px; }
+  .article-list-item .article-list-item-info {
+    border-top: 10px solid #3498db;
+    padding: 1em; }
+    .article-list-item .article-list-item-info .article-heading {
+      margin-bottom: 1em; }
+      .article-list-item .article-list-item-info .article-heading h3 {
+        margin-bottom: .444rem; }
+    .article-list-item .article-list-item-info p {
+      font-size: 14px; }
+
+#recent > h2 {
+  margin-bottom: 16px; }
+#recent article {
+  margin-bottom: 1.5em; }
+
+/*# sourceMappingURL=app.css.map */
