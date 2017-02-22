@@ -2,21 +2,19 @@
 
 namespace App\Newsroom\Categories;
 
-use App\Newsroom\Interfaces\IModelFormatter;
-
 /**
  * Description of RecentArticles
  *
  * @author Alex McFarlane
  */
-class CategoryRecentArticles extends CategoryRecentArticlesRetriever
+class RecentArticles extends CategoryArticlesRetriever
 {
-    public function retrieval(IModelFormatter $formatter)
+    public function retrieval()
     {
         $articles = $this->query->newestArticles($this->limit);
 
         foreach($articles as $article) {
-        	$article = $formatter->format($article);
+        	$article = $this->formatter->format($article);
         }
 
         return $articles;

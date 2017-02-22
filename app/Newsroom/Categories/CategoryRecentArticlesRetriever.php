@@ -4,33 +4,36 @@ namespace App\Newsroom\Categories;
 
 use App\Category;
 use App\Newsroom\Interfaces\IRetrieverOutput;
-use App\Newsroom\Interfaces\IModelFormatter;
+use App\Newsroom\Articles\ArticleFormatter;
 
 /**
  * Abstract CategoryArticleRetriever class
  *
  * @author Alex McFarlane
  */
-abstract class CategoryRecentArticlesRetriever
+abstract class CategoryArticlesRetriever
 {
     protected $model;
     protected $limit;
     protected $query;
     private $formatter;
+    private $presenter;
 
-    public function __construct(Category $category, IModelFormatter $formatter, $limit)
+    public function __construct(Category $category, $limit, IRetrieverOutput $presenter)
     {
         $this->model = $category;
-        $this->formatter = $formatter;
         $this->limit = $limit;
+        $this->presenter = $presenter;
+        $this->formatter = new ArticleFormatter;
     }
 
-    protected abstract function retrieval(IModelFormatter $formatter);
+    protected abstract function retrieval();
     
-    public function get(IRetrieverOutput $presenter)
+    public function get()
     {
-        $articles = $this->startQuery()->retrieval($this->formatter);
-        return $presenter->output($this->model, $articles);
+        $articles = $this->startQuery()->retrieval();
+        
+        return $this->presenter->output($this->model, $articles);
     }
     
     public function startQuery()
