@@ -85,7 +85,9 @@ class Article extends Model
     public function setHeadliner($headliner)
     {
         if($headliner == true) {
-            $this->markAsHeadliner();
+            if($this->headliner == false) {
+                $this->markAsHeadliner();
+            }
         } else {
             $this->removeAsHeadliner();
         }
