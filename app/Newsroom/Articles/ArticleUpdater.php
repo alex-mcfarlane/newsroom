@@ -35,10 +35,15 @@ class ArticleUpdater {
         
         try{
             $article = Article::findOrFail($id);
+            
+            $optionalAttrs = [
+                "headliner" => $attributes['headliner'],
+                "categoryId" => $attributes['category_id']
+            ];
 
-            $article->edit($attributes['title'], $attributes['body'], $attributes['headliner'], 
-                            $attributes['category_id']);
+            $article->edit($attributes['title'], $attributes['body'], $optionalAttrs);
 
+            //change article image if client passed one in
             if($file) {
                 $image = $this->imageCreator->make($file);
 

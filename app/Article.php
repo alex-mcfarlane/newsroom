@@ -33,14 +33,15 @@ class Article extends Model
         return $article;
     }
 
-    public function edit($title, $body, $isHeadliner, $categoryId)
+    public function edit($title, $body, array $optional)
     {
         $this->fill(['title'=>$title, 'body' => $body]);
 
-        $this->setHeadliner($isHeadliner);
-
-        if(isset($categoryId)) {
-            $this->setCategory($categoryId);
+        if(isset($optional['headliner'])) {
+            $this->setHeadliner($optional['headliner']);    
+        }
+        if(isset($optional['categoryId'])) {
+            $this->setCategory($optional['categoryId']);
         }
 
         $this->save();
