@@ -29,16 +29,19 @@ class ArticleCreator {
         }
         
         try{
-            $article = Article::fromForm($attributes['title'], $attributes['body'], $attributes['headliner'], 
-                                $attributes['category_id']);
-            
-            $formatter = new ArticleFormatter();
-            $article = $formatter->format($article);
+            $optionalAttrs = [
+                "headliner" => $attributes['headliner'],
+                "categoryId" => $attributes['category_id']
+            ];
+
+            $article = Article::fromForm($attributes['title'], $attributes['body'], $optionalAttrs);
         } catch(CategoryNotFoundException $e) {
-            $article->delete();
+            //$article->delete();
             throw new ArticleException($e->getErrors());
         }
         
-        return $article;
+        $formatter = new ArticleFormatter();
+        
+        return $formatter->format($article);
     }
 }
