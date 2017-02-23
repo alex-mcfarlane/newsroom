@@ -13,6 +13,7 @@ use App\Newsroom\Articles\ArticleHeadliner;
 use App\Newsroom\Articles\ArticleFormatter;
 use App\Newsroom\Images\ImageCreator;
 use App\Newsroom\Exceptions\ArticleException;
+use App\Newsroom\Exceptions\ImageException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class ArticlesAPIController extends Controller

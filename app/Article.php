@@ -15,7 +15,7 @@ class Article extends Model
         'headliner' => false
     ];
     
-    public static function fromForm($title, $body, $isHeadliner = false, $categoryId = 0)
+    public static function fromForm($title, $body, array $optional)
     {        
         $article = self::create([
             "title" => $title,
@@ -23,9 +23,12 @@ class Article extends Model
             "headliner" => false
         ]);
         
-        // By default, category is null and headliner is false. Only use setters if client explicitly passes them in
-        $categoryId ? $article->setCategory($categoryId) : '';
-        $isHeadliner ? $article->markAsHeadliner() : '';
+        if(isset($optional['headliner'])) {
+            $article->setHeadliner($optionalAttrs['headliner']);
+        }
+        if(isset($optional['categoryId'])) {
+            $article->setCategory($optional['categoryId']);
+        }
         
         return $article;
     }
