@@ -5,11 +5,11 @@ namespace App\Newsroom\Categories;
 use App\Newsroom\Interfaces\IRetrieverOutput;
 use Illuminate\Database\Eloquent\Model;
 
-class CategoryArticleRetrieverOutput implements IRetrieverOutput
+class ArticlesRetrieverOutput implements IRetrieverOutput
 {
-	public function output(Model $category, $article)
+	public function output(Model $category, $articles)
 	{
-        $category["article"] = $article;
+        $category["articles"] = $articles;
 
         return $category;
 	}
