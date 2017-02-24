@@ -3,6 +3,7 @@
 namespace App;
 
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use App\Newsroom\Exceptions\UserException;
 
 class User extends Authenticatable
 {
@@ -23,4 +24,13 @@ class User extends Authenticatable
     protected $hidden = [
         'password', 'remember_token',
     ];
+
+    public static function createAdmin($attributes)
+    {
+        if(User::all()->count() > 0) {
+            throw new UserException(["exists"=>"Admin user already exists"], 400);
+        }
+
+        return parent::create($attributes);
+    }
 }
