@@ -10,7 +10,7 @@
                     <button class="btn btn-sm btn-danger" data-toggle="modal" data-target="#delete-article">Delete Article</button>
                 </div>
             </div>
-            <div class="article article-item">
+            <article class="article article-item">
                 @if($article->category)
                     <h4 class="article-tag">
                         <a href="{{url('/categories/'.$article->category->id)}}">
@@ -19,17 +19,20 @@
                     </h4>
                 @endif
 
-                <div class="article-heading">
+                <section class="article-heading">
                     <h2>{{$article->title}}</h2>
                     <time>{{date('F d, Y', strtotime($article->created_at))}}</time>
-                </div>
+                </section>
 
-                <div class="article-image">
+                <section class="article-image">
                     <img src="../{{$article->image->path}}" class="img-responsive" alt="Image alt">
-                </div>
+                </section>
 
-                <p>{!!html_entity_decode($article->body)!!}</p>
-            </div>
+                <section class="article-body">
+                    <p>{!!html_entity_decode($article->body)!!}</p>
+                </section>
+                
+            </article>
         </section>
         
         <section id="recent" class="col-md-3 col-sm-12">
