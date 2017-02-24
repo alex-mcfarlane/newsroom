@@ -26,7 +26,7 @@ class UserCreator {
         //encrypt pswd
         $input['password'] = bcrypt($input['password']);
         
-        $user = User::create($input);
+        $user = User::createAdmin($input);
         
         return $user;
     }

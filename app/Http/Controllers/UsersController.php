@@ -26,7 +26,9 @@ class UsersController extends Controller
     {
         try{
             $user = $this->userCreator->register($request->only('name', 'email', 'password', 'password_confirmation'));
+            
             Auth::login($user);
+
             return redirect()->action('HomeController@index');
         } catch(UserException $ex) {
             return redirect()->back()->withErrors($ex->getErrors())->withInput();

@@ -7,6 +7,13 @@
             <div class="panel panel-default">
                 <div class="panel-heading">Register</div>
                 <div class="panel-body">
+                    
+                    @if ($errors->has('exists'))
+                        <div class="alert alert-danger">
+                            <p>{{$errors->first('exists')}}</p>
+                        </div>
+                    @endif
+
                     <form class="form-horizontal" role="form" method="POST" action="{{ url('/users') }}">
                         {{ csrf_field() }}
 

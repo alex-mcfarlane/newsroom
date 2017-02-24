@@ -15,7 +15,7 @@ class Article extends Model
         'headliner' => false
     ];
     
-    public static function fromForm($title, $body, $isHeadliner = false, $categoryId = 0)
+    public static function fromForm($title, $body, array $optional)
     {        
         $article = self::create([
             "title" => $title,
@@ -23,21 +23,25 @@ class Article extends Model
             "headliner" => false
         ]);
         
-        // By default, category is null and headliner is false. Only use setters if client explicitly passes them in
-        $categoryId ? $article->setCategory($categoryId) : '';
-        $isHeadliner ? $article->markAsHeadliner() : '';
+        if(isset($optional['headliner'])) {
+            $article->setHeadliner($optionalAttrs['headliner']);
+        }
+        if(isset($optional['categoryId'])) {
+            $article->setCategory($optional['categoryId']);
+        }
         
         return $article;
     }
 
-    public function edit($title, $body, $isHeadliner, $categoryId)
+    public function edit($title, $body, array $optional)
     {
         $this->fill(['title'=>$title, 'body' => $body]);
 
-        $this->setHeadliner($isHeadliner);
-
-        if(isset($categoryId)) {
-            $this->setCategory($categoryId);
+        if(isset($optional['headliner'])) {
+            $this->setHeadliner($optional['headliner']);    
+        }
+        if(isset($optional['categoryId'])) {
+            $this->setCategory($optional['categoryId']);
         }
 
         $this->save();
@@ -85,7 +89,9 @@ class Article extends Model
     public function setHeadliner($headliner)
     {
         if($headliner == true) {
-            $this->markAsHeadliner();
+            if($this->headliner == false) {
+                $this->markAsHeadliner();
+            }
         } else {
             $this->removeAsHeadliner();
         }
