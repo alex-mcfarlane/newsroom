@@ -33,4 +33,14 @@ class User extends Authenticatable
 
         return parent::create($attributes);
     }
+    
+    public static function getAdmin()
+    {
+        return User::first();
+    }
+    
+    public static function registrationOpen()
+    {
+        return is_null(User::getAdmin());
+    }
 }
