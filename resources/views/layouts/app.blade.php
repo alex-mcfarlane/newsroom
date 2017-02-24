@@ -56,7 +56,9 @@
                     <!-- Authentication Links -->
                     
                     <li v-if="!isLoggedIn()"><a href="{{ url('/login') }}">Login</a></li>
-                    <li v-if="!isLoggedIn()"><a href="{{ url('/register') }}">Register</a></li>
+                    @if($registrationOpen)
+                        <li v-if="!isLoggedIn()"><a href="{{ url('/register') }}">Register</a></li>
+                    @endif
                 
                     <li v-if="isLoggedIn()" class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
