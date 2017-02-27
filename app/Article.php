@@ -15,7 +15,7 @@ class Article extends Model
         'headliner' => false
     ];
     
-    public static function create($title, $body, $headliner = false)
+    public static function fromForm($title, $body, $headliner = false)
     {        
         $article = self::create([
             "title" => $title,
@@ -28,15 +28,12 @@ class Article extends Model
         return $article;
     }
 
-    public function edit($title, $body, array $optional)
+    public function edit($title, $body, $headliner = null)
     {
         $this->fill(['title'=>$title, 'body' => $body]);
 
-        if(isset($optional['headliner'])) {
-            $this->setHeadliner($optional['headliner']);    
-        }
-        if(isset($optional['categoryId'])) {
-            $this->setCategory($optional['categoryId']);
+        if(isset($headliner)) {
+            $this->setHeadliner($headliner);    
         }
 
         $this->save();
@@ -109,17 +106,21 @@ class Article extends Model
         $this->save();
     }
     
-    public function addCategory(Category $category)
+    public function associateCategory(Category $category)
     {
         $this->category()->associate($category);
-
         $this->save();
     }
 
-    private function clearCategory()
+    public function clearCategory()
     {
         $this->category()->dissociate();
         $this->save();
+    }
+
+    public function hasCategory()
+    {
+        return isset($this->category);
     }
 
     public function setImage()

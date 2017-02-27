@@ -29,13 +29,13 @@ class ArticleCreator {
             throw new ArticleException($this->validator->getErrors());
         }
         
-        $article = Article::create($attributes['title'], $attributes['body'], $attributes['headliner']);
+        $article = Article::fromForm($attributes['title'], $attributes['body'], $attributes['headliner']);
 
         if(isset($attributes['category_id'])) {
             try{
                 $category = Category::find($attributes['category_id']);
 
-                $article->addCategory($category);
+                $article->associateCategory($category);
             } catch(CategoryNotFoundException $e) {
                 $article->delete();
                 throw new ArticleException($e->getErrors());
