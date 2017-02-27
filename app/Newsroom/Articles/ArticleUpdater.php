@@ -3,6 +3,7 @@
 namespace App\Newsroom\Articles;
 
 use App\Article;
+use App\Category;
 use App\Newsroom\Images\ImageCreator;
 use App\Newsroom\Validators\ArticleValidator;
 use App\Newsroom\Exceptions\ArticleException;
@@ -35,13 +36,18 @@ class ArticleUpdater {
         
         try{
             $article = Article::findOrFail($id);
-            
-            $optionalAttrs = [
-                "headliner" => $attributes['headliner'],
-                "categoryId" => $attributes['category_id']
-            ];
+            $article->edit($attributes['title'], $attributes['body'], $attributes['headliner']);
 
-            $article->edit($attributes['title'], $attributes['body'], $optionalAttrs);
+            //client can specify whether to remove or associate category
+            if(empty($attributes['category_id'])) {
+                if($article->hasCategory()) {
+                    $article->clearCategory();
+                }
+            }
+            else{
+                $category = Category::find($attributes['category_id']);
+                $article->associateCategory($category);
+            }
 
             //change article image if client passed one in
             if($file) {
