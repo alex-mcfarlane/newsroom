@@ -3,7 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
-use App\Newsroom\Exceptions\CategoryNotFoundException;
+use App\Category;
 use App\Image;
 use App\Newsroom\Images\LocalFileStore;
 
@@ -15,7 +15,7 @@ class Article extends Model
         'headliner' => false
     ];
     
-    public static function fromForm($title, $body, array $optional)
+    public static function create($title, $body, $headliner = false)
     {        
         $article = self::create([
             "title" => $title,
@@ -23,12 +23,7 @@ class Article extends Model
             "headliner" => false
         ]);
         
-        if(isset($optional['headliner'])) {
-            $article->setHeadliner($optionalAttrs['headliner']);
-        }
-        if(isset($optional['categoryId'])) {
-            $article->setCategory($optional['categoryId']);
-        }
+        $headliner ? $article->markAsHeadliner() : '';
         
         return $article;
     }
@@ -96,21 +91,34 @@ class Article extends Model
             $this->removeAsHeadliner();
         }
     }
-    
-    public function setCategory($categoryId)
+
+    public function markAsHeadliner()
     {
-        if($categoryId === 0) {
-            $this->clearCategory();
-            return;
+        //if another article(s) is the headliner, we need to unfeature them
+        if($article = Article::headliner()) {
+            $article->removeAsHeadliner();
         }
-
-        //associate article with category
-        if(! $category = Category::find($categoryId)) {
-            throw new CategoryNotFoundException;
-        }
-
+        
+        $this->headliner = true;
+        $this->save();
+    }
+    
+    private function removeAsHeadliner()
+    {
+        $this->headliner = false;
+        $this->save();
+    }
+    
+    public function addCategory(Category $category)
+    {
         $this->category()->associate($category);
 
+        $this->save();
+    }
+
+    private function clearCategory()
+    {
+        $this->category()->dissociate();
         $this->save();
     }
 
@@ -136,29 +144,6 @@ class Article extends Model
     public function hasImage()
     {
         return is_null($this->image) === false;
-    }
-
-    private function clearCategory()
-    {
-        $this->category()->dissociate();
-        $this->save();
-    }
-    
-    public function markAsHeadliner()
-    {
-        //if another article(s) is the headliner, we need to unfeature them
-        if($article = Article::headliner()) {
-            $article->removeAsHeadliner();
-        }
-        
-        $this->headliner = true;
-        $this->save();
-    }
-    
-    private function removeAsHeadliner()
-    {
-        $this->headliner = false;
-        $this->save();
     }
     
     /**
