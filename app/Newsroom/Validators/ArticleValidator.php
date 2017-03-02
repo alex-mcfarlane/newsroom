@@ -13,7 +13,8 @@ class ArticleValidator extends Validator{
     
     protected static $rules = [
         "title" => "required",
-        "body" => "required",
+        "sub_title" => "max:300",
+        "body" => "required|max:10000",
         "category_id" => "numeric",
         "headliner" => "boolean"
     ];
