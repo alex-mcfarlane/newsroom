@@ -29,7 +29,12 @@ class ArticleCreator {
             throw new ArticleException($this->validator->getErrors());
         }
         
-        $article = Article::fromForm($attributes['title'], $attributes['body'], $attributes['headliner']);
+        $optionalAttrs = [
+            'subTitle' => $attributes['sub_title'],
+            'headliner' => $attributes['headliner']
+        ];
+        
+        $article = Article::fromForm($attributes['title'], $attributes['body'], $optionalAttrs);
 
         if(isset($attributes['category_id'])) {
             try{
