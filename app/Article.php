@@ -29,9 +29,13 @@ class Article extends Model
         return $article;
     }
 
-    public function edit($title, $body, $headliner = null)
+    public function edit($title, $body, $subTitle = "", $headliner = null)
     {
-        $this->fill(['title'=>$title, 'body' => $body]);
+        $this->fill([
+            'title'=>$title, 
+            'body' => $body, 
+            'sub_title' => $subTitle
+        ]);
 
         if(isset($headliner)) {
             $this->setHeadliner($headliner);    

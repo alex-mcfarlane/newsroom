@@ -83,6 +83,12 @@
                             
                             <input type="text" id="title" name="title" class="form-control" value="{{$article->title}}"></input>
                         </div>
+
+                        <div class="form-group">
+                            <label for="sub-title">Sub Title</label>
+                            
+                            <input type="text" id="sub_title" name="sub_title" class="form-control" value="{{$article->sub_title}}"></input>
+                        </div>
                         
                         <div class="form-group">
                             <label for="body">Body</label>

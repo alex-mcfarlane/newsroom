@@ -9,7 +9,7 @@ use App\Newsroom\Exceptions\CategoryNotFoundException;
 
 /**
  * ArticleCreator Class
- * Validation and Business logic for creating an article
+ * Validation and Application logic for creating an article
  * 
  * @author Alex McFarlane
  */
