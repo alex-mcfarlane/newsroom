@@ -111,6 +111,6 @@ class ArticlesAPIController extends Controller
 
     private function getInput(Request $request)
     {
-        return $request->only('title', 'body', 'headliner', 'category_id');
+        return $request->only('title', 'sub_title', 'body', 'headliner', 'category_id');
     }
 }

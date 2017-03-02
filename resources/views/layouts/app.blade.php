@@ -103,13 +103,19 @@
                             <form v-on:submit.prevent="createArticle">
                                 
                                 <div class="form-group">
-                                    <label for="new-feature-title">Title</label>
+                                    <label for="new-headline-title">Title</label>
                                     
                                     <input v-model="article.title" class="form-control"></input>
                                 </div>
+
+                                <div class="form-group">
+                                    <label for="new-headline-sub-title">Sub Title</label>
+                                    
+                                    <input v-model="article.sub_title" class="form-control"></input>
+                                </div>
                                 
                                 <div class="form-group">
-                                    <label for="new-feature-body">Body</label>
+                                    <label for="new-headline-body">Body</label>
                                     
                                     <textarea v-model="article.body" class="form-control"></textarea>
                                 </div>
@@ -125,9 +131,9 @@
                                 </div>
 
                                 <div class="form-group">
-                                    <label for="new-headline-category">Headliner</label>
+                                    <label for="new-headline-headliner">Headliner</label>
 
-                                    <select v-model="article.featured" class="form-control">
+                                    <select v-model="article.headliner" class="form-control">
                                         <option value="0">
                                             No
                                         </option>
@@ -166,13 +172,13 @@
                             <form v-on:submit.prevent="createCategory">
                                 
                                 <div class="form-group">
-                                    <label for="new-feature-title">Title</label>
+                                    <label for="category-title">Title</label>
                                     
                                     <input v-model="category.title" class="form-control"></input>
                                 </div>
                                 
                                 <div class="form-group">
-                                    <label for="new-feature-body">Description</label>
+                                    <label for="category-description">Description</label>
                                     
                                     <textarea v-model="category.description" class="form-control"></textarea>
                                 </div>

@@ -15,7 +15,7 @@ class Article extends Model
         'headliner' => false
     ];
     
-    public static function fromForm($title, $body, $headliner = false)
+    public static function fromForm($title, $body, $optional)
     {        
         $article = self::create([
             "title" => $title,
@@ -23,8 +23,12 @@ class Article extends Model
             "headliner" => false
         ]);
         
-        $headliner ? $article->markAsHeadliner() : '';
-        
+        if(isset($optional['subTitle'])) {
+            $article->sub_title = $optional['subTitle'];
+        }
+
+        $optional['headliner'] ? $article->markAsHeadliner() : '';
+
         return $article;
     }
 
@@ -77,7 +81,7 @@ class Article extends Model
     {
         return $this->hasOne('App\Image', 'article_id');
     }
-    
+
     public function setHeadliner($headliner)
     {
         if($headliner == true) {

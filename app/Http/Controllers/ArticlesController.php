@@ -25,7 +25,7 @@ class ArticlesController extends Controller
     {
         $article = Article::withSubResources($id);
         $categories = Category::all();
-        $newestArticles = $this->articleRetrieverService->retrieveArticlesForCategories(Category::all(), 1);
+        $newestArticles = $this->articleRetrieverService->retrieveArticlesForCategories($categories, 1);
         
         return view('articles.view', compact('article', 'categories', 'newestArticles'));
     }
