@@ -127,7 +127,7 @@
                                 <div class="form-group">
                                     <label for="new-headline-category">Headliner</label>
 
-                                    <select v-model="article.featured" class="form-control">
+                                    <select v-model="article.headliner" class="form-control">
                                         <option value="0">
                                             No
                                         </option>
@@ -166,13 +166,13 @@
                             <form v-on:submit.prevent="createCategory">
                                 
                                 <div class="form-group">
-                                    <label for="new-feature-title">Title</label>
+                                    <label for="category-title">Title</label>
                                     
                                     <input v-model="category.title" class="form-control"></input>
                                 </div>
                                 
                                 <div class="form-group">
-                                    <label for="new-feature-body">Description</label>
+                                    <label for="category-description">Description</label>
                                     
                                     <textarea v-model="category.description" class="form-control"></textarea>
                                 </div>
