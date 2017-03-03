@@ -3,6 +3,8 @@
 use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
+use App\Newsroom\Categories\RecentArticle;
+use App\Newsroom\Categories\ArticleRetrieverOutput;
 use App\Article;
 use App\Category;
 
@@ -86,61 +88,32 @@ class ArticleTest extends TestCase
     }
 
     /** @test */
-    public function get_newest_article_for_each_category()
+    public function get_newest_article_for_a_category()
     {
         $category1 = Category::create([
             'title' => 'PHP',
             'description' => 'Articles related to PHP'
         ]);
 
-        $category2 = Category::create([
-            'title' => 'JavaScript',
-            'description' => 'Articles related to JavaScript'
-        ]);
-
-        $category3 = Category::create([
-            'title' => 'Algorithms',
-            'description' => 'Trees, Sorting, Order, etc...'
-        ]);
-
-        $articlePHP = Article::create([
+        $PHPArticleNewest = Article::create([
             'title' => 'My PHP Article',
             'body' => 'Article body'
         ]);
-        $articlePHP->setCategory($category1->id);
 
-        $articleJS = Article::create([
+        $PHPArticleNewest->associateCategory($category1);
+
+        $PHPArticleOlder = Article::create([
             'title' => 'My JS Article',
             'body' => 'Article body'
         ]);
-        $articleJS->setCategory($category2->id);
-        $articleJS->created_at = date('Y-m-d H:i:s', time() - (60 * 60 * 24 * 2));
-        $articleJS->save();
 
-        $articleJS2 = Article::create([
-            'title' => 'My second JS Article',
-            'body' => 'Article body'
-        ]);
-        $articleJS2->setCategory($category2->id);
+        $PHPArticleOlder->associateCategory($category1);
+        $PHPArticleOlder->created_at = date('Y-m-d H:i:s', time() - (60 * 60 * 24 * 2));
+        $PHPArticleOlder->save();
 
-        $articleAlgo = Article::create([
-            'title' => 'My Algo Article',
-            'body' => 'Article body'
-        ]);
-        $articleAlgo->setCategory($category3->id);
-        $articleAlgo->created_at = date('Y-m-d H:i:s', time() - (60 * 60 * 24 * 2));
-        $articleAlgo->save();
+        $categoryArticleRetriever = new RecentArticle($category1, new ArticleRetrieverOutput);
+        $categoryWithRecentArticle = $categoryArticleRetriever->get();
 
-        $articleAlgo2 = Article::create([
-            'title' => 'My Second Algo Article',
-            'body' => 'Article body'
-        ]);
-        $articleAlgo2->setCategory($category3->id);
-
-        $articles = Article::newestForEachCategory(Category::all());
-
-        $this->assertTrue(in_array(Article::find($articlePHP->id), $articles));
-        $this->assertTrue(in_array(Article::find($articleJS2->id), $articles));
-        $this->assertTrue(in_array(Article::find($articleAlgo2->id), $articles));
+        $this->assertEquals($PHPArticleNewest->id, $categoryWithRecentArticle["article"]->id);
     }
 }
