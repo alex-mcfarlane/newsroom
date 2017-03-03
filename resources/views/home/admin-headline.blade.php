@@ -42,7 +42,8 @@
                 <time>@{{headline_article.created_at}}</time>
             </div>
 
-            <p>@{{headline_article.body}}</p>
+            <p v-if="headline_article.sub_title">@{{headline_article.sub_title}}</p>
+            <p v-else>@{{headline_article.body}}</p>
         </div>
 
     </article>
@@ -75,6 +76,12 @@
                             <label for="new-feature-title">Title</label>
                             
                             <input v-model="article.title" id="new-headline-title" class="form-control"></input>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="new-feature-title">Sub Title</label>
+                            
+                            <input v-model="article.sub_title" id="new-headline-sub-title" class="form-control"></input>
                         </div>
                         
                         <div class="form-group">

@@ -29,6 +29,9 @@
                 </section>
 
                 <section class="article-body">
+                    @if(!empty($article->sub_title))
+                        <h3 class="sub-title">{{$article->sub_title}}</h3>
+                    @endif
                     <p>{!!html_entity_decode($article->body)!!}</p>
                 </section>
                 
@@ -82,6 +85,12 @@
                             <label for="title">Title</label>
                             
                             <input type="text" id="title" name="title" class="form-control" value="{{$article->title}}"></input>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="sub-title">Sub Title</label>
+                            
+                            <input type="text" id="sub_title" name="sub_title" class="form-control" value="{{$article->sub_title}}"></input>
                         </div>
                         
                         <div class="form-group">

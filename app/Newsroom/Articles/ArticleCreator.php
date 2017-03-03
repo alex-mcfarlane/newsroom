@@ -9,7 +9,7 @@ use App\Newsroom\Exceptions\CategoryNotFoundException;
 
 /**
  * ArticleCreator Class
- * Validation and Business logic for creating an article
+ * Validation and Application logic for creating an article
  * 
  * @author Alex McFarlane
  */
@@ -29,12 +29,8 @@ class ArticleCreator {
             throw new ArticleException($this->validator->getErrors());
         }
         
-        $optionalAttrs = [
-            'subTitle' => $attributes['sub_title'],
-            'headliner' => $attributes['headliner']
-        ];
-        
-        $article = Article::fromForm($attributes['title'], $attributes['body'], $optionalAttrs);
+        $article = Article::fromForm($attributes['title'], $attributes['body'], 
+                    $attributes['sub_title'], $attributes['headliner']);
 
         if(isset($attributes['category_id'])) {
             try{

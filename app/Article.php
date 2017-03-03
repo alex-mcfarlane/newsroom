@@ -9,32 +9,33 @@ use App\Newsroom\Images\LocalFileStore;
 
 class Article extends Model
 {
-    protected $fillable = ["title", "body"];
+    protected $fillable = ["title", "body", "sub_title"];
     
     protected $attributes = [
         'headliner' => false
     ];
     
-    public static function fromForm($title, $body, $optional)
+    public static function fromForm($title, $body, $subTitle = "", $headliner = false)
     {        
         $article = self::create([
             "title" => $title,
+            "sub_title" => $subTitle,
             "body" => $body,
             "headliner" => false
         ]);
         
-        if(isset($optional['subTitle'])) {
-            $article->sub_title = $optional['subTitle'];
-        }
-
-        $optional['headliner'] ? $article->markAsHeadliner() : '';
-
+        $headliner ? $article->markAsHeadliner() : '';
+        
         return $article;
     }
 
-    public function edit($title, $body, $headliner = null)
+    public function edit($title, $body, $subTitle = "", $headliner = null)
     {
-        $this->fill(['title'=>$title, 'body' => $body]);
+        $this->fill([
+            'title'=>$title, 
+            'body' => $body, 
+            'sub_title' => $subTitle
+        ]);
 
         if(isset($headliner)) {
             $this->setHeadliner($headliner);    
@@ -81,7 +82,7 @@ class Article extends Model
     {
         return $this->hasOne('App\Image', 'article_id');
     }
-
+    
     public function setHeadliner($headliner)
     {
         if($headliner == true) {

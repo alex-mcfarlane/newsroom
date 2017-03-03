@@ -33,7 +33,8 @@ class ArticlesController extends Controller
     public function update(Request $request, $articleId)
     {
         try{
-            $article = $this->articleUpdater->update($articleId, $request->only('title', 'body', 'headliner', 'category_id'), $request->file('image'));
+            $attrs = $request->only('title', 'body', 'sub_title', 'headliner', 'category_id');
+            $article = $this->articleUpdater->update($articleId, $attrs, $request->file('image'));
         } catch(ArticleException $e) {
             return response()->json(["errors" => $e->getErrors()], 400);
         }
