@@ -19,10 +19,7 @@ class ArticleTest extends TestCase
      */
     public function can_create_an_article()
     {
-        $article = Article::create([
-            'title' => 'My Article',
-            'body' => 'Article body'
-        ]);
+        $article = Article::fromForm('My Article', 'Article body');
         
         $this->assertEquals('My Article', $article->title);
         $this->assertEquals('Article body', $article->body);
@@ -31,21 +28,38 @@ class ArticleTest extends TestCase
     /** @test */
     public function can_create_an_article_with_a_category()
     {
-        $article = Article::create([
-            'title' => 'My Article',
-            'body' => 'Article body'
-        ]);
+        $article = Article::fromForm('My Article', 'Article body');
         
         $category = Category::create([
             'title' => 'PHP',
             'description' => 'Articles related to PHP'
         ]);
         
-        $article->category()->associate($category);
+        $article->associateCategory($category);
         
         $this->assertEquals('My Article', $article->title);
         $this->assertEquals('Article body', $article->body);
         $this->assertEquals($category, $article->category);
+    }
+
+    /** @test */
+    public function can_edit_an_article()
+    {
+        $article = Article::fromForm('My Article', 'Article body');
+
+        $category = Category::create([
+            'title' => 'PHP',
+            'description' => 'Articles related to PHP'
+        ]);
+        
+        $article->associateCategory($category);
+
+        $article->edit('My Article Edit', 'Article body edit', 'Sub title', true);
+
+        $this->assertEquals('My Article Edit', $article->title);
+        $this->assertEquals('Article body edit', $article->body);
+        $this->assertEquals('Sub title', $article->sub_title);
+        $this->assertTrue($article->headliner);
     }
     
     /** @test */
