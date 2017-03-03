@@ -29,6 +29,9 @@
                 </section>
 
                 <section class="article-body">
+                    @if(!empty($article->sub_title))
+                        <h3 class="sub-title">{{$article->sub_title}}</h3>
+                    @endif
                     <p>{!!html_entity_decode($article->body)!!}</p>
                 </section>
                 
