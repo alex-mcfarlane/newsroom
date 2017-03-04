@@ -181,13 +181,6 @@ class Article extends Model
     {
         $article = $query->first();
         
-        if($article == null)
-        {
-            $article = new Article;
-            $article->relations['image'] = null;
-            return $article;
-        }
-        
         return $article;
     }
     
