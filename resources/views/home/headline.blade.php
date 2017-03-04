@@ -25,7 +25,7 @@
                 </div>
 
                 @if(!empty($headlineArticle->sub_title))
-                    <p>{{substr($headlineArticle->sub_title, 0, 150) . " ..."}}</p>
+                    <p>{{substr($headlineArticle->sub_title, 0, 150)}}</p>
                 @else
                     <p>{{substr($headlineArticle->body, 0, 150)." ..."}}</p>
                 @endif
