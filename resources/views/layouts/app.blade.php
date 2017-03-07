@@ -15,6 +15,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
     {{-- <link href="{{ elixir('css/app.css') }}" rel="stylesheet"> --}}
     <link rel="stylesheet" href="{{ asset('css/app.css') }}">
+    @yield('styles')
 
     <style>
         .fa-btn {
@@ -200,11 +201,7 @@
     <script src="https://unpkg.com/vue/dist/vue.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/vue-resource/1.0.3/vue-resource.min.js"></script>
     <script src="{{ asset('js/build.js') }}"></script>
-    
-    <script>
-
-        
-    </script>
     {{-- <script src="{{ elixir('js/app.js') }}"></script> --}}
+    @yield('scripts')
 </body>
 </html>
