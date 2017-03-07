@@ -15,11 +15,9 @@
                             <div class="col-md-6">
                                 <input id="email" type="email" class="form-control" v-model="user.email">
 
-                                @if ($errors->has('email'))
-                                    <span class="help-block">
-                                        <strong>{{ $errors->first('email') }}</strong>
+                                    <span v-if="errors.email" class="help-block">
+                                        <strong>@{{ errors.email[0] }}</strong>
                                     </span>
-                                @endif
                             </div>
                         </div>
 

@@ -68,7 +68,8 @@
 	        user: {
 	            "username": "",
 	            "email": ""
-	        }
+	        },
+	        errors: []
 	    },
 	    methods: {
 	        login: function login() {
@@ -79,7 +80,8 @@
 	                var homeUrl = window.location.href.substring(0, index);
 	                window.location.href = homeUrl;
 	            }, function (error) {
-	                console.log(error);
+	                console.log(error.body.errors);
+	                this.errors = error.body.errors;
 	            });
 	        },
 	        isLoggedIn: function isLoggedIn() {
@@ -631,6 +633,10 @@
 		else if (typeof module != "undefined" && typeof module.exports != "undefined") {
 			module.exports = factory();
 		}
+		else if (typeof Package !== "undefined") {
+			//noinspection JSUnresolvedVariable
+			Sortable = factory();  // export for Meteor.js
+		}
 		else {
 			/* jshint sub:true */
 			window["Sortable"] = factory();
@@ -650,7 +656,6 @@
 			cloneEl,
 			rootEl,
 			nextEl,
-			lastDownEl,
 
 			scrollEl,
 			scrollParentEl,
@@ -674,8 +679,7 @@
 			moved,
 
 			/** @const */
-			R_SPACE = /\s+/g,
-			R_FLOAT = /left|right|inline/,
+			RSPACE = /\s+/g,
 
 			expando = 'Sortable' + (new Date).getTime(),
 
@@ -685,8 +689,6 @@
 
 			$ = win.jQuery || win.Zepto,
 			Polymer = win.Polymer,
-
-			captureMode = false,
 
 			supportDraggable = !!('draggable' in document.createElement('div')),
 			supportCssPointerEvents = (function (el) {
@@ -703,15 +705,14 @@
 
 			abs = Math.abs,
 			min = Math.min,
+			slice = [].slice,
 
-			savedInputChecked = [],
 			touchDragOverListeners = [],
 
 			_autoScroll = _throttle(function (/**Event*/evt, /**Object*/options, /**HTMLElement*/rootEl) {
 				// Bug: https://bugzilla.mozilla.org/show_bug.cgi?id=505521
 				if (rootEl && options.scroll) {
-					var _this = rootEl[expando],
-						el,
+					var el,
 						rect,
 						sens = options.scrollSensitivity,
 						speed = options.scrollSpeed,
@@ -826,11 +827,11 @@
 				group.name = originalGroup.name;
 				group.checkPull = toFn(originalGroup.pull, true);
 				group.checkPut = toFn(originalGroup.put);
-				group.revertClone = originalGroup.revertClone;
 
 				options.group = group;
 			}
 		;
+
 
 
 		/**
@@ -850,6 +851,7 @@
 			// Export instance
 			el[expando] = this;
 
+
 			// Default options
 			var defaults = {
 				group: Math.random(),
@@ -866,7 +868,6 @@
 				dragClass: 'sortable-drag',
 				ignore: 'a, img',
 				filter: null,
-				preventOnFilter: true,
 				animation: 0,
 				setData: function (dataTransfer, dragEl) {
 					dataTransfer.setData('Text', dragEl.textContent);
@@ -924,16 +925,12 @@
 				var _this = this,
 					el = this.el,
 					options = this.options,
-					preventOnFilter = options.preventOnFilter,
 					type = evt.type,
 					touch = evt.touches && evt.touches[0],
 					target = (touch || evt).target,
 					originalTarget = evt.target.shadowRoot && evt.path[0] || target,
 					filter = options.filter,
 					startIndex;
-
-				_saveInputCheckedState(el);
-
 
 				// Don't trigger start event when an element is been dragged, otherwise the evt.oldindex always wrong when set option.group.
 				if (dragEl) {
@@ -944,15 +941,13 @@
 					return; // only left button or enabled
 				}
 
+				if (options.handle && !_closest(originalTarget, options.handle, el)) {
+					return;
+				}
 
 				target = _closest(target, options.draggable, el);
 
 				if (!target) {
-					return;
-				}
-
-				if (lastDownEl === target) {
-					// Ignoring duplicate `down`
 					return;
 				}
 
@@ -963,7 +958,7 @@
 				if (typeof filter === 'function') {
 					if (filter.call(this, evt, target, this)) {
 						_dispatchEvent(_this, originalTarget, 'filter', target, el, startIndex);
-						preventOnFilter && evt.preventDefault();
+						evt.preventDefault();
 						return; // cancel dnd
 					}
 				}
@@ -978,13 +973,9 @@
 					});
 
 					if (filter) {
-						preventOnFilter && evt.preventDefault();
+						evt.preventDefault();
 						return; // cancel dnd
 					}
-				}
-
-				if (options.handle && !_closest(originalTarget, options.handle, el)) {
-					return;
 				}
 
 				// Prepare `dragstart`
@@ -1005,7 +996,6 @@
 					dragEl = target;
 					parentEl = dragEl.parentNode;
 					nextEl = dragEl.nextSibling;
-					lastDownEl = target;
 					activeGroup = options.group;
 					oldIndex = startIndex;
 
@@ -1041,7 +1031,6 @@
 					_on(ownerDocument, 'touchend', _this._onDrop);
 					_on(ownerDocument, 'touchcancel', _this._onDrop);
 					_on(ownerDocument, 'pointercancel', _this._onDrop);
-					_on(ownerDocument, 'selectstart', _this);
 
 					if (options.delay) {
 						// If the user moves the pointer or let go the click or touch
@@ -1058,8 +1047,6 @@
 					} else {
 						dragStartFn();
 					}
-
-
 				}
 			},
 
@@ -1077,7 +1064,6 @@
 
 			_triggerDragStart: function (/** Event */evt, /** Touch */touch) {
 				touch = touch || (evt.pointerType == 'touch' ? evt : null);
-
 				if (touch) {
 					// Touch device support
 					tapEvt = {
@@ -1121,8 +1107,6 @@
 
 					// Drag start event
 					_dispatchEvent(this, rootEl, 'start', dragEl, rootEl, oldIndex);
-				} else {
-					this._nulling();
 				}
 			},
 
@@ -1244,15 +1228,9 @@
 
 				this._offUpEvents();
 
-				if (activeGroup.checkPull(this, this, dragEl, evt)) {
+				if (activeGroup.checkPull(this, this, dragEl, evt) == 'clone') {
 					cloneEl = _clone(dragEl);
-
-					cloneEl.draggable = false;
-					cloneEl.style['will-change'] = '';
-
 					_css(cloneEl, 'display', 'none');
-					_toggleClass(cloneEl, this.options.chosenClass, false);
-
 					rootEl.insertBefore(cloneEl, dragEl);
 					_dispatchEvent(this, rootEl, 'clone', dragEl);
 				}
@@ -1296,7 +1274,6 @@
 					group = options.group,
 					activeSortable = Sortable.active,
 					isOwner = (activeGroup === group),
-					isMovingBetweenSortable = false,
 					canSort = options.sort;
 
 				if (evt.preventDefault !== void 0) {
@@ -1304,21 +1281,14 @@
 					!options.dragoverBubble && evt.stopPropagation();
 				}
 
-				if (dragEl.animated) {
-					return;
-				}
-
 				moved = true;
 
-				if (activeSortable && !options.disabled &&
+				if (activeGroup && !options.disabled &&
 					(isOwner
 						? canSort || (revert = !rootEl.contains(dragEl)) // Reverting item into the original list
 						: (
 							putSortable === this ||
-							(
-								(activeSortable.lastPullMode = activeGroup.checkPull(this, activeSortable, dragEl, evt)) &&
-								group.checkPut(this, activeSortable, dragEl, evt)
-							)
+							activeGroup.checkPull(this, activeSortable, dragEl, evt) && group.checkPut(this, activeSortable, dragEl, evt)
 						)
 					) &&
 					(evt.rootEl === void 0 || evt.rootEl === this.el) // touch fallback
@@ -1332,14 +1302,10 @@
 
 					target = _closest(evt.target, options.draggable, el);
 					dragRect = dragEl.getBoundingClientRect();
-
-					if (putSortable !== this) {
-						putSortable = this;
-						isMovingBetweenSortable = true;
-					}
+					putSortable = this;
 
 					if (revert) {
-						_cloneHide(activeSortable, true);
+						_cloneHide(true);
 						parentEl = rootEl; // actualization
 
 						if (cloneEl || nextEl) {
@@ -1364,7 +1330,7 @@
 							targetRect = target.getBoundingClientRect();
 						}
 
-						_cloneHide(activeSortable, isOwner);
+						_cloneHide(isOwner);
 
 						if (_onMove(rootEl, el, dragEl, dragRect, target, targetRect, evt) !== false) {
 							if (!dragEl.contains(el)) {
@@ -1387,21 +1353,21 @@
 
 						var width = targetRect.right - targetRect.left,
 							height = targetRect.bottom - targetRect.top,
-							floating = R_FLOAT.test(lastCSS.cssFloat + lastCSS.display)
+							floating = /left|right|inline/.test(lastCSS.cssFloat + lastCSS.display)
 								|| (lastParentCSS.display == 'flex' && lastParentCSS['flex-direction'].indexOf('row') === 0),
 							isWide = (target.offsetWidth > dragEl.offsetWidth),
 							isLong = (target.offsetHeight > dragEl.offsetHeight),
 							halfway = (floating ? (evt.clientX - targetRect.left) / width : (evt.clientY - targetRect.top) / height) > 0.5,
 							nextSibling = target.nextElementSibling,
 							moveVector = _onMove(rootEl, el, dragEl, dragRect, target, targetRect, evt),
-							after = false
+							after
 						;
 
 						if (moveVector !== false) {
 							_silent = true;
 							setTimeout(_unsilent, 30);
 
-							_cloneHide(activeSortable, isOwner);
+							_cloneHide(isOwner);
 
 							if (moveVector === 1 || moveVector === -1) {
 								after = (moveVector === 1);
@@ -1418,7 +1384,7 @@
 								} else {
 									after = tgTop > elTop;
 								}
-							} else if (!isMovingBetweenSortable) {
+							} else {
 								after = (nextSibling !== dragEl) && !isLong || halfway && isLong;
 							}
 
@@ -1444,10 +1410,6 @@
 
 				if (ms) {
 					var currentRect = target.getBoundingClientRect();
-
-					if (prevRect.nodeType === 1) {
-						prevRect = prevRect.getBoundingClientRect();
-					}
 
 					_css(target, 'transition', 'none');
 					_css(target, 'transform', 'translate3d('
@@ -1478,7 +1440,6 @@
 				_off(ownerDocument, 'touchend', this._onDrop);
 				_off(ownerDocument, 'pointerup', this._onDrop);
 				_off(ownerDocument, 'touchcancel', this._onDrop);
-				_off(ownerDocument, 'selectstart', this);
 			},
 
 			_onDrop: function (/**Event*/evt) {
@@ -1576,7 +1537,6 @@
 				ghostEl =
 				nextEl =
 				cloneEl =
-				lastDownEl =
 
 				scrollEl =
 				scrollParentEl =
@@ -1593,31 +1553,19 @@
 				putSortable =
 				activeGroup =
 				Sortable.active = null;
-
-				savedInputChecked.forEach(function (el) {
-					el.checked = true;
-				});
-				savedInputChecked.length = 0;
 			},
 
 			handleEvent: function (/**Event*/evt) {
-				switch (evt.type) {
-					case 'drop':
-					case 'dragend':
-						this._onDrop(evt);
-						break;
+				var type = evt.type;
 
-					case 'dragover':
-					case 'dragenter':
-						if (dragEl) {
-							this._onDragOver(evt);
-							_globalDragOver(evt);
-						}
-						break;
-
-					case 'selectstart':
-						evt.preventDefault();
-						break;
+				if (type === 'dragover' || type === 'dragenter') {
+					if (dragEl) {
+						this._onDragOver(evt);
+						_globalDragOver(evt);
+					}
+				}
+				else if (type === 'drop' || type === 'dragend') {
+					this._onDrop(evt);
 				}
 			},
 
@@ -1741,25 +1689,10 @@
 		};
 
 
-		function _cloneHide(sortable, state) {
-			if (sortable.lastPullMode !== 'clone') {
-				state = true;
-			}
-
+		function _cloneHide(state) {
 			if (cloneEl && (cloneEl.state !== state)) {
 				_css(cloneEl, 'display', state ? 'none' : '');
-
-				if (!state) {
-					if (cloneEl.state) {
-						if (sortable.options.group.revertClone) {
-							rootEl.insertBefore(cloneEl, nextEl);
-							sortable._animate(dragEl, cloneEl);
-						} else {
-							rootEl.insertBefore(cloneEl, dragEl);
-						}
-					}
-				}
-
+				!state && cloneEl.state && rootEl.insertBefore(cloneEl, dragEl);
 				cloneEl.state = state;
 			}
 		}
@@ -1797,12 +1730,12 @@
 
 
 		function _on(el, event, fn) {
-			el.addEventListener(event, fn, captureMode);
+			el.addEventListener(event, fn, false);
 		}
 
 
 		function _off(el, event, fn) {
-			el.removeEventListener(event, fn, captureMode);
+			el.removeEventListener(event, fn, false);
 		}
 
 
@@ -1812,8 +1745,8 @@
 					el.classList[state ? 'add' : 'remove'](name);
 				}
 				else {
-					var className = (' ' + el.className + ' ').replace(R_SPACE, ' ').replace(' ' + name + ' ', ' ');
-					el.className = (className + (state ? ' ' + name : '')).replace(R_SPACE, ' ');
+					var className = (' ' + el.className + ' ').replace(RSPACE, ' ').replace(' ' + name + ' ', ' ');
+					el.className = (className + (state ? ' ' + name : '')).replace(RSPACE, ' ');
 				}
 			}
 		}
@@ -2036,33 +1969,6 @@
 				);
 		}
 
-		function _saveInputCheckedState(root) {
-			var inputs = root.getElementsByTagName('input');
-			var idx = inputs.length;
-
-			while (idx--) {
-				var el = inputs[idx];
-				el.checked && savedInputChecked.push(el);
-			}
-		}
-
-		// Fixed #973: 
-		_on(document, 'touchmove', function (evt) {
-			if (Sortable.active) {
-				evt.preventDefault();
-			}
-		});
-
-		try {
-			window.addEventListener('test', null, Object.defineProperty({}, 'passive', {
-				get: function () {
-					captureMode = {
-						capture: false,
-						passive: false
-					};
-				}
-			}));
-		} catch (err) {}
 
 		// Export utils
 		Sortable.utils = {
@@ -2093,7 +1999,7 @@
 
 
 		// Export
-		Sortable.version = '1.5.0';
+		Sortable.version = '1.5.0-rc1';
 		return Sortable;
 	});
 
