@@ -1,5 +1,9 @@
 @extends('layouts.app')
 
+@section('styles')
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.9.0/styles/default.min.css">
+@endsection
+
 @section('content')
     <div class="row">
         
@@ -165,4 +169,10 @@
             </div>
         </div>
     </div>
+@endsection
+
+@section('scripts')
+    <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.9.0/highlight.min.js"></script>
+    
+    <script>hljs.initHighlightingOnLoad();</script>
 @endsection
