@@ -2,13 +2,14 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Http\Requests;
-use App\Http\Controllers\Controller;
 use JWTAuth;
 use Tymon\JWTAuth\Exceptions\JWTException;
 use App\User;
 use Validator;
+use App\Newsroom\Validators\AuthValidator;
 
 class AuthController extends Controller
 {
@@ -21,6 +22,12 @@ class AuthController extends Controller
     public function authenticate(Request $request)
     {
         $credentials = $request->only('email', 'password');
+        
+        $authValidator = new AuthValidator();
+        
+        if(!$authValidator->isValid($credentials)) {
+            return response()->json(['errors' => $authValidator->getErrors()], 400);
+        }
         
         try{
             //verify credentials and authenticate user

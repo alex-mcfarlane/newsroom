@@ -12,6 +12,7 @@ var auth = {
             "username": "",
             "email": ""
         },
+        errors: []
     },
     methods: {
         login: function() {
@@ -22,7 +23,8 @@ var auth = {
                 var homeUrl = window.location.href.substring(0, index);
                 window.location.href = homeUrl;
             }, function(error){
-                console.log(error);
+                console.log(error.body.errors);
+                this.errors = error.body.errors;
             });
         },
         isLoggedIn: function() {

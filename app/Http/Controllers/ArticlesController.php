@@ -36,7 +36,7 @@ class ArticlesController extends Controller
             $attrs = $request->only('title', 'body', 'sub_title', 'headliner', 'category_id');
             $article = $this->articleUpdater->update($articleId, $attrs, $request->file('image'));
         } catch(ArticleException $e) {
-            return response()->json(["errors" => $e->getErrors()], 400);
+            return back()->withErrors($e->getErrors())->withInput();
         }
 
         return back();
