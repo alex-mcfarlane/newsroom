@@ -12,10 +12,14 @@ var auth = {
             "username": "",
             "email": ""
         },
+        form_errors: [],
         errors: []
     },
     methods: {
         login: function() {
+            //clear error messages
+            this.clearErrors();
+
             this.$http.post('api/auth', this.user).then(function(response){
                 this.saveToken(response.body.token);
 
@@ -23,8 +27,14 @@ var auth = {
                 var homeUrl = window.location.href.substring(0, index);
                 window.location.href = homeUrl;
             }, function(error){
-                console.log(error.body.errors);
-                this.errors = error.body.errors;
+                var errors = error.body.errors;
+
+                if(error.status == 400) {
+                    this.setFormErrors(errors);
+                }
+                else if(error.status == 401) {
+                    this.setErrors(errors);
+                }
             });
         },
         isLoggedIn: function() {
@@ -53,6 +63,16 @@ var auth = {
         getToken: function() {
             return localStorage.getItem('newsroom-token');
         },
+        setErrors: function(errors) {
+            this.errors = errors;
+        },
+        setFormErrors: function(errors) {
+            this.form_errors = errors;
+        },
+        clearErrors: function() {
+            this.form_errors = [];
+            this.errors = [];
+        }
     }
 }
 
