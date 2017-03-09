@@ -88,7 +88,7 @@
     <div id="vue-app" class="container">
         @yield('content')
 
-        <div id="add-resources">
+        <div v-if="isLoggedIn()" id="add-resources">
 
             <div id="add-article" class="modal fade" role="dialog" aria-labelledby="myModalLabel">
                 <div class="modal-dialog">
@@ -173,24 +173,24 @@
                             <form v-on:submit.prevent="createCategory">
                                 
                                 <div class="form-group"
-                                     v-bind:class="'has-error': errors.title">
+                                     v-bind:class="{'has-error': form_errors.title}">
                                     <label for="category-title">Title</label>
                                     
                                     <input v-model="category.title" class="form-control"></input>
                                     
-                                    <span v-if="errors.title" class="help-block">
-                                        <strong>@{{errors.title}}</strong>
+                                    <span v-if="form_errors.title" class="help-block">
+                                        <strong>@{{form_errors.title[0]}}</strong>
                                     </span>
                                 </div>
                                 
                                 <div class="form-group"
-                                     v-bind:class="'has-error': errors.description">
+                                     v-bind:class="{'has-error': form_errors.description}">
                                     <label for="category-description">Description</label>
                                     
                                     <textarea v-model="category.description" class="form-control"></textarea>
                                     
-                                    <span v-if="errors.description" class="help-block">
-                                        <strong>@{{errors.description}}</strong>
+                                    <span v-if="form_errors.description" class="help-block">
+                                        <strong>@{{form_errors.description[0]}}</strong>
                                     </span>
                                 </div>
                                 

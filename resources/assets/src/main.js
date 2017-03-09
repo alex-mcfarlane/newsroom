@@ -6,14 +6,32 @@ export default {
     }
 }
 
+var validationErrors = {
+    data: {
+        form_errors: [],
+        errors: []
+    },
+    methods: {
+        setErrors: function(errors) {
+            this.errors = errors;
+        },
+        setFormErrors: function(errors) {
+            this.form_errors = errors;
+        },
+        clearErrors: function() {
+            this.form_errors = [];
+            this.errors = [];
+        }
+    }
+}
+
 var auth = {
+    mixins: [validationErrors],
     data: {
         user: {
             "username": "",
             "email": ""
-        },
-        form_errors: [],
-        errors: []
+        }
     },
     methods: {
         login: function() {
@@ -62,23 +80,13 @@ var auth = {
         },
         getToken: function() {
             return localStorage.getItem('newsroom-token');
-        },
-        setErrors: function(errors) {
-            this.errors = errors;
-        },
-        setFormErrors: function(errors) {
-            this.form_errors = errors;
-        },
-        clearErrors: function() {
-            this.form_errors = [];
-            this.errors = [];
         }
     }
 }
 
 new Vue({
     el:"#vue-app",
-    mixins: [auth],
+    mixins: [auth, validationErrors],
     data: {
         articles: [],
         featured_articles: [],
@@ -269,7 +277,9 @@ new Vue({
                 this.categories.push(response.body);
                 $('#add-category').modal('toggle');
             }, function(error){
-                console.log(error);
+                if(error.status == 400) {
+                    this.setFormErrors(error.body.errors);
+                }
             });
         },
         onChange: function(object) {

@@ -63,14 +63,32 @@
 	};
 
 
+	var validationErrors = {
+	    data: {
+	        form_errors: [],
+	        errors: []
+	    },
+	    methods: {
+	        setErrors: function setErrors(errors) {
+	            this.errors = errors;
+	        },
+	        setFormErrors: function setFormErrors(errors) {
+	            this.form_errors = errors;
+	        },
+	        clearErrors: function clearErrors() {
+	            this.form_errors = [];
+	            this.errors = [];
+	        }
+	    }
+	};
+
 	var auth = {
+	    mixins: [validationErrors],
 	    data: {
 	        user: {
 	            "username": "",
 	            "email": ""
-	        },
-	        form_errors: [],
-	        errors: []
+	        }
 	    },
 	    methods: {
 	        login: function login() {
@@ -117,23 +135,13 @@
 	        },
 	        getToken: function getToken() {
 	            return localStorage.getItem('newsroom-token');
-	        },
-	        setErrors: function setErrors(errors) {
-	            this.errors = errors;
-	        },
-	        setFormErrors: function setFormErrors(errors) {
-	            this.form_errors = errors;
-	        },
-	        clearErrors: function clearErrors() {
-	            this.form_errors = [];
-	            this.errors = [];
 	        }
 	    }
 	};
 
 	new Vue({
 	    el: "#vue-app",
-	    mixins: [auth],
+	    mixins: [auth, validationErrors],
 	    data: {
 	        articles: [],
 	        featured_articles: [],
@@ -319,7 +327,9 @@
 	                this.categories.push(response.body);
 	                $('#add-category').modal('toggle');
 	            }, function (error) {
-	                console.log(error);
+	                if (error.status == 400) {
+	                    this.setFormErrors(error.body.errors);
+	                }
 	            });
 	        },
 	        onChange: function onChange(object) {
