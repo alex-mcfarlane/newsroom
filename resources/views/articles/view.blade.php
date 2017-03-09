@@ -85,10 +85,16 @@
 
                         <input type="hidden" name="_method" value="PUT"/>
 
-                        <div class="form-group">
+                        <div class="form-group {{$errors->has('title') ? 'has-error' : ''}}">
                             <label for="title">Title</label>
                             
                             <input type="text" id="title" name="title" class="form-control" value="{{$article->title}}"></input>
+                            
+                            @if($errors->has('title'))
+                                <span class="help-block">
+                                    <strong>{{$errors->first('title')}}</strong>
+                                </span>
+                            @endif
                         </div>
 
                         <div class="form-group">
