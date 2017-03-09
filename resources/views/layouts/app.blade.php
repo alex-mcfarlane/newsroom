@@ -172,16 +172,26 @@
                         <div class="modal-body">
                             <form v-on:submit.prevent="createCategory">
                                 
-                                <div class="form-group">
+                                <div class="form-group"
+                                     v-bind:class="'has-error': errors.title">
                                     <label for="category-title">Title</label>
                                     
                                     <input v-model="category.title" class="form-control"></input>
+                                    
+                                    <span v-if="errors.title" class="help-block">
+                                        <strong>@{{errors.title}}</strong>
+                                    </span>
                                 </div>
                                 
-                                <div class="form-group">
+                                <div class="form-group"
+                                     v-bind:class="'has-error': errors.description">
                                     <label for="category-description">Description</label>
                                     
                                     <textarea v-model="category.description" class="form-control"></textarea>
+                                    
+                                    <span v-if="errors.description" class="help-block">
+                                        <strong>@{{errors.description}}</strong>
+                                    </span>
                                 </div>
                                 
                                 <button type="submit" class="btn btn-success">Create</button>

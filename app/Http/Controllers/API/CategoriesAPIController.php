@@ -30,7 +30,7 @@ class CategoriesAPIController extends Controller
     		$category = $this->categoriesCreator->make($request->only('title', 'description'));
     	}
     	catch(CategoryException $e) {
-    		return response()->json($e->getErrors(), 400);
+    		return response()->json(["errors" => $e->getErrors()], 400);
     	}
 
     	return response()->json($category);
