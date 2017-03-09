@@ -63,7 +63,27 @@
 	};
 
 
+	var validationErrors = {
+	    data: {
+	        form_errors: [],
+	        errors: []
+	    },
+	    methods: {
+	        setErrors: function setErrors(errors) {
+	            this.errors = errors;
+	        },
+	        setFormErrors: function setFormErrors(errors) {
+	            this.form_errors = errors;
+	        },
+	        clearErrors: function clearErrors() {
+	            this.form_errors = [];
+	            this.errors = [];
+	        }
+	    }
+	};
+
 	var auth = {
+	    mixins: [validationErrors],
 	    data: {
 	        user: {
 	            "username": "",
@@ -72,6 +92,9 @@
 	    },
 	    methods: {
 	        login: function login() {
+	            //clear error messages
+	            this.clearErrors();
+
 	            this.$http.post('api/auth', this.user).then(function (response) {
 	                this.saveToken(response.body.token);
 
@@ -79,7 +102,13 @@
 	                var homeUrl = window.location.href.substring(0, index);
 	                window.location.href = homeUrl;
 	            }, function (error) {
-	                console.log(error);
+	                var errors = error.body.errors;
+
+	                if (error.status == 400) {
+	                    this.setFormErrors(errors);
+	                } else if (error.status == 401) {
+	                    this.setErrors(errors);
+	                }
 	            });
 	        },
 	        isLoggedIn: function isLoggedIn() {
@@ -112,7 +141,7 @@
 
 	new Vue({
 	    el: "#vue-app",
-	    mixins: [auth],
+	    mixins: [auth, validationErrors],
 	    data: {
 	        articles: [],
 	        featured_articles: [],
@@ -298,7 +327,9 @@
 	                this.categories.push(response.body);
 	                $('#add-category').modal('toggle');
 	            }, function (error) {
-	                console.log(error);
+	                if (error.status == 400) {
+	                    this.setFormErrors(error.body.errors);
+	                }
 	            });
 	        },
 	        onChange: function onChange(object) {
