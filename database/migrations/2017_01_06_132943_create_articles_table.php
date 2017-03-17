@@ -15,7 +15,8 @@ class CreateArticlesTable extends Migration
         Schema::create('articles', function (Blueprint $table) {
             $table->increments('id');
             $table->string('title');
-            $table->string('body', 5000);
+            $table->string('sub_title')->nullable();
+            $table->string('body', 10000);
             $table->boolean('headliner');
             $table->integer('category_id')->nullable();
             $table->timestamps();

@@ -35,8 +35,9 @@ h5 {
   font-weight: 600; }
 
 p {
+  color: #423F3F;
   font-size: 1em;
-  line-height: 1.5;
+  line-height: 1.4;
   margin-bottom: 10px; }
 
 a {
@@ -44,6 +45,9 @@ a {
 
 time {
   font-size: 1em; }
+
+pre {
+  margin: 2.25em 0; }
 
 textarea.form-control {
   height: 300px; }
@@ -104,6 +108,8 @@ textarea.form-control {
 
 .article-body h3 {
   margin-top: 1em; }
+.article-body .sub-title {
+  margin-bottom: 1em; }
 
 .article-item {
   padding: 1em 2.25em; }

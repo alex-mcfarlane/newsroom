@@ -13,7 +13,7 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\UploadedFile;
 
 /**
- * Domain logic for updating an article
+ * Application logic for updating an article
  *
  * @author Alex McFarlane
  */
@@ -36,7 +36,8 @@ class ArticleUpdater {
         
         try{
             $article = Article::findOrFail($id);
-            $article->edit($attributes['title'], $attributes['body'], $attributes['headliner']);
+            $article->edit($attributes['title'], $attributes['body'], 
+                        $attributes['sub_title'], $attributes['headliner']);
 
             //client can specify whether to remove or associate category
             if(empty($attributes['category_id'])) {
@@ -60,7 +61,7 @@ class ArticleUpdater {
         } catch(CategoryNotFoundException $e) {
             throw new ArticleException($e->getErrors());
         } catch(ImageException $e) {
-            $errors = ["Article has been updated but there were errors changing the image."] + $e->getErrors;
+            $errors = ["Article has been updated but there were errors changing the image."];// TODO: array union with this + $e->getErrors();
             throw new ArticleException($errors);
         }
 

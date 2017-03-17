@@ -24,7 +24,11 @@
                     <time>{{date('F d, Y', strtotime($headlineArticle->created_at))}}</time>
                 </div>
 
-                <p>{{substr($headlineArticle->body, 0, 150)." ..."}}</p>
+                @if(!empty($headlineArticle->sub_title))
+                    <p>{{substr($headlineArticle->sub_title, 0, 150)}}</p>
+                @else
+                    <p>{{substr($headlineArticle->body, 0, 150)." ..."}}</p>
+                @endif
             </div>
 
         </article>

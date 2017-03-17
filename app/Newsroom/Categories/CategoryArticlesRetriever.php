@@ -19,11 +19,11 @@ abstract class CategoryArticlesRetriever
     protected $formatter;
     private $presenter;
 
-    public function __construct(Category $category, $limit, IRetrieverOutput $presenter)
+    public function __construct(Category $category, IRetrieverOutput $presenter, $limit = 0)
     {
         $this->model = $category;
-        $this->limit = $limit;
         $this->presenter = $presenter;
+        $this->limit = $limit;
         $this->formatter = new ArticleFormatter;
     }
 

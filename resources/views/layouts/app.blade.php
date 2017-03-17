@@ -15,6 +15,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
     {{-- <link href="{{ elixir('css/app.css') }}" rel="stylesheet"> --}}
     <link rel="stylesheet" href="{{ asset('css/app.css') }}">
+    @yield('styles')
 
     <style>
         .fa-btn {
@@ -87,7 +88,7 @@
     <div id="vue-app" class="container">
         @yield('content')
 
-        <div id="add-resources">
+        <div v-if="isLoggedIn()" id="add-resources">
 
             <div id="add-article" class="modal fade" role="dialog" aria-labelledby="myModalLabel">
                 <div class="modal-dialog">
@@ -103,13 +104,19 @@
                             <form v-on:submit.prevent="createArticle">
                                 
                                 <div class="form-group">
-                                    <label for="new-feature-title">Title</label>
+                                    <label for="new-headline-title">Title</label>
                                     
                                     <input v-model="article.title" class="form-control"></input>
                                 </div>
+
+                                <div class="form-group">
+                                    <label for="new-headline-sub-title">Sub Title</label>
+                                    
+                                    <input v-model="article.sub_title" class="form-control"></input>
+                                </div>
                                 
                                 <div class="form-group">
-                                    <label for="new-feature-body">Body</label>
+                                    <label for="new-headline-body">Body</label>
                                     
                                     <textarea v-model="article.body" class="form-control"></textarea>
                                 </div>
@@ -125,9 +132,9 @@
                                 </div>
 
                                 <div class="form-group">
-                                    <label for="new-headline-category">Headliner</label>
+                                    <label for="new-headline-headliner">Headliner</label>
 
-                                    <select v-model="article.featured" class="form-control">
+                                    <select v-model="article.headliner" class="form-control">
                                         <option value="0">
                                             No
                                         </option>
@@ -165,16 +172,26 @@
                         <div class="modal-body">
                             <form v-on:submit.prevent="createCategory">
                                 
-                                <div class="form-group">
-                                    <label for="new-feature-title">Title</label>
+                                <div class="form-group"
+                                     v-bind:class="{'has-error': form_errors.title}">
+                                    <label for="category-title">Title</label>
                                     
                                     <input v-model="category.title" class="form-control"></input>
+                                    
+                                    <span v-if="form_errors.title" class="help-block">
+                                        <strong>@{{form_errors.title[0]}}</strong>
+                                    </span>
                                 </div>
                                 
-                                <div class="form-group">
-                                    <label for="new-feature-body">Description</label>
+                                <div class="form-group"
+                                     v-bind:class="{'has-error': form_errors.description}">
+                                    <label for="category-description">Description</label>
                                     
                                     <textarea v-model="category.description" class="form-control"></textarea>
+                                    
+                                    <span v-if="form_errors.description" class="help-block">
+                                        <strong>@{{form_errors.description[0]}}</strong>
+                                    </span>
                                 </div>
                                 
                                 <button type="submit" class="btn btn-success">Create</button>
@@ -194,11 +211,7 @@
     <script src="https://unpkg.com/vue/dist/vue.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/vue-resource/1.0.3/vue-resource.min.js"></script>
     <script src="{{ asset('js/build.js') }}"></script>
-    
-    <script>
-
-        
-    </script>
     {{-- <script src="{{ elixir('js/app.js') }}"></script> --}}
+    @yield('scripts')
 </body>
 </html>

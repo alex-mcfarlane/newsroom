@@ -9,16 +9,17 @@ use App\Newsroom\Images\LocalFileStore;
 
 class Article extends Model
 {
-    protected $fillable = ["title", "body"];
+    protected $fillable = ["title", "body", "sub_title"];
     
     protected $attributes = [
         'headliner' => false
     ];
     
-    public static function fromForm($title, $body, $headliner = false)
+    public static function fromForm($title, $body, $subTitle = "", $headliner = false)
     {        
         $article = self::create([
             "title" => $title,
+            "sub_title" => $subTitle,
             "body" => $body,
             "headliner" => false
         ]);
@@ -28,9 +29,13 @@ class Article extends Model
         return $article;
     }
 
-    public function edit($title, $body, $headliner = null)
+    public function edit($title, $body, $subTitle = "", $headliner = null)
     {
-        $this->fill(['title'=>$title, 'body' => $body]);
+        $this->fill([
+            'title'=>$title, 
+            'body' => $body, 
+            'sub_title' => $subTitle
+        ]);
 
         if(isset($headliner)) {
             $this->setHeadliner($headliner);    
@@ -175,13 +180,6 @@ class Article extends Model
     public function scopeNewestArticle($query)
     {
         $article = $query->first();
-        
-        if($article == null)
-        {
-            $article = new Article;
-            $article->relations['image'] = null;
-            return $article;
-        }
         
         return $article;
     }

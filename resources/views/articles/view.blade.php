@@ -1,5 +1,9 @@
 @extends('layouts.app')
 
+@section('styles')
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.9.0/styles/default.min.css">
+@endsection
+
 @section('content')
     <div class="row">
         
@@ -29,6 +33,9 @@
                 </section>
 
                 <section class="article-body">
+                    @if(!empty($article->sub_title))
+                        <h3 class="sub-title">{{$article->sub_title}}</h3>
+                    @endif
                     <p>{!!html_entity_decode($article->body)!!}</p>
                 </section>
                 
@@ -78,10 +85,22 @@
 
                         <input type="hidden" name="_method" value="PUT"/>
 
-                        <div class="form-group">
+                        <div class="form-group {{$errors->has('title') ? 'has-error' : ''}}">
                             <label for="title">Title</label>
                             
                             <input type="text" id="title" name="title" class="form-control" value="{{$article->title}}"></input>
+                            
+                            @if($errors->has('title'))
+                                <span class="help-block">
+                                    <strong>{{$errors->first('title')}}</strong>
+                                </span>
+                            @endif
+                        </div>
+
+                        <div class="form-group">
+                            <label for="sub-title">Sub Title</label>
+                            
+                            <input type="text" id="sub_title" name="sub_title" class="form-control" value="{{$article->sub_title}}"></input>
                         </div>
                         
                         <div class="form-group">
@@ -156,4 +175,10 @@
             </div>
         </div>
     </div>
+@endsection
+
+@section('scripts')
+    <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.9.0/highlight.min.js"></script>
+    
+    <script>hljs.initHighlightingOnLoad();</script>
 @endsection

@@ -13,6 +13,9 @@ class RecentArticle extends CategoryArticlesRetriever
     {
         $article = $this->query->newestArticle();
         
+        if($article->count() < 1) {
+        	return;
+        }
         return $this->formatter->format($article);
     }
 }

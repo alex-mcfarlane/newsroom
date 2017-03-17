@@ -15,12 +15,12 @@ class CategoryArticleRetrieverFactory {
     {
         switch(true){
             case $limit == 1:
-                return new RecentArticle($category, $limit, new ArticleRetrieverOutput);
+                return new RecentArticle($category, new ArticleRetrieverOutput);
                 break;
             case $limit > 1:
-                return new RecentArticles($category, $limit, new ArticlesRetrieverOutput);
+                return new RecentArticles($category, new ArticlesRetrieverOutput, $limit);
             case $limit == null:
-                return new AllRecentArticles($category, $limit, new ArticlesRetrieverOutput);
+                return new AllRecentArticles($category, new ArticlesRetrieverOutput, $limit);
         }
     }
 }

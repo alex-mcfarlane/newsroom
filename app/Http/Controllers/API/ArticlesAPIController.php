@@ -1,10 +1,11 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\API;
 
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use App\Http\Requests;
+use App\Http\Controllers\Controller;
 use App\Article;
 use App\Newsroom\Articles\ArticleCreator;
 use App\Newsroom\Articles\ArticleUpdater;
@@ -111,6 +112,6 @@ class ArticlesAPIController extends Controller
 
     private function getInput(Request $request)
     {
-        return $request->only('title', 'body', 'headliner', 'category_id');
+        return $request->only('title', 'sub_title', 'body', 'headliner', 'category_id');
     }
 }

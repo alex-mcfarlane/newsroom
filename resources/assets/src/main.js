@@ -6,15 +6,38 @@ export default {
     }
 }
 
+var validationErrors = {
+    data: {
+        form_errors: [],
+        errors: []
+    },
+    methods: {
+        setErrors: function(errors) {
+            this.errors = errors;
+        },
+        setFormErrors: function(errors) {
+            this.form_errors = errors;
+        },
+        clearErrors: function() {
+            this.form_errors = [];
+            this.errors = [];
+        }
+    }
+}
+
 var auth = {
+    mixins: [validationErrors],
     data: {
         user: {
             "username": "",
             "email": ""
-        },
+        }
     },
     methods: {
         login: function() {
+            //clear error messages
+            this.clearErrors();
+
             this.$http.post('api/auth', this.user).then(function(response){
                 this.saveToken(response.body.token);
 
@@ -22,7 +45,14 @@ var auth = {
                 var homeUrl = window.location.href.substring(0, index);
                 window.location.href = homeUrl;
             }, function(error){
-                console.log(error);
+                var errors = error.body.errors;
+
+                if(error.status == 400) {
+                    this.setFormErrors(errors);
+                }
+                else if(error.status == 401) {
+                    this.setErrors(errors);
+                }
             });
         },
         isLoggedIn: function() {
@@ -50,13 +80,13 @@ var auth = {
         },
         getToken: function() {
             return localStorage.getItem('newsroom-token');
-        },
+        }
     }
 }
 
 new Vue({
     el:"#vue-app",
-    mixins: [auth],
+    mixins: [auth, validationErrors],
     data: {
         articles: [],
         featured_articles: [],
@@ -247,7 +277,9 @@ new Vue({
                 this.categories.push(response.body);
                 $('#add-category').modal('toggle');
             }, function(error){
-                console.log(error);
+                if(error.status == 400) {
+                    this.setFormErrors(error.body.errors);
+                }
             });
         },
         onChange: function(object) {

@@ -2,13 +2,14 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Http\Requests;
-use App\Http\Controllers\Controller;
 use JWTAuth;
 use Tymon\JWTAuth\Exceptions\JWTException;
 use App\User;
 use Validator;
+use App\Newsroom\Validators\AuthValidator;
 
 class AuthController extends Controller
 {
@@ -22,14 +23,20 @@ class AuthController extends Controller
     {
         $credentials = $request->only('email', 'password');
         
+        $authValidator = new AuthValidator();
+        
+        if(!$authValidator->isValid($credentials)) {
+            return response()->json(['errors' => $authValidator->getErrors()], 400);
+        }
+        
         try{
             //verify credentials and authenticate user
             if(! $token = JWTAuth::attempt($credentials)) {
-                return response()->json(['error' => 'Invalid login credentials'], 401);
+                return response()->json(['errors' => ['Invalid login credentials']], 401);
             }
         } catch (JWTException $ex) {
             // something went wrong
-            return response()->json(['error' => 'could_not_create_token'], 500);
+            return response()->json(['errors' => ['could_not_create_token']], 500);
         }
         
         return response()->json(compact('token'));

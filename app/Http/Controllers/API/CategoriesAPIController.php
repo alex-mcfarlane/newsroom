@@ -1,9 +1,10 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\API;
 
 use Illuminate\Http\Request;
 use App\Http\Requests;
+use App\Http\Controllers\Controller;
 use App\Newsroom\Categories\CategoriesCreator;
 use App\Newsroom\Exceptions\CategoryException;
 use App\Category;
@@ -29,7 +30,7 @@ class CategoriesAPIController extends Controller
     		$category = $this->categoriesCreator->make($request->only('title', 'description'));
     	}
     	catch(CategoryException $e) {
-    		return response()->json($e->getErrors(), 400);
+    		return response()->json(["errors" => $e->getErrors()], 400);
     	}
 
     	return response()->json($category);

@@ -7,33 +7,40 @@
             <div class="panel panel-default">
                 <div class="panel-heading">Login</div>
                 <div class="panel-body">
+
+                    <div v-if="errors.length > 0" class="alert alert-danger">
+                        <ul>
+                            <li v-for="error in errors">
+                                @{{ error }}
+                            </li>
+                        </ul>
+                    </div>
+
                     <form class="form-horizontal" role="form" method="POST" v-on:submit.prevent="login">
-                        
-                        <div class="form-group">
+
+                        <div class="form-group"
+                             v-bind:class="{'has-error': form_errors.email}">
                             <label for="email" class="col-md-4 control-label">E-Mail Address</label>
 
                             <div class="col-md-6">
                                 <input id="email" type="email" class="form-control" v-model="user.email">
 
-                                @if ($errors->has('email'))
-                                    <span class="help-block">
-                                        <strong>{{ $errors->first('email') }}</strong>
+                                    <span v-if="form_errors.email" class="help-block">
+                                        <strong>@{{ form_errors.email[0] }}</strong>
                                     </span>
-                                @endif
                             </div>
                         </div>
 
-                        <div class="form-group{{ $errors->has('password') ? ' has-error' : '' }}">
+                        <div class="form-group"
+                             v-bind:class="{'has-error': form_errors.password}">
                             <label for="password" class="col-md-4 control-label">Password</label>
 
                             <div class="col-md-6">
                                 <input id="password" type="password" class="form-control" v-model="user.password">
 
-                                @if ($errors->has('password'))
-                                    <span class="help-block">
-                                        <strong>{{ $errors->first('password') }}</strong>
-                                    </span>
-                                @endif
+                                <span v-if="form_errors.password" class="help-block">
+                                    <strong>@{{form_errors.password[0]}}</strong>
+                                </span>
                             </div>
                         </div>
 
@@ -56,6 +63,7 @@
                                 <a class="btn btn-link" href="{{ url('/password/reset') }}">Forgot Your Password?</a>
                             </div>
                         </div>
+
                     </form>
                 </div>
             </div>
