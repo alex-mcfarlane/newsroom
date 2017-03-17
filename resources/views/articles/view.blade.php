@@ -114,11 +114,14 @@
 
                             <select id="category_id" name="category_id" class="form-control">
                                 @foreach($categories as $category)
-
-                                    <option value="{{$category->id}}" {{$article->category == $category ? "selected='selected'" : ''}}>
-                                        {{ $category->title }}
-                                    </option>
-
+                                        <option value="{{$category->id}}" 
+                                            @if($article->category)
+                                                {{$article->category->id == $category->id ? "selected='selected'" : ''}}
+                                            @else
+                                                {{reset($categories) == $category ? "selected='selected'" : ''}}
+                                            @endif>
+                                            {{ $category->title }}
+                                        </option>
                                 @endforeach
                             </select>                               
                         </div>
