@@ -284,20 +284,22 @@
 	                this.headline_article = response.body;
 	                this.headline_article.body = this.headline_article.body.substring(0, 150) + " ...";
 
-	                //upload image for article
-	                this.$http.post('api/articles/' + this.headline_article.id + '/images', this.fileFormData, {
-	                    headers: {
-	                        "Authorization": "Bearer " + token
-	                    }
-	                }).then(function (response) {
-	                    this.headline_article.image = response.body;
+	                // upload image for article if user provided one
+	                if (this.fileFormData.has('image')) {
+	                    this.$http.post('api/articles/' + this.headline_article.id + '/images', this.fileFormData, {
+	                        headers: {
+	                            "Authorization": "Bearer " + token
+	                        }
+	                    }).then(function (response) {
+	                        this.headline_article.image = response.body;
+	                    }, function (error) {
+	                        console.log(error);
+	                    });
+	                }
 
-	                    //close modal and clear entry
-	                    $('#add_headliner').modal('toggle');
-	                    this.article = {};
-	                }, function (error) {
-	                    console.log(error);
-	                });
+	                //close modal and clear entry
+	                $('#add_headliner').modal('toggle');
+	                this.article = {};
 	            }, function (error) {
 	                console.log(error);
 	            });
