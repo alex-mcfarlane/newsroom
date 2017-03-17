@@ -61,7 +61,7 @@ class ArticleUpdater {
         } catch(CategoryNotFoundException $e) {
             throw new ArticleException($e->getErrors());
         } catch(ImageException $e) {
-            $errors = ["Article has been updated but there were errors changing the image."] + $e->getErrors;
+            $errors = ["Article has been updated but there were errors changing the image."];// TODO: array union with this + $e->getErrors();
             throw new ArticleException($errors);
         }
 
