@@ -55,6 +55,7 @@ class FeaturedArticle extends Article
     public function removeFromFeaturedArticles()
     {
         $nextSortOrder = $this->order + 1;
+        
         $this->removeSortOrder();
         
         // if there is a featured article to the right, recursively shift order to the left
@@ -103,5 +104,10 @@ class FeaturedArticle extends Article
     public function scopeFeaturedArticle($query, $articleId)
     {
         return $query->featured()->where('featured_articles.article_id', $articleId);
+    }
+    
+    private function scopeFeaturedArticleByOrder($query, $order)
+    {
+        return $query->featured()->where('featured_articles.order_id', $order)->first();
     }
 }
