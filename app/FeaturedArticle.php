@@ -51,6 +51,17 @@ class FeaturedArticle extends Article
 
         $this->addSortOrder($order);
     }
+    
+    public function removeFromFeaturedArticles()
+    {
+        $nextSortOrder = $this->order + 1;
+        $this->removeSortOrder();
+        
+        // if there is a featured article to the right, recursively shift order to the left
+        if($article = FeaturedArticle::featuredArticleByOrder($nextSortOrder)) {
+            $article->shiftSortOrder();
+        }
+    }
 
     private function addSortOrder($order)
     {
@@ -60,6 +71,22 @@ class FeaturedArticle extends Article
     private function removeSortOrder()
     {
         DB::delete('delete from featured_articles where article_id = ?', [$this->id]);
+    }
+    
+    private function updateSortOrder($newOrder)
+    {
+        return DB::table('featured_articles')->where('article_id', $this->id)->update(['order_id' => $newOrder]);
+    }
+    
+    private function shiftSortOrder()
+    {
+        $sortOrder = $this->order;
+        
+        $this->updateSortOrder($sortOrder - 1);
+        
+        if($article = FeaturedArticle::featuredArticleByOrder($sortOrder + 1)) {
+            $article->shiftSortOrder();
+        }
     }
 
     private function hasSortOrder()
