@@ -51,7 +51,20 @@ class FeaturedArticle extends Article
 
         $this->addSortOrder($order);
     }
-
+    
+    public function removeFromFeaturedArticles()
+    {
+        $sortOrder = $this->order;
+        $this->removeSortOrder();
+        
+        // get all featured articles to the right
+        $articles = FeaturedArticle::trailingFeaturedArticles($sortOrder);
+        
+        foreach($articles as $article) {
+            $article->shiftSortOrder();
+        }
+    }
+    
     private function addSortOrder($order)
     {
         DB::table('featured_articles')->insert(['article_id'=> $this->id, 'order_id' => $order]);
@@ -61,7 +74,19 @@ class FeaturedArticle extends Article
     {
         DB::delete('delete from featured_articles where article_id = ?', [$this->id]);
     }
+    
+    private function updateSortOrder($newOrder)
+    {
+        DB::table('featured_articles')->update(['article_']);
+    }
 
+    private function shiftSortOrder()
+    {
+        $newSortOrder = $this->order - 1;
+        
+        $this->updateSortOrder($newSortOrder);
+    }
+    
     private function hasSortOrder()
     {
         return !empty(FeaturedArticle::featuredArticle($this->id)->first());
@@ -76,5 +101,10 @@ class FeaturedArticle extends Article
     public function scopeFeaturedArticle($query, $articleId)
     {
         return $query->featured()->where('featured_articles.article_id', $articleId);
+    }
+    
+    private function scopeTrailingFeaturedArticles($query, $sortOrder)
+    {
+        return $query->featured()->where('featured_articles.order_id', '>', $sortOrder)->get();
     }
 }
