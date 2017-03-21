@@ -53,10 +53,12 @@ class FeaturedArticle extends Article
     }
     
     public function removeFromFeaturedArticles()
-    {   
+    {
+        $order = $this->order;
+
         $this->removeSortOrder();
         
-        $this->shiftSortOrder($this->order);
+        $this->shiftSortOrder($order);
     }
     
     private function addSortOrder($order)
@@ -69,7 +71,7 @@ class FeaturedArticle extends Article
         DB::delete('delete from featured_articles where article_id = ?', [$this->id]);
     }
     
-    private function updateSortOrder($newOrder)
+    public function updateSortOrder($newOrder)
     {
         return DB::table('featured_articles')->where('article_id', $this->id)->update(["order_id" => $newOrder]);
     }
@@ -102,8 +104,8 @@ class FeaturedArticle extends Article
         return $query->featured()->where('featured_articles.article_id', $articleId);
     }
     
-    private function scopeTrailingFeaturedArticles($query, $sortOrder)
+    public function scopeTrailingFeaturedArticles($query, $sortOrder)
     {
-        return $query->featured()->where('featured_articles.order_id', '>', $sortOrder)->get();
+        return $query->featured()->where('featured_articles.order_id', '>=', $sortOrder)->get();
     }
 }

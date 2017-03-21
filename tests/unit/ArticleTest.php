@@ -6,6 +6,7 @@ use Illuminate\Foundation\Testing\DatabaseTransactions;
 use App\Newsroom\Categories\RecentArticle;
 use App\Newsroom\Categories\ArticleRetrieverOutput;
 use App\Article;
+use App\FeaturedArticle;
 use App\Category;
 
 class ArticleTest extends TestCase
@@ -129,5 +130,29 @@ class ArticleTest extends TestCase
         $categoryWithRecentArticle = $categoryArticleRetriever->get();
 
         $this->assertEquals($PHPArticleNewest->id, $categoryWithRecentArticle["article"]->id);
+    }
+    
+    /** @test */
+    public function can_feature_an_article()
+    {
+        $article = FeaturedArticle::fromForm('My Article', 'Article body');
+
+        $article->setSortOrder(1);
+
+        $this->assertTrue(FeaturedArticle::all()->contains($article));
+    }
+
+    /** @test */
+    public function can_remove_featured_article()
+    {
+        $article = FeaturedArticle::fromForm('My Article', 'Article body');
+        $article2 = FeaturedArticle::fromForm('My Article 2', 'Article body');
+
+        $article->setSortOrder(1);
+        $article2->setSortOrder(2);
+
+        $article->removeFromFeaturedArticles();
+
+        $this->assertEquals(1, $article2->order);
     }
 }
