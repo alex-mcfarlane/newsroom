@@ -2,8 +2,6 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="bd2065c1-df73-4a64-8a7b-f695e12351a1" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/FeaturedArticle.php" afterPath="$PROJECT_DIR$/app/FeaturedArticle.php" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/tests/unit/ArticleTest.php" afterPath="$PROJECT_DIR$/tests/unit/ArticleTest.php" />
     </list>
     <ignored path="newsroom2.iws" />
@@ -26,11 +24,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="ArticleTest.php" pinned="false" current-in-tab="false">
+      <file leaf-file-name="ArticleTest.php" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/tests/unit/ArticleTest.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="677">
-              <caret line="153" column="32" selection-start-line="153" selection-start-column="32" selection-end-line="153" selection-end-column="32" />
+            <state relative-caret-position="662">
+              <caret line="158" column="29" selection-start-line="158" selection-start-column="29" selection-end-line="158" selection-end-column="29" />
               <folding>
                 <element signature="e#7#59#0#PHP" expanded="true" />
               </folding>
@@ -38,11 +36,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="FeaturedArticle.php" pinned="false" current-in-tab="true">
+      <file leaf-file-name="FeaturedArticle.php" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/FeaturedArticle.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="228">
-              <caret line="60" column="38" selection-start-line="60" selection-start-column="38" selection-end-line="60" selection-end-column="38" />
+            <state relative-caret-position="260">
+              <caret line="86" column="28" selection-start-line="86" selection-start-column="28" selection-end-line="86" selection-end-column="28" />
               <folding>
                 <marker date="1490055609000" expanded="true" signature="1900:1950" ph="delete from " />
               </folding>
@@ -73,8 +71,8 @@
         <option value="$PROJECT_DIR$/resources/views/layouts/app.blade.php" />
         <option value="$PROJECT_DIR$/app/Newsroom/Articles/ArticleUpdater.php" />
         <option value="$PROJECT_DIR$/resources/assets/src/main.js" />
-        <option value="$PROJECT_DIR$/tests/unit/ArticleTest.php" />
         <option value="$PROJECT_DIR$/app/FeaturedArticle.php" />
+        <option value="$PROJECT_DIR$/tests/unit/ArticleTest.php" />
       </list>
     </option>
   </component>
@@ -372,12 +370,12 @@
       <workItem from="1489149416600" duration="1000" />
       <workItem from="1489715578448" duration="128000" />
       <workItem from="1489765208789" duration="1562000" />
-      <workItem from="1490053887482" duration="1716000" />
+      <workItem from="1490053887482" duration="2464000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="9821000" />
+    <option name="totallyTimeSpent" value="10569000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="4" y="23" width="1392" height="873" extended-state="0" />
@@ -579,16 +577,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/tests/unit/ArticleTest.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="677">
-          <caret line="153" column="32" selection-start-line="153" selection-start-column="32" selection-end-line="153" selection-end-column="32" />
-          <folding>
-            <element signature="e#7#59#0#PHP" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/Http/Controllers/FeaturedArticlesController.php">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="210">
@@ -599,10 +587,20 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/app/FeaturedArticle.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="228">
-          <caret line="60" column="38" selection-start-line="60" selection-start-column="38" selection-end-line="60" selection-end-column="38" />
+        <state relative-caret-position="260">
+          <caret line="86" column="28" selection-start-line="86" selection-start-column="28" selection-end-line="86" selection-end-column="28" />
           <folding>
             <marker date="1490055609000" expanded="true" signature="1900:1950" ph="delete from " />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/tests/unit/ArticleTest.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="662">
+          <caret line="158" column="29" selection-start-line="158" selection-start-column="29" selection-end-line="158" selection-end-column="29" />
+          <folding>
+            <element signature="e#7#59#0#PHP" expanded="true" />
           </folding>
         </state>
       </provider>

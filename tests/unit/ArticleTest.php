@@ -147,12 +147,15 @@ class ArticleTest extends TestCase
     {
         $article = FeaturedArticle::fromForm('My Article', 'Article body');
         $article2 = FeaturedArticle::fromForm('My Article 2', 'Article body');
+        $article3 = FeaturedArticle::fromForm('My Article 3', 'Article body');
 
         $article->setSortOrder(1);
         $article2->setSortOrder(2);
+        $article3->setSortOrder(3);
 
         $article->removeFromFeaturedArticles();
 
         $this->assertEquals(1, $article2->order);
+        $this->assertEquals(2, $article3->order);
     }
 }
