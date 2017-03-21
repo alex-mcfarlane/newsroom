@@ -11,6 +11,7 @@ Route::group(['prefix' => 'api'], function(){
     Route::post('articles/{id}/images', 'API\ArticlesAPIController@addImage');
     
     Route::post('articles/{id}/featured', 'FeaturedArticlesController@store');
+    Route::delete('articles/{id}/featured', 'FeaturedArticlesController@destroy');
     Route::get('articles/featured', 'FeaturedArticlesController@index');
     
     Route::put('articles/{id}/headline', 'API\ArticlesAPIController@makeHeadliner');

@@ -13,7 +13,7 @@ class FeaturedArticlesController extends Controller
     
     public function __construct()
     {
-        $this->middleware('jwt.auth', ['except' => ['index']]);
+        //$this->middleware('jwt.auth', ['except' => ['index']]);
     }
     
     public function index()
@@ -25,5 +25,15 @@ class FeaturedArticlesController extends Controller
     {
         $article = FeaturedArticle::find($articleId);
         $article->setSortOrder($request->input('order_id'));
+
+        return response()->json('Article has been featured', 200);
+    }
+
+    public function destroy($articleId)
+    {
+        $article = FeaturedArticle::find($articleId);
+        $article->removeFromFeaturedArticles();
+
+        return response()->json('Article is no longer a feature article', 200);
     }
 }
